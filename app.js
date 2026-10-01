@@ -20,6 +20,7 @@ class EGTechCinematicEngine {
     this.masterTimeline = null;
     this.scrollTriggerInstance = null;
     this.bokehField = null;
+    this.fallingCodeEngine = null;
   }
 
   init() {
@@ -33,6 +34,9 @@ class EGTechCinematicEngine {
     // Initialize lightweight digital bokeh field for Scene 01
     this.initDigitalBokeh();
 
+    // Initialize 3D Falling Code Engine (Scene 03 - 07)
+    this.initFallingCodeEngine();
+
     // Master ScrollTrigger timeline (scrub: 1, strictly reversible)
     this.initMasterTimeline();
 
@@ -42,6 +46,7 @@ class EGTechCinematicEngine {
     this.bindNavigationAndCTA();
     this.bindMagneticCTA();
     this.bind3DTiltInteractions();
+    this.bind3DLaptopGyroscope();
     this.initScrollWatchers();
   }
 
@@ -151,6 +156,126 @@ class EGTechCinematicEngine {
   }
 
   /* ==========================================================================
+     01B. 3D FALLING CODE STREAM ENGINE (SCENES 03–07)
+     Codes dropping from the air in 3D perspective space with zero-g physics
+     ========================================================================== */
+  initFallingCodeEngine() {
+    const canvas = document.getElementById('fallingCodeCanvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let animationFrameId = null;
+    let isActive = false;
+    let speedMultiplier = 1.0;
+
+    const codeTokens = [
+      'const idea = "YOUR VISION";',
+      'await buildTomorrow();',
+      'export default SpatialApp;',
+      '<UIComponent depth={3D} />',
+      'git commit -m "ship product"',
+      '01000101 01000111',
+      'const scale = Infinity;',
+      'render3D(cyberspace);',
+      'function deploy() { return 200; }',
+      '{ growth: "1000x", prestige: "global" }',
+      'new EGTechEngine()',
+      'import { Future } from "egtech";',
+      'transform3D({ perspective: 1800 })',
+      'npm run build --production',
+      'while(vision) { innovate(); }',
+      'edge.sync({ latency: 0.1 });'
+    ];
+
+    const colors = [
+      'rgba(6, 182, 212, ',    // Cyan
+      'rgba(59, 130, 246, ',   // Blue
+      'rgba(245, 158, 11, ',   // Gold
+      'rgba(139, 92, 246, ',   // Violet
+      'rgba(16, 185, 129, ',   // Emerald
+      'rgba(236, 72, 153, '    // Pink
+    ];
+
+    const streams = [];
+    const streamCount = window.innerWidth < 768 ? 20 : 42;
+
+    const resize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+
+    for (let i = 0; i < streamCount; i++) {
+      const z = Math.random() * 0.8 + 0.2; // 0.2 = deep background, 1.0 = foreground
+      streams.push({
+        x: Math.random() * width,
+        y: Math.random() * height - height,
+        speed: (Math.random() * 3.5 + 2.5) * z,
+        z: z,
+        fontSize: Math.floor(10 * z + 8),
+        color: colors[Math.floor(Math.random() * colors.length)],
+        text: codeTokens[Math.floor(Math.random() * codeTokens.length)],
+        alpha: Math.random() * 0.5 + 0.35
+      });
+    }
+
+    const render = () => {
+      if (!isActive) return;
+
+      ctx.clearRect(0, 0, width, height);
+
+      for (let i = 0; i < streams.length; i++) {
+        const s = streams[i];
+        s.y += s.speed * speedMultiplier;
+
+        if (s.y > height + 50) {
+          s.y = -50 - Math.random() * 100;
+          s.x = Math.random() * width;
+          s.text = codeTokens[Math.floor(Math.random() * codeTokens.length)];
+        }
+
+        ctx.font = `${s.fontSize}px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = `${s.color}${s.alpha * s.z})`;
+
+        // Draw glowing code token
+        ctx.fillText(s.text, s.x, s.y);
+
+        // Subtle glow streak behind
+        if (s.z > 0.6) {
+          ctx.strokeStyle = `${s.color}${s.alpha * 0.2})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(s.x + 20, s.y - 12);
+          ctx.lineTo(s.x + 20, s.y - 36);
+          ctx.stroke();
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    this.fallingCodeEngine = {
+      setActive: (active) => {
+        if (active && !isActive) {
+          isActive = true;
+          render();
+        } else if (!active && isActive) {
+          isActive = false;
+          cancelAnimationFrame(animationFrameId);
+        }
+      },
+      setSpeed: (mult) => {
+        speedMultiplier = Math.max(0.5, Math.min(4.0, mult));
+      }
+    };
+  }
+
+  /* ==========================================================================
      02. MASTER SCROLL-DRIVEN CINEMATIC MASTER TIMELINE (SCRUB: 1)
      Zero autoplay. Pure scroll = timeline. Bidirectional.
      ========================================================================== */
@@ -166,8 +291,32 @@ class EGTechCinematicEngine {
     gsap.set('#chatStudioBubble', { opacity: 0, x: 25, force3D: true });
     gsap.set('#startActionPill', { opacity: 0, scale: 0.85, force3D: true });
 
-    // Scene 03 - 07: 2.5D Laptop & Integrated Developer Workspace
-    gsap.set('#laptopWrapper', { opacity: 0, y: 80, scale: 0.84, force3D: true });
+    // Scene 03 - 07: 3D Laptop Dropping from the Air, Cyber Grid & Falling Code
+    gsap.set('#perspectiveGridFloor', { opacity: 0, force3D: true });
+    gsap.set('#volumetricLightCone', { opacity: 0, force3D: true });
+    gsap.set('#gridShockwaveRing', { scale: 0.1, opacity: 0, force3D: true });
+    gsap.set('#fallingCodeStage', { opacity: 1, force3D: true });
+    gsap.set('.falling-code-card', { opacity: 0, y: -800, force3D: true });
+    gsap.set('#fallingCodeCanvas', { opacity: 0, force3D: true });
+    gsap.set('#orbitingTechHalo', { opacity: 0, scale: 0.75, force3D: true });
+
+    // 3D Laptop starts high in the atmosphere (dropping from the air)
+    gsap.set('#laptopWrapper', {
+      opacity: 0,
+      y: -750,
+      z: -380,
+      rotateX: -34,
+      rotateY: 26,
+      rotateZ: -12,
+      scale: 0.65,
+      force3D: true
+    });
+    gsap.set('#laptop3dShadow', {
+      opacity: 0,
+      scale: 0.35,
+      filter: 'blur(35px)',
+      force3D: true
+    });
     gsap.set('#metaphorBanner', { opacity: 0, y: 15, force3D: true });
     gsap.set('#ideFileTree', { opacity: 0, x: -15, force3D: true });
     gsap.set(['#cLine1', '#cLine2', '#cLine3', '#cLine4', '#cLine5', '#cLine6'], {
@@ -297,28 +446,81 @@ class EGTechCinematicEngine {
     }, 2.9);
 
     /* ------------------------------------------------------------------------
-       BEAT 3: SCENE 03 — 2.5D METALLIC LAPTOP REVEAL (2.80 – 5.00s)
-       Chassis rises from workspace, settling smoothly to eye level
+       BEAT 3: SCENE 03 — 3D LAPTOP DROPPING FROM THE AIR & 3D CODE STREAM CASCADE (2.60 – 5.00s)
+       Chassis swoops down from cyberspace atmosphere, settling smoothly with 3D shadow & shockwave
+       Codes rain down from above in 3D perspective space into orbital positions around laptop
        ------------------------------------------------------------------------ */
-    tl.to('#laptopWrapper', {
+    tl.to('#perspectiveGridFloor', {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power2.out'
+    }, 2.6)
+    .to('#volumetricLightCone', {
+      opacity: 0.75,
+      duration: 0.9,
+      ease: 'power2.out'
+    }, 2.7)
+    .to('#fallingCodeCanvas', {
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out'
+    }, 2.7)
+    // The 3D Laptop drops gracefully from the air!
+    .to('#laptopWrapper', {
       opacity: 1,
       y: 0,
+      z: 0,
+      rotateX: 6,
+      rotateY: -10,
+      rotateZ: 2,
       scale: 1,
-      duration: 1.2,
+      duration: 1.5,
       ease: 'power2.out'
-    }, 2.8)
+    }, 2.7)
+    // 3D Shadow lands and sharpens with proximity
+    .to('#laptop3dShadow', {
+      opacity: 0.85,
+      scale: 1,
+      filter: 'blur(16px)',
+      duration: 1.5,
+      ease: 'power2.out'
+    }, 2.7)
+    // Shockwave pulse on landing
+    .fromTo('#gridShockwaveRing', {
+      scale: 0.2,
+      opacity: 0.95
+    }, {
+      scale: 3.8,
+      opacity: 0,
+      duration: 1.0,
+      ease: 'power2.out'
+    }, 3.5)
+    // 3D Codes dropping from the air in staggered formation
+    .to('#fcc1', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 2.9)
+    .to('#fcc2', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.05)
+    .to('#fcc3', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.2)
+    .to('#fcc4', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.35)
+    .to('#fcc5', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.5)
+    .to('#fcc6', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.65)
+    // 3D Orbiting tech badges appear
+    .to('#orbitingTechHalo', {
+      opacity: 1,
+      scale: 1,
+      duration: 0.9,
+      ease: 'back.out(1.3)'
+    }, 3.3)
     .to('#metaphorBanner', {
       opacity: 1,
       y: 0,
       duration: 0.6,
       ease: 'power2.out'
-    }, 3.3)
+    }, 3.5)
     .to('#ideFileTree', {
       opacity: 1,
       x: 0,
       duration: 0.5,
       ease: 'power2.out'
-    }, 3.6);
+    }, 3.8);
 
     /* ------------------------------------------------------------------------
        BEAT 4: SCENE 04 — INTEGRATED IDE & SCROLL-DRIVEN CODE REVEAL (4.20 – 6.60s)
@@ -333,7 +535,16 @@ class EGTechCinematicEngine {
     .call(() => {
       const pill = document.getElementById('ideStatusText');
       if (pill) pill.textContent = 'COMPILING';
-    }, null, 5.8);
+    }, null, 5.8)
+    // 3D falling code cards funnel and dissolve into the glowing IDE screen
+    .to(['#fcc1', '#fcc2', '#fcc3', '#fcc4', '#fcc5', '#fcc6'], {
+      scale: 0.5,
+      opacity: 0.2,
+      y: 120,
+      stagger: 0.08,
+      duration: 1.0,
+      ease: 'power2.in'
+    }, 4.4);
 
     /* ------------------------------------------------------------------------
        BEAT 5: SCENE 05 — SIGNATURE CODE-TO-UI MORPH (6.20 – 8.50s)
@@ -441,15 +652,43 @@ class EGTechCinematicEngine {
     }, 10.2);
 
     /* ------------------------------------------------------------------------
-       BEAT 7: SCENE 08 & 09 — SIGNATURE SCREEN-ENTRY ZOOM (10.40 – 13.00s)
-       Laptop zooms 4.6x, bezels dissolve, camera enters into fullscreen client site
+       BEAT 7: SCENE 08 & 09 — SIGNATURE 3D SCREEN-ENTRY ZOOM (10.40 – 13.00s)
+       Laptop zooms 5.2x with 3D Z-translation, bezels dissolve, camera plunges into live client site
        ------------------------------------------------------------------------ */
     tl.to('#laptopWrapper', {
-      scale: 4.6,
-      y: -20,
-      duration: 1.5,
+      scale: 5.2,
+      z: 750,
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+      y: 35,
+      duration: 1.6,
       ease: 'power2.inOut'
     }, 10.4)
+    .to('#laptop3dShadow', {
+      opacity: 0,
+      scale: 3,
+      duration: 1.0,
+      ease: 'power2.in'
+    }, 10.4)
+    .to('#perspectiveGridFloor', {
+      opacity: 0,
+      duration: 0.9
+    }, 10.6)
+    .to('#volumetricLightCone', {
+      opacity: 0,
+      duration: 0.8
+    }, 10.5)
+    .to('#orbitingTechHalo', {
+      opacity: 0,
+      scale: 2.2,
+      duration: 0.8
+    }, 10.5)
+    .to('.falling-code-card', {
+      opacity: 0,
+      scale: 2.0,
+      duration: 0.7
+    }, 10.5)
     .to(['#laptopBase', '.lid-bezel', '.lid-camera', '#ideFileTree', '#ideTerminalDrawer', '#buildStatusStage', '.ide-titlebar'], {
       opacity: 0,
       duration: 0.6,
@@ -534,6 +773,16 @@ class EGTechCinematicEngine {
       } else {
         this.bokehField.setActive(true);
         this.bokehField.setScrollDrift(pinnedProgress * 5);
+      }
+    }
+
+    // 3D Falling Code Stream sleep/wake & velocity optimization (Scenes 03 - 07)
+    if (this.fallingCodeEngine) {
+      if (pinnedProgress >= 0.16 && pinnedProgress <= 0.62) {
+        this.fallingCodeEngine.setActive(true);
+        this.fallingCodeEngine.setSpeed(1.0 + (pinnedProgress - 0.16) * 3.5);
+      } else {
+        this.fallingCodeEngine.setActive(false);
       }
     }
 
@@ -941,5 +1190,80 @@ class EGTechCinematicEngine {
         });
       });
     });
+  }
+
+  /* ==========================================================================
+     07. 3D GYROSCOPIC MOUSE TRACKING & MULTI-PLANE PERSPECTIVE ORBIT
+     Enables realistic 3D physical orbit of the floating laptop, shadow, & code
+     ========================================================================== */
+  bind3DLaptopGyroscope() {
+    if (window.innerWidth < 1024) return;
+
+    const laptop = document.getElementById('stylizedLaptop');
+    const shadow = document.getElementById('laptop3dShadow');
+    const halo = document.getElementById('orbitingTechHalo');
+    const cards = document.querySelectorAll('.falling-code-card');
+    if (!laptop) return;
+
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      const normX = (e.clientX / window.innerWidth) * 2 - 1;
+      const normY = (e.clientY / window.innerHeight) * 2 - 1;
+      targetX = normX;
+      targetY = normY;
+    }, { passive: true });
+
+    const update3DPhysics = () => {
+      // Smooth lerp damping
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+
+      // 3D tilt angles for the laptop
+      const tiltX = 6 - currentY * 14;
+      const tiltY = -10 + currentX * 18;
+      const tiltZ = 2 + currentX * 3;
+
+      gsap.set(laptop, {
+        rotateX: tiltX,
+        rotateY: tiltY,
+        rotateZ: tiltZ,
+        transformPerspective: 1800,
+        force3D: true
+      });
+
+      if (shadow) {
+        gsap.set(shadow, {
+          x: -currentX * 35,
+          y: currentY * 15,
+          rotateX: 75 + currentY * 5,
+          force3D: true
+        });
+      }
+
+      if (halo) {
+        gsap.set(halo, {
+          rotateY: currentX * 22,
+          rotateX: -currentY * 16,
+          force3D: true
+        });
+      }
+
+      cards.forEach((card, idx) => {
+        const factor = (idx % 3 + 1) * 12;
+        gsap.set(card, {
+          x: currentX * factor,
+          y: currentY * factor * 0.8,
+          force3D: true
+        });
+      });
+
+      requestAnimationFrame(update3DPhysics);
+    };
+
+    update3DPhysics();
   }
 }

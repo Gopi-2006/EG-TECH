@@ -146,10 +146,81 @@
       </section>
 
       <!-- ====================================================================
-           SCENES 03, 04, 05, 06, 07: LAPTOP REVEAL, INTEGRATED IDE & TERMINAL
+           3D CYBER GRID FLOOR, VOLUMETRIC LIGHT & 3D FALLING CODE STAGE
+           ==================================================================== -->
+      <div class="perspective-grid-floor" id="perspectiveGridFloor" aria-hidden="true">
+        <div class="grid-plane"></div>
+        <div class="grid-horizon-glow"></div>
+        <div class="grid-shockwave-ring" id="gridShockwaveRing"></div>
+      </div>
+
+      <div class="volumetric-light-cone" id="volumetricLightCone" aria-hidden="true"></div>
+
+      <!-- 3D FALLING CODE STAGE: CODES DROPPING FROM THE AIR IN 3D PERSPECTIVE -->
+      <div class="falling-code-stage" id="fallingCodeStage" aria-hidden="true">
+        <canvas id="fallingCodeCanvas" class="falling-code-canvas"></canvas>
+
+        <!-- 3D Spatial Code Cards (Dropping from the air into cyberspace & laptop) -->
+        <div class="falling-code-card fcc-1" id="fcc1">
+          <div class="fcc-badge"><span class="fcc-dot"></span>01_INIT</div>
+          <div class="fcc-body">
+            <span class="fcc-kwd">const</span> <span class="fcc-var">vision</span> = <span class="fcc-str">"REVOLUTIONIZE"</span>;
+          </div>
+        </div>
+
+        <div class="falling-code-card fcc-2" id="fcc2">
+          <div class="fcc-badge"><span class="fcc-dot"></span>02_ASYNC</div>
+          <div class="fcc-body">
+            <span class="fcc-kwd">await</span> <span class="fcc-func">egtech</span>.<span class="fcc-call">transform3D</span>({ <span class="fcc-key">depth</span>: <span class="fcc-val">Infinity</span> });
+          </div>
+        </div>
+
+        <div class="falling-code-card fcc-3" id="fcc3">
+          <div class="fcc-badge"><span class="fcc-dot"></span>03_JSX</div>
+          <div class="fcc-body">
+            <span class="fcc-tag-jsx">&lt;<span class="fcc-comp">SpatialEcosystem</span> <span class="fcc-prop">motion</span>=<span class="fcc-str">"60fps"</span> /&gt;</span>
+          </div>
+        </div>
+
+        <div class="falling-code-card fcc-4" id="fcc4">
+          <div class="fcc-badge"><span class="fcc-dot"></span>04_IMPACT</div>
+          <div class="fcc-body">
+            <span class="fcc-kwd">return</span> <span class="fcc-obj">{ <span class="fcc-key">growth</span>: <span class="fcc-val">1000</span>, <span class="fcc-key">prestige</span>: <span class="fcc-str">"global"</span> }</span>;
+          </div>
+        </div>
+
+        <div class="falling-code-card fcc-5" id="fcc5">
+          <div class="fcc-badge"><span class="fcc-dot"></span>05_EDGE</div>
+          <div class="fcc-body">
+            <span class="fcc-cmd">$ egtech deploy --3d-experience --ultra</span>
+          </div>
+        </div>
+
+        <div class="falling-code-card fcc-6" id="fcc6">
+          <div class="fcc-badge"><span class="fcc-dot"></span>06_AUTONOMOUS</div>
+          <div class="fcc-body">
+            <span class="fcc-func">buildTomorrow</span>(<span class="fcc-var">ideasToday</span>);
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           SCENES 03, 04, 05, 06, 07: 3D LAPTOP DROPPING FROM THE AIR, IDE & BUILD
            ==================================================================== -->
       <div class="laptop-wrapper" id="laptopWrapper">
         
+        <!-- 3D Orbiting Tech Halo Badges -->
+        <div class="orbiting-tech-halo" id="orbitingTechHalo" aria-hidden="true">
+          <div class="orbit-badge ob-1"><span class="ob-dot"></span>THREE.JS 3D</div>
+          <div class="orbit-badge ob-2"><span class="ob-dot"></span>NEXT.JS 15</div>
+          <div class="orbit-badge ob-3"><span class="ob-dot"></span>GSAP ENGINE</div>
+          <div class="orbit-badge ob-4"><span class="ob-dot"></span>AI AGENTIC</div>
+          <div class="orbit-badge ob-5"><span class="ob-dot"></span>60 FPS SYNC</div>
+        </div>
+
+        <!-- Dynamic 3D Ground Shadow that scales with altitude -->
+        <div class="laptop-3d-shadow" id="laptop3dShadow" aria-hidden="true"></div>
+
         <!-- Metaphor Banner (Scene 04) -->
         <div class="metaphor-banner" id="metaphorBanner">
           <span class="metaphor-tag">CLIENT IDEA &rarr; CODE &rarr; PRODUCT</span>
@@ -330,9 +401,74 @@
             </div>
           </div> <!-- End #laptopLid -->
 
-          <!-- Precision Metallic Aluminum Keyboard Base -->
+          <!-- Precision 3D Metallic Aluminum Keyboard Deck with Backlit Matrix -->
           <div class="laptop-base" id="laptopBase">
             <div class="base-surface">
+              <div class="keyboard-deck">
+                <!-- Function Row -->
+                <div class="kb-row kb-fn">
+                  <span class="key key-esc">esc</span>
+                  <span class="key key-fn">F1</span>
+                  <span class="key key-fn">F2</span>
+                  <span class="key key-fn">F3</span>
+                  <span class="key key-fn">F4</span>
+                  <span class="key key-fn">F5</span>
+                  <span class="key key-fn">F6</span>
+                  <span class="key key-fn">F7</span>
+                  <span class="key key-fn">F8</span>
+                  <span class="key key-fn">F9</span>
+                  <span class="key key-fn">F10</span>
+                  <span class="key key-fn">F11</span>
+                  <span class="key key-fn">F12</span>
+                  <span class="key key-power">&bull;</span>
+                </div>
+                <!-- Number Row -->
+                <div class="kb-row">
+                  <span class="key key-tilde">~</span>
+                  <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span><span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key">0</span>
+                  <span class="key">-</span><span class="key">=</span><span class="key key-del">delete</span>
+                </div>
+                <!-- QWERTY Row -->
+                <div class="kb-row">
+                  <span class="key key-tab">tab</span>
+                  <span class="key">Q</span><span class="key">W</span><span class="key">E</span><span class="key">R</span><span class="key">T</span><span class="key">Y</span><span class="key">U</span><span class="key">I</span><span class="key">O</span><span class="key">P</span>
+                  <span class="key">[</span><span class="key">]</span><span class="key">\</span>
+                </div>
+                <!-- ASDF Row -->
+                <div class="kb-row">
+                  <span class="key key-caps">caps</span>
+                  <span class="key">A</span><span class="key">S</span><span class="key">D</span><span class="key">F</span><span class="key">G</span><span class="key">H</span><span class="key">J</span><span class="key">K</span><span class="key">L</span>
+                  <span class="key">;</span><span class="key">'</span><span class="key key-return">return</span>
+                </div>
+                <!-- ZXCV Row -->
+                <div class="kb-row">
+                  <span class="key key-shift-l">shift</span>
+                  <span class="key">Z</span><span class="key">X</span><span class="key">C</span><span class="key">V</span><span class="key">B</span><span class="key">N</span><span class="key">M</span>
+                  <span class="key">,</span><span class="key">.</span><span class="key">/</span><span class="key key-shift-r">shift</span>
+                </div>
+                <!-- Bottom Command Row -->
+                <div class="kb-row kb-bottom">
+                  <span class="key key-fn-s">fn</span>
+                  <span class="key key-ctrl">ctrl</span>
+                  <span class="key key-opt">&#8997; opt</span>
+                  <span class="key key-cmd">&#8984; cmd</span>
+                  <span class="key key-space"></span>
+                  <span class="key key-cmd">&#8984; cmd</span>
+                  <span class="key key-opt">&#8997; opt</span>
+                  <div class="key-arrows">
+                    <span class="key key-arrow-u">&uarr;</span>
+                    <div class="key-arrow-h">
+                      <span class="key key-arrow-l">&larr;</span>
+                      <span class="key key-arrow-d">&darr;</span>
+                      <span class="key key-arrow-r">&rarr;</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Precision Glass Trackpad -->
+              <div class="trackpad-glass">
+                <div class="trackpad-sheen"></div>
+              </div>
               <div class="keyboard-notch"></div>
             </div>
           </div>

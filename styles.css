@@ -796,7 +796,222 @@ body.eg-body {
 }
 
 /* ==========================================================================
-   SCENES 03–07: LAPTOP HARDWARE, CODE, SIGNATURE MORPH & ASSEMBLY
+   3D PERSPECTIVE CYBER GRID FLOOR & VOLUMETRIC ATMOSPHERIC LIGHT
+   ========================================================================== */
+.perspective-grid-floor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  perspective: 900px;
+  z-index: 12;
+  opacity: 0.85;
+}
+
+.grid-plane {
+  width: 250%;
+  height: 250%;
+  position: absolute;
+  left: -75%;
+  top: 15%;
+  transform: rotateX(74deg) translateZ(-80px);
+  background-image: 
+    linear-gradient(rgba(6, 182, 212, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.22) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at 50% 35%, black 15%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 35%, black 15%, transparent 72%);
+  animation: gridDrift 24s linear infinite;
+  will-change: transform;
+}
+
+@keyframes gridDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 600px; }
+}
+
+.grid-horizon-glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 55%;
+  height: 120px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.3) 0%, rgba(59, 130, 246, 0.15) 40%, transparent 75%);
+  filter: blur(25px);
+  pointer-events: none;
+}
+
+.grid-shockwave-ring {
+  position: absolute;
+  left: 50%;
+  top: 65%;
+  width: 300px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid var(--c-cyan);
+  box-shadow: 0 0 30px var(--c-cyan), inset 0 0 20px var(--c-cyan);
+  transform: translate(-50%, -50%) scale(0.2);
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+.volumetric-light-cone {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 700px;
+  height: 75vh;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(6, 182, 212, 0.22) 0%, rgba(59, 130, 246, 0.08) 50%, transparent 100%);
+  clip-path: polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%);
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 14;
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   3D FALLING CODE STAGE (CODES DROPPING FROM THE AIR IN 3D PERSPECTIVE)
+   ========================================================================== */
+.falling-code-stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 22;
+  perspective: 1600px;
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+.falling-code-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.falling-code-card {
+  position: absolute;
+  background: rgba(8, 14, 34, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(6, 182, 212, 0.4);
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-family: var(--font-mono);
+  box-shadow: 
+    0 20px 45px rgba(0, 0, 0, 0.85),
+    0 0 25px rgba(6, 182, 212, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  will-change: transform, opacity;
+  z-index: 5;
+  pointer-events: auto;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.falling-code-card:hover {
+  border-color: var(--c-cyan);
+  box-shadow: 0 25px 60px rgba(6, 182, 212, 0.35);
+}
+
+.fcc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: var(--c-cyan);
+  font-weight: 700;
+}
+
+.fcc-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c-cyan);
+  box-shadow: 0 0 6px var(--c-cyan);
+}
+
+.fcc-body {
+  font-size: 0.85rem;
+  white-space: nowrap;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.fcc-kwd { color: #EC4899; font-weight: 700; }
+.fcc-var { color: #F59E0B; }
+.fcc-str { color: #10B981; }
+.fcc-func { color: #3B82F6; font-weight: 600; }
+.fcc-call { color: #8B5CF6; }
+.fcc-tag-jsx { color: #06B6D4; }
+.fcc-comp { color: #F59E0B; font-weight: 700; }
+.fcc-prop { color: #A855F7; }
+.fcc-val { color: #10B981; }
+.fcc-obj { color: #E2E8F0; }
+.fcc-key { color: #06B6D4; }
+.fcc-cmd { color: #10B981; font-weight: 700; }
+
+/* 3D Spatial Positions for Falling Code Cards */
+.fcc-1 { left: 4%;  top: 14%; transform: translate3d(0, -600px, 120px) rotateX(12deg) rotateY(-18deg) rotateZ(-4deg); }
+.fcc-2 { right: 6%; top: 18%; transform: translate3d(0, -750px, 80px) rotateX(-10deg) rotateY(16deg) rotateZ(3deg); }
+.fcc-3 { left: 8%;  bottom: 22%; transform: translate3d(0, -900px, 160px) rotateX(15deg) rotateY(-12deg) rotateZ(2deg); }
+.fcc-4 { right: 8%; bottom: 20%; transform: translate3d(0, -680px, 40px) rotateX(-8deg) rotateY(20deg) rotateZ(-5deg); }
+.fcc-5 { left: 22%; top: 6%;  transform: translate3d(0, -820px, 200px) rotateX(8deg) rotateY(10deg) rotateZ(-2deg); }
+.fcc-6 { right: 24%; top: 8%; transform: translate3d(0, -880px, 100px) rotateX(-12deg) rotateY(-15deg) rotateZ(4deg); }
+
+/* ==========================================================================
+   3D ORBITING TECH HALO BADGES
+   ========================================================================== */
+.orbiting-tech-halo {
+  position: absolute;
+  inset: -60px;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  z-index: 25;
+}
+
+.orbit-badge {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(10, 16, 38, 0.82);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: var(--c-warm-white);
+  font-weight: 700;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.75), 0 0 15px rgba(6, 182, 212, 0.2);
+  will-change: transform;
+}
+
+.ob-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+}
+
+.ob-1 { top: 6%; left: -30px; transform: translateZ(80px) rotateY(-15deg); }
+.ob-2 { top: 12%; right: -25px; transform: translateZ(120px) rotateY(18deg); }
+.ob-3 { bottom: 25%; left: -45px; transform: translateZ(140px) rotateY(-20deg); }
+.ob-4 { bottom: 20%; right: -40px; transform: translateZ(90px) rotateY(16deg); }
+.ob-5 { top: -20px; left: 45%; transform: translateZ(160px) translateX(-50%); }
+
+/* ==========================================================================
+   SCENES 03–07: 3D LAPTOP HARDWARE CHASSIS DROPPING FROM THE AIR
    ========================================================================== */
 .laptop-wrapper {
   position: absolute;
@@ -807,15 +1022,34 @@ body.eg-body {
   justify-content: center;
   z-index: 20;
   opacity: 0;
+  perspective: 1800px;
+  transform-style: preserve-3d;
   will-change: transform, opacity;
+}
+
+/* Dynamic 3D Ground Shadow */
+.laptop-3d-shadow {
+  position: absolute;
+  bottom: 6%;
+  width: 920px;
+  max-width: 88vw;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.4) 0%, rgba(0, 0, 0, 0.85) 45%, transparent 72%);
+  filter: blur(20px);
+  transform: rotateX(75deg);
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  z-index: -1;
 }
 
 /* Metaphor Banner (Scene 04) */
 .metaphor-banner {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(12px) translateZ(40px);
   will-change: opacity, transform;
 }
 
@@ -833,38 +1067,40 @@ body.eg-body {
 
 .metaphor-sub {
   font-family: var(--font-display);
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   color: var(--c-warm-white);
   font-weight: 600;
   letter-spacing: -0.01em;
 }
 
-/* Stylized 2.5D Metallic Laptop Chassis */
+/* Stylized 3D Metallic Laptop Chassis */
 .stylized-laptop {
   position: relative;
-  width: 960px;
-  max-width: 90vw;
+  width: 980px;
+  max-width: 92vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   transform-origin: center center;
+  transform-style: preserve-3d;
   will-change: transform;
 }
 
-/* Laptop Screen Lid with Dual Rim Glow */
+/* Laptop Screen Lid with 3D Depth & Dual Rim Glow */
 .laptop-lid {
   width: 100%;
-  background: linear-gradient(145deg, #1c2438 0%, #0d1222 50%, #151b2e 100%);
-  border-radius: 14px 14px 2px 2px;
-  border: 1.5px solid rgba(6, 182, 212, 0.35);
+  background: linear-gradient(145deg, #1e2840 0%, #0e1424 50%, #161e32 100%);
+  border-radius: 16px 16px 2px 2px;
+  border: 1.5px solid rgba(6, 182, 212, 0.4);
   box-shadow: 
-    0 25px 60px rgba(0, 0, 0, 0.9),
-    -15px 0 35px rgba(6, 182, 212, 0.25),
-    15px 0 35px rgba(245, 158, 11, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  padding: 12px 12px 10px 12px;
+    0 30px 80px rgba(0, 0, 0, 0.95),
+    -20px 0 45px rgba(6, 182, 212, 0.3),
+    20px 0 45px rgba(245, 158, 11, 0.25),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.25);
+  padding: 14px 14px 10px 14px;
   position: relative;
   transform-origin: bottom center;
+  transform-style: preserve-3d;
 }
 
 .lid-bezel {
@@ -875,51 +1111,150 @@ body.eg-body {
 }
 
 .lid-camera {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #1e293b;
-  border: 1px solid #334155;
+  border: 1.5px solid #06B6D4;
+  box-shadow: 0 0 6px var(--c-cyan);
   margin-bottom: 8px;
 }
 
 .lid-screen {
   width: 100%;
-  height: 500px;
+  height: 510px;
   background: #040714;
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
   position: relative;
-  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.95);
+  box-shadow: 
+    inset 0 0 35px rgba(0, 0, 0, 0.98),
+    0 0 15px rgba(6, 182, 212, 0.15);
 }
 
-/* Precision Metallic Keyboard Base */
+/* Precision 3D Metallic Aluminum Keyboard Deck */
 .laptop-base {
-  width: 104%;
-  height: 18px;
-  background: linear-gradient(180deg, #1e273d 0%, #0e1424 100%);
-  border-radius: 0 0 18px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 105%;
+  background: linear-gradient(180deg, #222d48 0%, #131a2c 60%, #0a0e1a 100%);
+  border-radius: 0 0 20px 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
   border-top: none;
   position: relative;
   box-shadow: 
-    0 18px 45px rgba(0, 0, 0, 0.85),
-    -10px 0 20px rgba(6, 182, 212, 0.15),
-    10px 0 20px rgba(245, 158, 11, 0.15);
+    0 25px 60px rgba(0, 0, 0, 0.9),
+    -12px 0 25px rgba(6, 182, 212, 0.2),
+    12px 0 25px rgba(245, 158, 11, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform-origin: top center;
+  transform: rotateX(28deg) translateY(-2px);
+  transform-style: preserve-3d;
+  padding: 10px 14px 14px 14px;
 }
 
 .base-surface {
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Realistic Chiclet Keyboard Deck Matrix */
+.keyboard-deck {
+  width: 94%;
+  background: #090e1e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 10px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kb-row {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+}
+
+.key {
+  height: 15px;
+  flex: 1;
+  background: linear-gradient(180deg, #1c263e 0%, #101626 100%);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 2px solid #060912;
+  color: #94a3b8;
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.key:hover {
+  background: linear-gradient(180deg, #273656 0%, #162035 100%);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: var(--c-cyan);
+}
+
+.kb-fn .key { height: 11px; font-size: 6.5px; color: #64748b; }
+.key-esc { flex: 1.4; color: var(--c-cyan); }
+.key-power { flex: 1; color: var(--c-pink); }
+.key-tilde { flex: 1; }
+.key-del { flex: 1.6; }
+.key-tab { flex: 1.5; }
+.key-caps { flex: 1.8; }
+.key-return { flex: 1.8; color: var(--c-cyan); font-weight: 700; }
+.key-shift-l { flex: 2.2; }
+.key-shift-r { flex: 2.2; }
+.key-fn-s { flex: 1; }
+.key-ctrl { flex: 1.1; }
+.key-opt { flex: 1.1; }
+.key-cmd { flex: 1.3; font-weight: 700; color: var(--c-warm-white); }
+.key-space { flex: 5.5; background: linear-gradient(180deg, #1c263e 0%, #101626 100%); }
+
+.key-arrows {
+  flex: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.key-arrow-u { height: 6px; font-size: 6px; }
+.key-arrow-h { display: flex; gap: 2px; }
+.key-arrow-h .key { height: 7px; font-size: 6px; flex: 1; }
+
+/* Precision Glass Trackpad */
+.trackpad-glass {
+  width: 220px;
+  height: 48px;
+  background: rgba(20, 28, 48, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.1);
   position: relative;
+  overflow: hidden;
+}
+
+.trackpad-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 .keyboard-notch {
-  width: 100px;
+  width: 110px;
   height: 4px;
   background: #04060d;
-  border-radius: 0 0 4px 4px;
-  margin: 0 auto;
+  border-radius: 0 0 5px 5px;
+  margin-top: -4px;
 }
 
 /* ==========================================================================
@@ -2754,6 +3089,25 @@ body.eg-body {
   }
   .lid-screen {
     height: 390px;
+  }
+  .falling-code-card {
+    padding: 8px 12px;
+  }
+  .fcc-body {
+    font-size: 0.72rem;
+  }
+  .fcc-5, .fcc-6 {
+    display: none; /* Keep screen clean on mobile */
+  }
+  .orbiting-tech-halo {
+    display: none;
+  }
+  .keyboard-deck {
+    display: none; /* Hide dense keys on mobile to keep chassis sleek */
+  }
+  .trackpad-glass {
+    height: 24px;
+    width: 130px;
   }
 }
 
