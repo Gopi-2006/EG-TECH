@@ -12,13 +12,40 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- High-Performance GSAP & ScrollTrigger -->
+  <!-- High-Performance 3D WebGL Engine, GSAP & ScrollTrigger -->
+  <script src="assets/libs/three.min.js"></script>
   <script src="assets/libs/gsap.min.js"></script>
   <script src="assets/libs/ScrollTrigger.min.js"></script>
 
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="eg-body">
+
+  <!-- REAL THREE.JS 3D WEBGL SPATIAL UNIVERSE CANVAS (PAKA 3D CORE) -->
+  <canvas class="webgl-canvas-3d" id="webglCanvas3D" aria-hidden="true"></canvas>
+
+  <!-- REAL-TIME 3D SPATIAL TELEMETRY HUD -->
+  <aside class="spatial-telemetry-hud" id="spatialTelemetryHud" aria-hidden="true">
+    <div class="hud-header">
+      <span class="hud-pulse"></span>
+      <span class="hud-label">SPATIAL 3D CORE</span>
+      <span class="hud-fps" id="hudFpsReadout">60 FPS</span>
+    </div>
+    <div class="hud-body">
+      <div class="hud-coord-row">
+        <span class="coord-tag">CAM_POS</span>
+        <span class="coord-val" id="hudCamPos">X: +0.0  Y: +35.0  Z: +100.0</span>
+      </div>
+      <div class="hud-coord-row">
+        <span class="coord-tag">CAM_ROT</span>
+        <span class="coord-val" id="hudCamRot">PITCH: -18°  YAW: 0°  ROLL: 0°</span>
+      </div>
+      <div class="hud-coord-row">
+        <span class="coord-tag">ENGINE</span>
+        <span class="coord-val">THREE.JS WEBGL</span>
+      </div>
+    </div>
+  </aside>
 
   <!-- KINETIC FLUID GLOWING CURSOR FOLLOWER -->
   <div class="kinetic-cursor-follower" id="cursorFollower" aria-hidden="true">

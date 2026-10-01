@@ -19,6 +19,7 @@ class EGTechCinematicEngine {
   constructor() {
     this.masterTimeline = null;
     this.scrollTriggerInstance = null;
+    this.threeEngine = null;
     this.bokehField = null;
     this.fallingCodeEngine = null;
   }
@@ -30,6 +31,9 @@ class EGTechCinematicEngine {
     }
 
     gsap.registerPlugin(ScrollTrigger);
+
+    // Initialize True 3D Three.js Spatial Universe (Paka 3D Core)
+    this.initThreeWebGLWorld();
 
     // Initialize lightweight digital bokeh field for Scene 01
     this.initDigitalBokeh();
@@ -52,6 +56,305 @@ class EGTechCinematicEngine {
     this.bind3DTiltInteractions();
     this.bind3DLaptopGyroscope();
     this.initScrollWatchers();
+  }
+
+  /* ==========================================================================
+     00. TRUE 3D THREE.JS SPATIAL UNIVERSE (PAKA 3D ENGINE)
+     WebGL renderer: 2,500 volumetric stars, dynamic undulating cyber wave grid,
+     floating wireframe polyhedra, deep space torus knot & scroll-driven camera shifts
+     ========================================================================== */
+  initThreeWebGLWorld() {
+    if (typeof THREE === 'undefined') {
+      console.warn('Three.js library missing, skipping WebGL 3D world');
+      return;
+    }
+
+    const canvas = document.getElementById('webglCanvas3D');
+    if (!canvas) return;
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    // High-performance WebGL Renderer
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance'
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(width, height);
+
+    // 3D Scene & Perspective Camera
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 2000);
+    camera.position.set(0, 35, 100);
+    camera.lookAt(0, 5, 0);
+
+    // Volumetric 3D Lighting Setup
+    const ambientLight = new THREE.AmbientLight(0x061129, 2.8);
+    scene.add(ambientLight);
+
+    const cyanPoint = new THREE.PointLight(0x00F0FF, 5, 350);
+    cyanPoint.position.set(-45, 25, 45);
+    scene.add(cyanPoint);
+
+    const goldPoint = new THREE.PointLight(0xF59E0B, 4, 350);
+    goldPoint.position.set(45, -15, 35);
+    scene.add(goldPoint);
+
+    // 1. Dynamic Undulating Cyber Matrix Terrain Floor
+    const gridGeo = new THREE.PlaneGeometry(280, 280, 55, 55);
+    gridGeo.rotateX(-Math.PI / 2);
+    const gridMat = new THREE.MeshBasicMaterial({
+      color: 0x06B6D4,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.32
+    });
+    const gridMesh = new THREE.Mesh(gridGeo, gridMat);
+    gridMesh.position.set(0, -32, 0);
+    scene.add(gridMesh);
+
+    const gridPositions = gridGeo.attributes.position;
+    const baseGridY = new Float32Array(gridPositions.count);
+    for (let i = 0; i < gridPositions.count; i++) {
+      baseGridY[i] = gridPositions.getY(i);
+    }
+
+    // 2. Volumetric 3D Particle Starfield (2,500 particles in 3D Space)
+    const particleCount = width < 768 ? 1200 : 2500;
+    const starGeo = new THREE.BufferGeometry();
+    const starPositions = new Float32Array(particleCount * 3);
+    const starColors = new Float32Array(particleCount * 3);
+
+    const palette = [
+      new THREE.Color(0x00F0FF), // Electric Cyan
+      new THREE.Color(0xF59E0B), // Molten Gold
+      new THREE.Color(0xA855F7), // Plasma Violet
+      new THREE.Color(0x38BDF8), // Sky Blue
+      new THREE.Color(0xFFFFFF)  // Pure Diamond
+    ];
+
+    for (let i = 0; i < particleCount; i++) {
+      const i3 = i * 3;
+      starPositions[i3] = (Math.random() - 0.5) * 700;
+      starPositions[i3 + 1] = (Math.random() - 0.5) * 600;
+      starPositions[i3 + 2] = (Math.random() - 0.5) * 800;
+
+      const col = palette[Math.floor(Math.random() * palette.length)];
+      starColors[i3] = col.r;
+      starColors[i3 + 1] = col.g;
+      starColors[i3 + 2] = col.b;
+    }
+
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
+
+    const starMat = new THREE.PointsMaterial({
+      size: 2.6,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.85,
+      blending: THREE.AdditiveBlending
+    });
+    const starField = new THREE.Points(starGeo, starMat);
+    scene.add(starField);
+
+    // 3. Floating 3D Cyber Geometries (Deep Space Wireframe Polyhedra)
+    // Central Majestic Cyber Torus Knot in deep space
+    const torusGeo = new THREE.TorusKnotGeometry(15, 3.2, 120, 22);
+    const torusMat = new THREE.MeshBasicMaterial({
+      color: 0x06B6D4,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.35
+    });
+    const torusMesh = new THREE.Mesh(torusGeo, torusMat);
+    torusMesh.position.set(0, 18, -140);
+    scene.add(torusMesh);
+
+    // Icosahedron 1 (Left space)
+    const icoGeo = new THREE.IcosahedronGeometry(8, 1);
+    const icoMat1 = new THREE.MeshBasicMaterial({ color: 0xF59E0B, wireframe: true, transparent: true, opacity: 0.45 });
+    const icoMesh1 = new THREE.Mesh(icoGeo, icoMat1);
+    icoMesh1.position.set(-68, 24, 20);
+    scene.add(icoMesh1);
+
+    // Icosahedron 2 (Right space)
+    const icoMat2 = new THREE.MeshBasicMaterial({ color: 0x8B5CF6, wireframe: true, transparent: true, opacity: 0.45 });
+    const icoMesh2 = new THREE.Mesh(icoGeo, icoMat2);
+    icoMesh2.position.set(72, -12, 15);
+    scene.add(icoMesh2);
+
+    // Octahedron 1 (Foreground Left)
+    const octGeo = new THREE.OctahedronGeometry(6);
+    const octMat1 = new THREE.MeshBasicMaterial({ color: 0x10B981, wireframe: true, transparent: true, opacity: 0.5 });
+    const octMesh1 = new THREE.Mesh(octGeo, octMat1);
+    octMesh1.position.set(-42, -18, 48);
+    scene.add(octMesh1);
+
+    // Octahedron 2 (Foreground Right)
+    const octMat2 = new THREE.MeshBasicMaterial({ color: 0xEC4899, wireframe: true, transparent: true, opacity: 0.5 });
+    const octMesh2 = new THREE.Mesh(octGeo, octMat2);
+    octMesh2.position.set(48, 32, 34);
+    scene.add(octMesh2);
+
+    // 4. Expanding 3D Shockwave Ring on Cyber Grid
+    const ringGeo = new THREE.RingGeometry(0.8, 3.2, 64);
+    ringGeo.rotateX(-Math.PI / 2);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0x00F0FF,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0
+    });
+    const shockwaveRing3D = new THREE.Mesh(ringGeo, ringMat);
+    shockwaveRing3D.position.set(0, -31.7, 0);
+    scene.add(shockwaveRing3D);
+
+    this.trigger3DShockwave = () => {
+      shockwaveRing3D.scale.set(1, 1, 1);
+      shockwaveRing3D.material.opacity = 0.95;
+      gsap.to(shockwaveRing3D.scale, { x: 38, y: 38, z: 38, duration: 1.4, ease: 'power2.out' });
+      gsap.to(shockwaveRing3D.material, { opacity: 0, duration: 1.4, ease: 'power2.out' });
+    };
+
+    // Camera 3D Waypoints (Shift of Transformation)
+    const cameraWaypoints = [
+      { p: 0.00, x: 0,   y: 35,  z: 100, rx: -0.32, ry: 0,     rz: 0 },
+      { p: 0.14, x: -16, y: 22,  z: 82,  rx: -0.22, ry: 0.18,  rz: -0.06 },
+      { p: 0.28, x: -24, y: 30,  z: 70,  rx: -0.28, ry: 0.25,  rz: 0.08 },
+      { p: 0.38, x: 0,   y: 10,  z: 50,  rx: -0.16, ry: 0,     rz: 0 },
+      { p: 0.52, x: 26,  y: 14,  z: 44,  rx: -0.22, ry: -0.36, rz: 0.05 },
+      { p: 0.66, x: 0,   y: 6,   z: 32,  rx: -0.12, ry: 0,     rz: 0 },
+      { p: 0.78, x: 0,   y: -4,  z: 36,  rx: 0.08,  ry: 0,     rz: 0 },
+      { p: 0.90, x: 0,   y: 2,   z: 6,   rx: -0.04, ry: 0,     rz: 0 },
+      { p: 1.00, x: 0,   y: 22,  z: 85,  rx: -0.24, ry: 0,     rz: 0 }
+    ];
+
+    let currentProgress = 0;
+    let targetProgress = 0;
+    let normMouseX = 0;
+    let normMouseY = 0;
+    let mouseOffsetX = 0;
+    let mouseOffsetY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      normMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      normMouseY = (e.clientY / window.innerHeight) * 2 - 1;
+    }, { passive: true });
+
+    const resize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
+    window.addEventListener('resize', resize, { passive: true });
+
+    // HUD elements
+    const hudCamPos = document.getElementById('hudCamPos');
+    const hudCamRot = document.getElementById('hudCamRot');
+
+    let time = 0;
+    const renderThree = () => {
+      requestAnimationFrame(renderThree);
+      time += 0.016;
+
+      // Smooth progress interpolation
+      currentProgress += (targetProgress - currentProgress) * 0.1;
+
+      // Find surrounding camera waypoints
+      let wpA = cameraWaypoints[0];
+      let wpB = cameraWaypoints[cameraWaypoints.length - 1];
+
+      for (let i = 0; i < cameraWaypoints.length - 1; i++) {
+        if (currentProgress >= cameraWaypoints[i].p && currentProgress <= cameraWaypoints[i + 1].p) {
+          wpA = cameraWaypoints[i];
+          wpB = cameraWaypoints[i + 1];
+          break;
+        }
+      }
+
+      const segmentSpan = (wpB.p - wpA.p) || 1;
+      const t = Math.max(0, Math.min(1, (currentProgress - wpA.p) / segmentSpan));
+      // Smooth Hermite blend
+      const easeT = t * t * (3 - 2 * t);
+
+      const targetX = wpA.x + (wpB.x - wpA.x) * easeT;
+      const targetY = wpA.y + (wpB.y - wpA.y) * easeT;
+      const targetZ = wpA.z + (wpB.z - wpA.z) * easeT;
+      const targetRx = wpA.rx + (wpB.rx - wpA.rx) * easeT;
+      const targetRy = wpA.ry + (wpB.ry - wpA.ry) * easeT;
+      const targetRz = wpA.rz + (wpB.rz - wpA.rz) * easeT;
+
+      // Gyroscopic mouse parallax lag
+      mouseOffsetX += (normMouseX * 10 - mouseOffsetX) * 0.06;
+      mouseOffsetY += (-normMouseY * 7 - mouseOffsetY) * 0.06;
+
+      camera.position.x = targetX + mouseOffsetX;
+      camera.position.y = targetY + mouseOffsetY;
+      camera.position.z = targetZ;
+
+      camera.rotation.x = targetRx;
+      camera.rotation.y = targetRy;
+      camera.rotation.z = targetRz + mouseOffsetX * 0.005;
+
+      // Undulate cyber matrix grid vertices
+      const posAttr = gridGeo.attributes.position;
+      for (let i = 0; i < posAttr.count; i++) {
+        const vx = posAttr.getX(i);
+        const vz = posAttr.getZ(i);
+        const wave = Math.sin(vx * 0.07 + time * 1.8) * Math.cos(vz * 0.07 + time * 1.8) * 3.8;
+        posAttr.setY(i, baseGridY[i] + wave);
+      }
+      posAttr.needsUpdate = true;
+
+      // Rotate 3D spatial polyhedra
+      torusMesh.rotation.x += 0.004;
+      torusMesh.rotation.y += 0.007;
+
+      icoMesh1.rotation.x += 0.008;
+      icoMesh1.rotation.y += 0.012;
+      icoMesh1.position.y = 24 + Math.sin(time * 1.2) * 4;
+
+      icoMesh2.rotation.x -= 0.007;
+      icoMesh2.rotation.y += 0.01;
+      icoMesh2.position.y = -12 + Math.cos(time * 1.4) * 4;
+
+      octMesh1.rotation.y += 0.015;
+      octMesh1.position.y = -18 + Math.sin(time * 1.5) * 3;
+
+      octMesh2.rotation.x += 0.012;
+      octMesh2.position.y = 32 + Math.cos(time * 1.3) * 3;
+
+      // Starfield subtle rotation & hyperspace drift
+      starField.rotation.y = time * 0.02 + currentProgress * 0.8;
+      starField.rotation.x = currentProgress * 0.4;
+
+      // Update HUD Telemetry
+      if (hudCamPos) {
+        hudCamPos.textContent = `X: ${camera.position.x >= 0 ? '+' : ''}${camera.position.x.toFixed(1)}  Y: ${camera.position.y >= 0 ? '+' : ''}${camera.position.y.toFixed(1)}  Z: ${camera.position.z >= 0 ? '+' : ''}${camera.position.z.toFixed(1)}`;
+      }
+      if (hudCamRot) {
+        const pitchDeg = Math.round(camera.rotation.x * (180 / Math.PI));
+        const yawDeg = Math.round(camera.rotation.y * (180 / Math.PI));
+        const rollDeg = Math.round(camera.rotation.z * (180 / Math.PI));
+        hudCamRot.textContent = `PITCH: ${pitchDeg}°  YAW: ${yawDeg}°  ROLL: ${rollDeg}°`;
+      }
+
+      renderer.render(scene, camera);
+    };
+
+    renderThree();
+
+    this.threeEngine = {
+      updateScrollProgress: (prog) => {
+        targetProgress = prog;
+      }
+    };
   }
 
   /* ==========================================================================
@@ -469,8 +772,16 @@ class EGTechCinematicEngine {
       duration: 0.6,
       ease: 'power2.out'
     }, 2.7)
-    // The 3D Laptop drops gracefully from the air!
-    .to('#laptopWrapper', {
+    // The 3D Laptop plummets from deep cyberspace in a dramatic 3D corkscrew roll!
+    .fromTo('#laptopWrapper', {
+      opacity: 0,
+      y: -1300,
+      z: 950,
+      rotateX: 65,
+      rotateY: 46,
+      rotateZ: -28,
+      scale: 0.55
+    }, {
       opacity: 1,
       y: 0,
       z: 0,
@@ -478,17 +789,24 @@ class EGTechCinematicEngine {
       rotateY: -10,
       rotateZ: 2,
       scale: 1,
-      duration: 1.5,
-      ease: 'power2.out'
-    }, 2.7)
+      duration: 1.8,
+      ease: 'power3.out'
+    }, 2.55)
     // 3D Shadow lands and sharpens with proximity
-    .to('#laptop3dShadow', {
+    .fromTo('#laptop3dShadow', {
+      opacity: 0,
+      scale: 0.2,
+      filter: 'blur(35px)'
+    }, {
       opacity: 0.85,
       scale: 1,
       filter: 'blur(16px)',
-      duration: 1.5,
+      duration: 1.6,
       ease: 'power2.out'
     }, 2.7)
+    .call(() => {
+      if (this.trigger3DShockwave) this.trigger3DShockwave();
+    }, null, 3.5)
     // Dual Chromatic Shockwave pulse on landing
     .fromTo('#gridShockwaveRing1', {
       scale: 0.2,
@@ -819,6 +1137,11 @@ class EGTechCinematicEngine {
      Controls minimal 5-step HUD and transitions to studio header after film
      ========================================================================== */
   handleTimelineProgress(pinnedProgress) {
+    // 3D Spatial Universe Camera & Geometry Shift (Three.js WebGL)
+    if (this.threeEngine) {
+      this.threeEngine.updateScrollProgress(pinnedProgress);
+    }
+
     // Bokeh canvas sleep/wake optimization
     if (this.bokehField) {
       if (pinnedProgress > 0.25) {
@@ -1230,10 +1553,12 @@ class EGTechCinematicEngine {
         card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
 
         gsap.to(card, {
-          rotateY: x * 6,
-          rotateX: -y * 6,
-          transformPerspective: 900,
-          duration: 0.4,
+          rotateY: x * 14,
+          rotateX: -y * 14,
+          z: 30,
+          transformPerspective: 1100,
+          boxShadow: '0 30px 75px rgba(0, 0, 0, 0.95), 0 0 35px rgba(6, 182, 212, 0.35)',
+          duration: 0.35,
           ease: 'power2.out'
         });
       });
@@ -1242,6 +1567,8 @@ class EGTechCinematicEngine {
         gsap.to(card, {
           rotateY: 0,
           rotateX: 0,
+          z: 0,
+          boxShadow: '',
           duration: 0.7,
           ease: 'power2.out'
         });
