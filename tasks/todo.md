@@ -1,0 +1,48 @@
+# Todo Tasks: EG TECH Full Cinematic Scroll-Driven Digital Experience
+
+- [x] Task 1: Reference Video Alignment & Architectural Synthesis
+  - Recreated the exact narrative progression: 01 Particle/Bokeh intro -> 02 Client request message -> 03 2.5D Laptop reveal -> 04 Integrated IDE workspace (file explorer + code editor + browser preview) -> 05 Signature code-to-UI morphing -> 06 Bottom slide-up terminal build ($ npm install/build/deploy) -> 07 Build complete status -> 08 Website reveal -> 09 Continuous screen-entry zoom -> 10 Live client experience (Vibe Attire) -> 11 Color collapse -> 12 EG TECH brand reveal -> 13 Editorial services -> 14 Shipped case studies -> 15 Final magnetic CTA -> 16 Project briefing form.
+  - Verified: Confirmed through interview-me intent alignment and code inspection.
+  - Files: `index.html`, `styles.css`, `app.js`
+
+- [x] Task 2: Digital Bokeh Energy Canvas (Scene 01)
+  - Implemented lightweight, high-performance GPU canvas with slow-drifting circular particles in deep navy, electric blue, cyan, and subtle violet with breathing pulse.
+  - Features intelligent sleep/wake optimization (0% CPU/GPU overhead when scrolled past Scene 02) and organic scroll-velocity drift.
+  - Files: `index.html`, `styles.css`, `app.js`
+
+- [x] Task 3: Client Request Dialog (Scene 02)
+  - Recreated the reference video's glass chat dialog: Client inquiry ("I have an idea. Can you turn it into a website?") followed by studio response ("Let's build it.") and pulsating START action pill.
+  - Files: `index.html`, `styles.css`, `app.js`
+
+- [x] Task 4: Integrated Developer Environment & Terminal Build (Scenes 03–07)
+  - Constructed the confirmed 3-column studio IDE inside the 2.5D metallic laptop:
+    - Left: File explorer tree (`src/`, `components/`, `Navbar.tsx`, `Hero.tsx`, `Card.tsx`, `Button.tsx`, `App.tsx`, `styles.css`, `package.json`).
+    - Center: Code editor with syntax highlighting, line numbers, and cursor blink for `const idea = "YOUR BUSINESS"; design(idea); build(idea); launch(idea);`.
+    - Right: Live browser preview pane with omnibar address `https://vibeattire.com`.
+    - Morph Layer: `<Navbar />`, `<Card />`, `<Button />` tokens detaching and gliding across into preview components.
+    - Bottom Drawer: Slide-up terminal running `$ npm install`, `$ npm run build`, `$ npm run deploy` with emerald checkmarks.
+    - Status: `BUILD COMPLETE ✓`, `TESTING COMPLETE ✓`, `DEPLOYMENT READY ✓`.
+  - Files: `index.html`, `styles.css`, `app.js`
+
+- [x] Task 5: Screen-Entry Zoom Transition & Brand Reveal (Scenes 08–12)
+  - Continuous 4.6x camera push into the laptop screen with bezel dissolve, seamlessly transitioning into fullscreen Vibe Attire.
+  - Dual-energy color collapse rings converging to center core.
+  - Official EG TECH emblem reveal with halo lighting and kinetic statement lines ("YOUR IDEA." -> pause -> "OUR CODE." -> pause -> "YOUR DIGITAL PRODUCT.").
+  - Files: `index.html`, `styles.css`, `app.js`
+
+- [x] Task 6: Post-Film Transition & Project Briefing Form (Scenes 13–16)
+  - Minimal HUD indicator (01 IDEA, 02 BUILD, 03 PRODUCT, 04 EG TECH, 05 START) during film, transitioning smoothly to full floating studio navigation for agency sections.
+  - Editorial services, shipped case studies, magnetic CTA button.
+  - Complete briefing form with Project Type, Budget, Timeline pills, file attachment input, and persistent SQLite REST API (`/api/project-inquiry`).
+  - Files: `index.html`, `styles.css`, `app.js`, `server.js`
+
+- [x] Task 7: Autonomous Multi-Skill Integration & System Verification
+  - Installed and locked 4 skill packages:
+    1. `Roo-Code` (`.agents/skills/roo-code/SKILL.md`) - Multi-agent personas (Architect, Code, Fixer) & execution protocols.
+    2. `Get Shit Done` (`.agents/skills/get-shit-done/SKILL.md`) - Phase-driven delivery & verification framework.
+    3. `Ralph Loop for Antigravity` (`.agents/skills/ralph-loop/SKILL.md`) - Externalized memory (`tasks/todo.md`, `progress.txt`) & atomic execution loop.
+    4. `CodeRabbit Skills` (`.agents/skills/code-review/SKILL.md`, `.agents/skills/autofix/SKILL.md`) - Automated code review and autofix.
+  - Configured `skills-lock.json` and established persistent `progress.txt`.
+  - Verified REST API and SQLite database persistence at `http://localhost:3000`.
+  - Files: `.agents/skills/*`, `skills-lock.json`, `progress.txt`, `tasks/todo.md`
+

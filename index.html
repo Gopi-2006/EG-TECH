@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EG TECH — Empowering Growth Technology | Ideas Today, Impact Tomorrow</title>
+  <meta name="description" content="EG TECH is an elite creative technology studio engineering bespoke digital products, autonomous AI systems, and high-performance web ecosystems from concept to code." />
+  <meta name="theme-color" content="#050816" />
+
+  <!-- Google Fonts: Outfit (Display), Plus Jakarta Sans (Body), JetBrains Mono (Code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- High-Performance GSAP & ScrollTrigger -->
+  <script src="assets/libs/gsap.min.js"></script>
+  <script src="assets/libs/ScrollTrigger.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="eg-body">
+
+  <!-- LIVING ANIMATED MESH GRADIENT (CONTINUOUS AMBIENT LIGHTING) -->
+  <div class="living-mesh-container" aria-hidden="true">
+    <div class="mesh-orb orb-1"></div>
+    <div class="mesh-orb orb-2"></div>
+    <div class="mesh-orb orb-3"></div>
+    <div class="mesh-orb orb-4"></div>
+  </div>
+  <div class="ambient-grid-overlay" aria-hidden="true"></div>
+
+  <!-- FLOATING GLASS MASTER NAVIGATION BAR (Slides in after cinematic sequence) -->
+  <header class="main-floating-nav cinematic-nav-hidden" id="mainHeader">
+    <a href="#" class="brand-link" id="navBrandLink">
+      <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Logo" class="nav-logo-thumb" />
+      <div class="nav-brand-text">
+        <span class="nav-brand-title">EG<span class="gold-text">TECH</span></span>
+        <span class="nav-brand-sub">STUDIO</span>
+      </div>
+    </a>
+    <nav class="nav-center-links" aria-label="Primary Navigation">
+      <a href="#servicesSection" class="nav-link" id="linkNavServices">SERVICES</a>
+      <a href="#workSection" class="nav-link" id="linkNavWork">WORK</a>
+      <a href="#projectFormSection" class="nav-link" id="linkNavContact">BRIEF</a>
+    </nav>
+    <div class="nav-right-action">
+      <span class="nav-status-pill"><span class="pulse-dot"></span>COMMISSIONS OPEN</span>
+      <button class="nav-cta-btn" id="btnNavCta">START PROJECT &rarr;</button>
+    </div>
+  </header>
+
+  <!-- MINIMAL CHROMATIC PROGRESS HUD (01 IDEA, 02 BUILD, 03 PRODUCT, 04 EG TECH, 05 START) -->
+  <aside class="scroll-nav" id="scrollNav" aria-label="Experience Progress">
+    <div class="nav-bar-line">
+      <div class="nav-bar-fill" id="navProgressFill"></div>
+    </div>
+    <div class="nav-dot active" data-pos="0.0" data-label="01 IDEA"><span>01 IDEA</span></div>
+    <div class="nav-dot" data-pos="0.25" data-label="02 BUILD"><span>02 BUILD</span></div>
+    <div class="nav-dot" data-pos="0.55" data-label="03 PRODUCT"><span>03 PRODUCT</span></div>
+    <div class="nav-dot" data-pos="0.80" data-label="04 EG TECH"><span>04 EG TECH</span></div>
+    <div class="nav-dot" data-pos="1.0" data-label="05 START"><span>05 START</span></div>
+  </aside>
+
+  <!-- ==========================================================================
+       MAIN SCROLL CONTAINER
+       ========================================================================== -->
+  <div class="scroll-track" id="scrollTrack">
+
+    <!-- PINNED CINEMATIC STAGE (100dvh Sticky Viewport) -->
+    <div class="pinned-stage" id="pinnedStage">
+
+      <!-- ====================================================================
+           SCENE 01: DIGITAL PARTICLE / BOKEH INTRO
+           ==================================================================== -->
+      <section class="scene scene-1-intro" id="sceneIntro">
+        <!-- High-Performance GPU Canvas for Slow Floating Bokeh Digital Energy -->
+        <canvas id="digitalBokehCanvas" class="digital-bokeh-canvas" aria-hidden="true"></canvas>
+
+        <div class="intro-inner">
+          <div class="intro-eyebrow" id="introEyebrow">
+            <span class="digital-pulse-node"></span>
+            <span>CREATIVE TECHNOLOGY STUDIO</span>
+          </div>
+          <h1 class="intro-statement" id="introStatement">EVERY DIGITAL PRODUCT STARTS WITH AN IDEA.</h1>
+          <p class="intro-sub-line" id="introSubLine">SCROLL TO BUILD</p>
+          <div class="scroll-cue" id="scrollCue">
+            <span class="cue-label">SCROLL TIMELINE</span>
+            <div class="cue-mouse" aria-hidden="true">
+              <div class="cue-wheel"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCENE 02: CLIENT REQUEST (PREMIUM GLASS INTERACTION MOMENT)
+           ==================================================================== -->
+      <section class="scene-client-request" id="sceneClientRequest">
+        <div class="client-request-card" id="clientRequestCard">
+          <div class="request-card-glow" aria-hidden="true"></div>
+          
+          <div class="request-card-header">
+            <div class="request-dots">
+              <span class="r-dot dot-cyan"></span>
+              <span class="r-dot dot-blue"></span>
+              <span class="r-dot dot-violet"></span>
+            </div>
+            <span class="request-header-tag">PROJECT BRIEF INCOMING // ENCRYPTED</span>
+            <span class="request-live-badge"><span class="pulse-dot"></span>ACTIVE</span>
+          </div>
+
+          <div class="request-dialog-body">
+            <!-- Client Message -->
+            <div class="chat-bubble client-bubble" id="chatClientBubble">
+              <div class="bubble-meta">
+                <span class="avatar-tag client-avatar">CL</span>
+                <span class="meta-sender">CLIENT</span>
+                <span class="meta-time">JUST NOW</span>
+              </div>
+              <div class="bubble-text">
+                "I have an idea. Can you turn it into a website?"
+              </div>
+            </div>
+
+            <!-- EG TECH Response -->
+            <div class="chat-bubble studio-bubble" id="chatStudioBubble">
+              <div class="bubble-meta">
+                <span class="avatar-tag studio-avatar">EG</span>
+                <span class="meta-sender">EG TECH</span>
+                <span class="meta-time">IMMEDIATE</span>
+              </div>
+              <div class="bubble-text">
+                "Let's build it."
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Bar -->
+          <div class="request-action-bar" id="requestActionBar">
+            <div class="start-action-pill" id="startActionPill">
+              <span class="action-icon">&bull;</span>
+              <span class="action-text">STARTING PROJECT WORKSPACE...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCENES 03, 04, 05, 06, 07: LAPTOP REVEAL, INTEGRATED IDE & TERMINAL
+           ==================================================================== -->
+      <div class="laptop-wrapper" id="laptopWrapper">
+        
+        <!-- Metaphor Banner (Scene 04) -->
+        <div class="metaphor-banner" id="metaphorBanner">
+          <span class="metaphor-tag">CLIENT IDEA &rarr; CODE &rarr; PRODUCT</span>
+          <p class="metaphor-sub">"We turn code into products."</p>
+        </div>
+
+        <div class="stylized-laptop" id="stylizedLaptop">
+          
+          <!-- Laptop Screen Chassis with Dual Cyan/Blue Edge Lighting -->
+          <div class="laptop-lid" id="laptopLid">
+            <div class="lid-bezel">
+              <div class="lid-camera"></div>
+              
+              <!-- Screen Interior Display -->
+              <div class="lid-screen" id="laptopScreen">
+                <div class="ide-container" id="ideContainer">
+                  
+                  <!-- IDE Top Titlebar -->
+                  <div class="ide-titlebar">
+                    <div class="ide-dots">
+                      <span class="dot d-red"></span>
+                      <span class="dot d-yellow"></span>
+                      <span class="dot d-green"></span>
+                    </div>
+                    <div class="ide-title-text">
+                      <span class="ide-branch-glyph">&bull;</span>
+                      <span class="ide-project-title">EG-TECH-WEBSITE</span>
+                      <span class="ide-current-file">&mdash; App.tsx</span>
+                    </div>
+                    <div class="ide-status-pill" id="ideStatusPill">
+                      <span class="ide-status-dot" id="ideStatusDot"></span>
+                      <span id="ideStatusText">READY</span>
+                    </div>
+                  </div>
+
+                  <!-- IDE Main Workspace Grid (File Tree + Code Pane + Browser Preview) -->
+                  <div class="ide-workspace-body" id="ideWorkspaceBody">
+                    
+                    <!-- 1. Left File Tree Explorer -->
+                    <aside class="ide-file-tree" id="ideFileTree">
+                      <div class="tree-header">EXPLORER</div>
+                      <div class="tree-root-item">
+                        <span class="tree-arrow">&#9662;</span>
+                        <span class="tree-folder-icon">&#128193;</span>
+                        <span class="tree-root-name">EG-TECH-WEBSITE</span>
+                      </div>
+                      <ul class="tree-list">
+                        <li class="tree-item open">
+                          <span class="tree-arrow">&#9662;</span>
+                          <span class="tree-folder-icon">&#128193;</span>
+                          <span>src</span>
+                          <ul class="tree-sub">
+                            <li class="tree-item open">
+                              <span class="tree-arrow">&#9662;</span>
+                              <span class="tree-folder-icon">&#128193;</span>
+                              <span>components</span>
+                              <ul class="tree-components">
+                                <li class="tree-file"><span class="f-icon-react">&#9883;</span> Navbar.tsx</li>
+                                <li class="tree-file"><span class="f-icon-react">&#9883;</span> Hero.tsx</li>
+                                <li class="tree-file"><span class="f-icon-react">&#9883;</span> Card.tsx</li>
+                                <li class="tree-file"><span class="f-icon-react">&#9883;</span> Button.tsx</li>
+                              </ul>
+                            </li>
+                            <li class="tree-file active"><span class="f-icon-react">&#9883;</span> App.tsx</li>
+                            <li class="tree-file"><span class="f-icon-css">#</span> styles.css</li>
+                          </ul>
+                        </li>
+                        <li class="tree-item"><span class="tree-arrow">&#9656;</span> <span class="tree-folder-icon">&#128193;</span> assets</li>
+                        <li class="tree-file"><span class="f-icon-json">{}</span> package.json</li>
+                      </ul>
+                    </aside>
+
+                    <!-- 2. Center Code Editor Pane -->
+                    <main class="ide-code-pane" id="ideCodePane">
+                      <div class="editor-tabs-bar">
+                        <div class="editor-tab active">
+                          <span class="f-icon-react">&#9883;</span> App.tsx
+                          <span class="tab-x">&times;</span>
+                        </div>
+                        <div class="editor-tab"><span class="f-icon-css">#</span> styles.css</div>
+                      </div>
+                      <div class="editor-editor-area">
+                        <div class="editor-gutter">
+                          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span>
+                        </div>
+                        <div class="editor-code-content">
+                          <div class="code-line c-comment" id="cLine1">// 01. Client Concept</div>
+                          <div class="code-line c-statement" id="cLine2"><span class="c-kwd">const</span> <span class="c-var">idea</span> = <span class="c-str">"YOUR BUSINESS"</span>;</div>
+                          <div class="code-line c-empty">&nbsp;</div>
+                          <div class="code-line c-func-call" id="cLine3"><span class="c-func">design</span>(idea);</div>
+                          <div class="code-line c-func-call" id="cLine4"><span class="c-func">build</span>(idea);</div>
+                          <div class="code-line c-func-call" id="cLine5"><span class="c-func">launch</span>(idea);</div>
+                          <div class="code-line c-empty">&nbsp;</div>
+                          <div class="code-line c-status" id="cLine6"><span class="c-accent">// Live synchronizing UI...</span><span class="editor-cursor">|</span></div>
+                        </div>
+                      </div>
+                    </main>
+
+                    <!-- 3. Right Live Browser Preview Pane -->
+                    <section class="ide-preview-pane" id="idePreviewPane">
+                      <div class="preview-browser-bar">
+                        <div class="pbb-dots"><span></span><span></span><span></span></div>
+                        <div class="pbb-address">https://vibeattire.com</div>
+                        <div class="pbb-live-pill" id="pbbLivePill">&bull; PREVIEW</div>
+                      </div>
+                      <div class="preview-browser-viewport" id="previewBrowserViewport">
+                        <!-- Miniature Client Site -->
+                        <div class="p-nav comp-item" id="pNav">
+                          <span class="p-brand">VIBE ATTIRE</span>
+                          <div class="p-links"><span>NEW</span><span>SHOP</span><span>DROPS</span></div>
+                          <span class="p-bag">BAG (2)</span>
+                        </div>
+                        <div class="p-hero comp-item" id="pHero">
+                          <div class="p-hero-copy">
+                            <span class="p-tag">AW24 COLLECTION</span>
+                            <h4 class="p-heading">THE ELEVATED<br />COLLECTION</h4>
+                            <div class="p-btn-row">
+                              <button class="p-btn-dark comp-item" id="previewCtaBtn">EXPLORE DROP &rarr;</button>
+                            </div>
+                          </div>
+                          <div class="p-hero-art comp-item" id="pArt">
+                            <img src="assets/images/vibe_attire.jpg" alt="Vibe Attire Hero Preview" loading="lazy" />
+                          </div>
+                        </div>
+                        <div class="p-cards-row comp-item" id="pCards">
+                          <div class="mini-card">
+                            <img src="assets/images/vibe_attire.jpg" alt="Essential Hoodie" loading="lazy" />
+                            <div class="m-info"><span>Essential Hoodie</span><strong>$210</strong></div>
+                          </div>
+                          <div class="mini-card">
+                            <img src="assets/images/vibe_attire.jpg" alt="Urban Zip" loading="lazy" />
+                            <div class="m-info"><span>Urban Zip</span><strong>$180</strong></div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                  </div> <!-- End .ide-workspace-body -->
+
+                  <!-- 4. Signature Code-to-UI Morph Tokens Layer (Scene 05) -->
+                  <div class="code-morph-overlay" id="codeMorphOverlay">
+                    <div class="morph-token token-navbar" id="tokenNavbar">&lt;Navbar /&gt;</div>
+                    <div class="morph-token token-card" id="tokenCard">&lt;Card /&gt;</div>
+                    <div class="morph-token token-btn" id="tokenBtn">&lt;Button /&gt;</div>
+                  </div>
+
+                  <!-- 5. Bottom Slide-Up Terminal Drawer (Scene 06 & 07) -->
+                  <div class="ide-terminal-drawer" id="ideTerminalDrawer">
+                    <div class="terminal-bar">
+                      <div class="term-title-left">
+                        <span class="term-glyph">&gt;_</span>
+                        <span class="term-title">TERMINAL &mdash; zsh</span>
+                      </div>
+                      <div class="term-status-right">
+                        <span class="term-status-badge" id="termStatusBadge">IDLE</span>
+                      </div>
+                    </div>
+                    <div class="terminal-screen" id="terminalScreen">
+                      <div class="t-line t-cmd" id="tLine1"><span class="t-prompt">$</span> npm install</div>
+                      <div class="t-line t-info" id="tLine2">Installing dependencies: react, next, gsap, tailwind...</div>
+                      <div class="t-line t-cmd" id="tLine3"><span class="t-prompt">$</span> npm run build</div>
+                      <div class="t-line t-success" id="tLine4">&check; Build successful &bull; Core Web Vitals 99/100</div>
+                      <div class="t-line t-cmd" id="tLine5"><span class="t-prompt">$</span> npm run deploy</div>
+                      <div class="t-line t-cyan" id="tLine6">&check; Deployment ready &bull; Edge network active</div>
+                    </div>
+                  </div>
+
+                  <!-- Build Status Floating Pill (Scene 07) -->
+                  <div class="build-status-stage" id="buildStatusStage">
+                    <div class="build-status-pill">
+                      <span class="build-pulse-dot" id="buildPulseDot"></span>
+                      <span class="build-status-text" id="buildStatusText">BUILDING...</span>
+                    </div>
+                  </div>
+
+                </div> <!-- End #ideContainer -->
+              </div> <!-- End #laptopScreen -->
+            </div>
+          </div> <!-- End #laptopLid -->
+
+          <!-- Precision Metallic Aluminum Keyboard Base -->
+          <div class="laptop-base" id="laptopBase">
+            <div class="base-surface">
+              <div class="keyboard-notch"></div>
+            </div>
+          </div>
+
+        </div> <!-- End of #stylizedLaptop -->
+      </div> <!-- End of #laptopWrapper -->
+
+      <!-- ====================================================================
+           SCENE 08: FINISHED CLIENT PRODUCT (FULLSCREEN VIBE ATTIRE)
+           ==================================================================== -->
+      <section class="scene-client-flagship" id="sceneClient">
+        <div class="client-brand-bar">
+          <div class="status-indicator">
+            <span class="live-dot"></span>
+            <span class="status-live">&bull; LIVE</span>
+            <span class="status-divider">|</span>
+            <span class="status-complete">PROJECT COMPLETE &check;</span>
+          </div>
+          <span class="built-by-tag">ENGINEERED BY EG TECH</span>
+        </div>
+
+        <div class="client-container">
+          <header class="vibe-header">
+            <div class="vibe-logo">VIBE ATTIRE</div>
+            <nav class="vibe-menu" aria-label="Client demo navigation">
+              <span class="active">NEW RELEASES</span>
+              <span>COLLECTIONS</span>
+              <span>EDITORIAL</span>
+            </nav>
+            <div class="vibe-cart-pill">BAG (2)</div>
+          </header>
+
+          <div class="vibe-hero-layout">
+            <div class="vibe-hero-text">
+              <span class="vibe-season">COLLECTION 04 // LIMITED RELEASE</span>
+              <h2 class="vibe-title">THE ELEVATED<br />COLLECTION</h2>
+              <p class="vibe-desc">
+                Architectural minimalism meets tactile luxury. Designed in London, crafted for global distinction.
+              </p>
+              <div class="vibe-actions">
+                <button class="btn-vibe-primary" id="btnClientShop">SHOP THE DROP &rarr;</button>
+                <button class="btn-vibe-ghost">VIEW LOOKBOOK</button>
+              </div>
+            </div>
+            <div class="vibe-hero-img-box">
+              <img src="assets/images/vibe_attire.jpg" alt="Vibe Attire Luxury Look" loading="lazy" />
+              <span class="vibe-stamp">AW24 EDITORIAL</span>
+            </div>
+          </div>
+
+          <div class="vibe-essentials-row">
+            <div class="v-card">
+              <div class="v-card-media">
+                <img src="assets/images/vibe_attire.jpg" alt="Oversized Cream Hoodie" loading="lazy" />
+                <span class="v-badge">FLAGSHIP</span>
+              </div>
+              <div class="v-card-meta">
+                <span>Oversized Cream Hoodie</span>
+                <strong>$210 USD</strong>
+              </div>
+            </div>
+
+            <div class="v-card">
+              <div class="v-card-media">
+                <img src="assets/images/vibe_attire.jpg" alt="Urban Zip Tech Hoodie" loading="lazy" />
+                <span class="v-badge">BESTSELLER</span>
+              </div>
+              <div class="v-card-meta">
+                <span>Urban Zip Tech Hoodie</span>
+                <strong>$180 USD</strong>
+              </div>
+            </div>
+
+            <div class="v-card">
+              <div class="v-card-media">
+                <img src="assets/images/vibe_attire.jpg" alt="Architect Heavyweight Pullover" loading="lazy" />
+                <span class="v-badge">NEW</span>
+              </div>
+              <div class="v-card-meta">
+                <span>Architect Heavyweight Pullover</span>
+                <strong>$240 USD</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCENE 09: DUAL-ENERGY COLOR COLLAPSE
+           ==================================================================== -->
+      <div class="scene-color-collapse" id="sceneColorCollapse">
+        <div class="collapse-ring ring-pink" id="ringPink"></div>
+        <div class="collapse-ring ring-violet" id="ringViolet"></div>
+        <div class="collapse-ring ring-blue" id="ringBlue"></div>
+        <div class="collapse-ring ring-cyan" id="ringCyan"></div>
+        <div class="collapse-ring ring-gold" id="ringGold"></div>
+      </div>
+
+      <!-- ====================================================================
+           SCENE 10: EG TECH GRAND EMBLEM REVEAL
+           ==================================================================== -->
+      <section class="scene-brand-reveal" id="sceneBrand">
+        <div class="brand-reveal-box">
+          <p class="tagline-top" id="taglineTop">FROM IDEA</p>
+          <h2 class="tagline-bottom" id="taglineBottom">TO DIGITAL PRODUCT.</h2>
+
+          <!-- OFFICIAL COMPANY LOGO EMBLEM WITH DUAL CYAN-GOLD GLOW HALO -->
+          <div class="eg-emblem-wrap" id="egEmblem">
+            <div class="emblem-halo-ring"></div>
+            <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Company Emblem" class="emblem-img" />
+          </div>
+
+          <div class="eg-brand-text-wrap" id="egBrandText">
+            <h1 class="eg-main-title">EG<span class="gold-text">TECH</span></h1>
+            <p class="eg-main-sub">EMPOWERING GROWTH TECHNOLOGY</p>
+            <p class="eg-tagline">IDEAS TODAY &nbsp;|&nbsp; IMPACT TOMORROW</p>
+            
+            <div class="kinetic-statement-wrap" id="kineticStatementWrap">
+              <span class="kinetic-line-1" id="kLine1">"YOUR IDEA."</span>
+              <span class="kinetic-line-2" id="kLine2">"OUR CODE."</span>
+              <span class="kinetic-line-3" id="kLine3">"YOUR DIGITAL PRODUCT."</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div> <!-- End of #pinnedStage -->
+
+    <!-- ====================================================================
+         SCENE 11: SERVICES (CLEAN ASYMMETRIC EDITORIAL LAYOUT)
+         ==================================================================== -->
+    <section class="services-section" id="servicesSection">
+      <div class="services-container">
+        <div class="services-header">
+          <span class="s-eyebrow">CAPABILITIES &amp; ARCHITECTURE</span>
+          <h2 class="s-title">Bespoke Digital Systems.</h2>
+          <p class="s-sub">We engineer mission-critical systems and tactile brand worlds from concept to scale.</p>
+        </div>
+
+        <div class="services-editorial-grid">
+          <!-- 01 WEB DEVELOPMENT (Electric Blue Accent) -->
+          <div class="service-item srv-blue">
+            <div class="service-num">01</div>
+            <div class="service-content">
+              <h3 class="service-name">WEB DEVELOPMENT</h3>
+              <p class="service-desc">Next-generation web applications, headless commerce engines, and reactive interfaces built for sub-second speeds, flawless responsiveness, and maximum conversion.</p>
+              <div class="service-tags">
+                <span>Next.js</span>
+                <span>TypeScript</span>
+                <span>Edge APIs</span>
+                <span>High Performance</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 02 MOBILE APPLICATIONS (Cyan Accent) -->
+          <div class="service-item srv-cyan">
+            <div class="service-num">02</div>
+            <div class="service-content">
+              <h3 class="service-name">MOBILE APPLICATIONS</h3>
+              <p class="service-desc">Native iOS &amp; Android mobile ecosystems crafted with fluid 120 FPS gesture physics, biometric security, and offline synchronicity.</p>
+              <div class="service-tags">
+                <span>React Native</span>
+                <span>iOS &amp; Android</span>
+                <span>Offline-First</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 03 AI SOLUTIONS (Violet Accent) -->
+          <div class="service-item srv-violet">
+            <div class="service-num">03</div>
+            <div class="service-content">
+              <h3 class="service-name">AI SOLUTIONS</h3>
+              <p class="service-desc">Autonomous AI agent workflows, custom RAG architectures, LLM fine-tuning, and intelligent multimodal pipeline automation.</p>
+              <div class="service-tags">
+                <span>Autonomous Agents</span>
+                <span>RAG Systems</span>
+                <span>LLM Pipelines</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 04 UI/UX DESIGN (Pink Accent) -->
+          <div class="service-item srv-pink">
+            <div class="service-num">04</div>
+            <div class="service-content">
+              <h3 class="service-name">UI/UX DESIGN</h3>
+              <p class="service-desc">Tactile design systems, dark-mode luxury aesthetics, interactive micro-animations, and conversion-engineered information hierarchy.</p>
+              <div class="service-tags">
+                <span>Design Systems</span>
+                <span>Motion Choreography</span>
+                <span>Micro-Interactions</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 05 BUSINESS SOFTWARE (Molten Gold / Teal Accent) -->
+          <div class="service-item srv-teal">
+            <div class="service-num">05</div>
+            <div class="service-content">
+              <h3 class="service-name">BUSINESS SOFTWARE</h3>
+              <p class="service-desc">High-throughput internal tooling, custom operational ERPs, automated client portals, and secure database architectures that scale reliably.</p>
+              <div class="service-tags">
+                <span>Internal Tooling</span>
+                <span>Cloud ERP</span>
+                <span>Secure Data Layers</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 12: PROJECT SHOWCASE (IMMERSIVE LARGE VISUAL PANELS)
+         ==================================================================== -->
+    <section class="work-section" id="workSection">
+      <div class="work-container">
+        <div class="work-header">
+          <span class="w-eyebrow">PORTFOLIO &amp; PROOF</span>
+          <h2 class="w-title">Shipped Digital Products.</h2>
+          <p class="w-sub">Selected engineering and design commissions built for market impact.</p>
+        </div>
+
+        <div class="work-editorial-list">
+          
+          <!-- PROJECT 01: VIBE ATTIRE -->
+          <article class="work-case-item case-vibe">
+            <div class="case-visual">
+              <img src="assets/images/vibe_attire.jpg" alt="Vibe Attire E-Commerce Flagship Case Study" loading="lazy" />
+              <div class="case-badge">E-COMMERCE // LUXURY FASHION</div>
+            </div>
+            <div class="case-body">
+              <span class="case-num">CASE 01</span>
+              <h3 class="case-title">Vibe Attire Flagship</h3>
+              <div class="case-formula">
+                <div class="f-block">
+                  <strong class="f-label">PROBLEM:</strong>
+                  <p>Monolithic legacy storefront loaded in 4.2s, losing mobile users and diluting the brand's London luxury positioning.</p>
+                </div>
+                <div class="f-block">
+                  <strong class="f-label">SOLUTION:</strong>
+                  <p>Engineered a headless Next.js digital flagship with sub-second image prefetching and fluid lookbook transitions.</p>
+                </div>
+                <div class="f-block">
+                  <strong class="f-label">RESULT:</strong>
+                  <p class="f-metric">240% increase in mobile checkout conversion; 99/100 Core Web Vitals score.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 02: CAMPUSBITE / FOOD PLATFORM -->
+          <article class="work-case-item case-campus">
+            <div class="case-visual">
+              <img src="assets/images/pulse_fintech.jpg" alt="CampusBite Food Platform Case Study" loading="lazy" />
+              <div class="case-badge">CAMPUSBITE // FOOD PLATFORM</div>
+            </div>
+            <div class="case-body">
+              <span class="case-num">CASE 02</span>
+              <h3 class="case-title">CampusBite Ordering Ecosystem</h3>
+              <div class="case-formula">
+                <div class="f-block">
+                  <strong class="f-label">PROBLEM:</strong>
+                  <p>Campus food vendors faced severe peak-hour queue bottlenecks and 35% abandoned order rates during class breaks.</p>
+                </div>
+                <div class="f-block">
+                  <strong class="f-label">SOLUTION:</strong>
+                  <p>Built a real-time ordering and kitchen orchestration system with offline queue caching and instant UPI checkouts.</p>
+                </div>
+                <div class="f-block">
+                  <strong class="f-label">RESULT:</strong>
+                  <p class="f-metric">14,000+ daily orders processed across 6 campus hubs with under 4-minute average fulfillment time.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 03: NEXUS CLOUD AI -->
+          <article class="work-case-item case-nexus">
+            <div class="case-visual">
+              <img src="assets/images/nexus_cloud.jpg" alt="Nexus Cloud AI Platform Case Study" loading="lazy" />
+              <div class="case-badge">AI PRODUCT // ENTERPRISE INFRASTRUCTURE</div>
+            </div>
+            <div class="case-body">
+              <span class="case-num">CASE 03</span>
+              <h3 class="case-title">Nexus Cloud AI Engine</h3>
+              <div class="case-formula">
+                <div class="f-block">
+                  <strong class="f-label">PROBLEM:</strong>
+                  <p>Enterprise teams lacked visibility into distributed LLM autonomous pipelines and high-latency vector query bottlenecks.</p>
+                </div>
+                <div class="f-block">
+                  <strong class="f-label">SOLUTION:</strong>
+                  <p>Developed an edge-cached execution telemetry console with visual RAG stream inspection and automated token routing.</p>
+                </div>
+                <div class="f-block">
+                  <strong class="f-label">RESULT:</strong>
+                  <p class="f-metric">68% reduction in latency triage time across 40+ deployed enterprise engineering squads.</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 13: FINAL CTA BANNER
+         ==================================================================== -->
+    <section class="cta-banner-section" id="ctaSection">
+      <div class="cta-banner-inner">
+        <span class="cta-banner-eyebrow">YOUR IDEA. OUR CODE.</span>
+        <h2 class="cta-banner-title">Have an idea?</h2>
+        <p class="cta-banner-sub">Let's turn it into something real.</p>
+        <button class="btn-start-project-main" id="btnScrollToForm">
+          <span>START YOUR PROJECT</span>
+          <span class="arrow-glyph">&rarr;</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 14: PROJECT REQUIREMENT FORM (FINAL DESTINATION)
+         ==================================================================== -->
+    <section class="form-section-container" id="projectFormSection">
+      <div class="form-card-wrap">
+        <div class="form-header">
+          <span class="f-pill">CONFIDENTIAL BRIEFING</span>
+          <h2 class="f-title">Let’s Build Your Idea.</h2>
+          <p class="f-sub">Tell us what you need. We’ll take it from there.</p>
+        </div>
+
+        <form class="brief-form" id="projectInquiryForm" novalidate>
+          <div class="f-grid-2">
+            <div class="f-group">
+              <label for="fName">Name *</label>
+              <input type="text" id="fName" name="name" placeholder="John Doe" required />
+              <span class="f-err" id="err-name"></span>
+            </div>
+            <div class="f-group">
+              <label for="fEmail">Email *</label>
+              <input type="email" id="fEmail" name="email" placeholder="john@company.com" required />
+              <span class="f-err" id="err-email"></span>
+            </div>
+          </div>
+
+          <div class="f-grid-2">
+            <div class="f-group">
+              <label for="fPhone">Phone Number *</label>
+              <input type="tel" id="fPhone" name="phone" placeholder="+91 98765 43210" required />
+              <span class="f-err" id="err-phone"></span>
+            </div>
+            <div class="f-group">
+              <label for="fCompany">Company / Business</label>
+              <input type="text" id="fCompany" name="company" placeholder="Acme Studio" />
+            </div>
+          </div>
+
+          <!-- Project Type Selector -->
+          <div class="f-group">
+            <label>Project Type *</label>
+            <div class="pills-grid" id="projectTypeGrid">
+              <button type="button" class="pill-btn active" data-val="Website">Website</button>
+              <button type="button" class="pill-btn" data-val="E-Commerce">E-Commerce</button>
+              <button type="button" class="pill-btn" data-val="Mobile App">Mobile App</button>
+              <button type="button" class="pill-btn" data-val="AI Product">AI Product</button>
+              <button type="button" class="pill-btn" data-val="Business Software">Business Software</button>
+              <button type="button" class="pill-btn" data-val="UI/UX">UI/UX</button>
+              <button type="button" class="pill-btn" data-val="Other">Other</button>
+            </div>
+            <input type="hidden" id="fProjectType" name="projectType" value="Website" />
+          </div>
+
+          <!-- Project Description -->
+          <div class="f-group">
+            <label for="fDesc">Project Description *</label>
+            <textarea id="fDesc" name="description" rows="3" placeholder="Tell us about your idea, requirements, or problem you want to solve..." required></textarea>
+            <span class="f-err" id="err-desc"></span>
+          </div>
+
+          <!-- Budget Selector -->
+          <div class="f-group">
+            <label>Budget *</label>
+            <div class="pills-grid" id="budgetGrid">
+              <button type="button" class="pill-btn" data-val="₹10K – ₹25K">₹10K – ₹25K</button>
+              <button type="button" class="pill-btn active" data-val="₹25K – ₹50K">₹25K – ₹50K</button>
+              <button type="button" class="pill-btn" data-val="₹50K – ₹1L">₹50K – ₹1L</button>
+              <button type="button" class="pill-btn" data-val="₹1L+">₹1L+</button>
+              <button type="button" class="pill-btn" data-val="Not Decided">Not Decided</button>
+            </div>
+            <input type="hidden" id="fBudget" name="budget" value="₹25K – ₹50K" />
+          </div>
+
+          <!-- Timeline Selector -->
+          <div class="f-group">
+            <label>Timeline *</label>
+            <div class="pills-grid" id="timelineGrid">
+              <button type="button" class="pill-btn" data-val="ASAP">ASAP</button>
+              <button type="button" class="pill-btn active" data-val="1–2 Weeks">1–2 Weeks</button>
+              <button type="button" class="pill-btn" data-val="1 Month">1 Month</button>
+              <button type="button" class="pill-btn" data-val="2–3 Months">2–3 Months</button>
+              <button type="button" class="pill-btn" data-val="Flexible">Flexible</button>
+            </div>
+            <input type="hidden" id="fTimeline" name="timeline" value="1–2 Weeks" />
+          </div>
+
+          <div class="f-group">
+            <label for="fRef">Reference URL (optional)</label>
+            <input type="url" id="fRef" name="referenceUrl" placeholder="https://example.com" />
+          </div>
+
+          <div class="f-group">
+            <label for="fFile">Attachment / Project Brief File (optional)</label>
+            <input type="file" id="fFile" name="projectFile" class="f-file-input" />
+          </div>
+
+          <div class="f-submit-wrap">
+            <button type="submit" class="btn-submit-main" id="btnSubmit">
+              <span id="btnSubmitLabel">SUBMIT PROJECT</span>
+              <span class="submit-arrow">&rarr;</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Success Confirmation Card with Official Logo -->
+        <div class="success-card" id="formSuccessCard" style="display: none;">
+          <div class="success-logo-wrap">
+            <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Emblem" class="success-logo-img" />
+          </div>
+          <h3 class="success-title">PROJECT REQUEST RECEIVED &check;</h3>
+          <p class="success-text">Thanks for sharing your idea with EG TECH.</p>
+          <p class="success-subtext">Our engineering and design partners will review your brief and respond within 24 hours.</p>
+          <div class="success-signoff">
+            <span class="s-brand">EG<span class="gold-text">TECH</span></span>
+            <span class="s-quote">“YOUR IDEA. OUR CODE.”</span>
+          </div>
+          <button type="button" class="btn-another-brief" id="btnAnotherBrief">Submit Another Project</button>
+        </div>
+      </div>
+    </section>
+
+  </div> <!-- End of #scrollTrack -->
+
+  <!-- Toast Notification Box -->
+  <div id="toastBox" class="toast-box" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
