@@ -20,6 +20,12 @@
 </head>
 <body class="eg-body">
 
+  <!-- KINETIC FLUID GLOWING CURSOR FOLLOWER -->
+  <div class="kinetic-cursor-follower" id="cursorFollower" aria-hidden="true">
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+  </div>
+
   <!-- LIVING ANIMATED MESH GRADIENT (CONTINUOUS AMBIENT LIGHTING) -->
   <div class="living-mesh-container" aria-hidden="true">
     <div class="mesh-orb orb-1"></div>
@@ -151,7 +157,8 @@
       <div class="perspective-grid-floor" id="perspectiveGridFloor" aria-hidden="true">
         <div class="grid-plane"></div>
         <div class="grid-horizon-glow"></div>
-        <div class="grid-shockwave-ring" id="gridShockwaveRing"></div>
+        <div class="grid-shockwave-ring ring-1" id="gridShockwaveRing1"></div>
+        <div class="grid-shockwave-ring ring-2" id="gridShockwaveRing2"></div>
       </div>
 
       <div class="volumetric-light-cone" id="volumetricLightCone" aria-hidden="true"></div>
@@ -202,6 +209,25 @@
             <span class="fcc-func">buildTomorrow</span>(<span class="fcc-var">ideasToday</span>);
           </div>
         </div>
+
+        <!-- 3D Floating Cyber Geometry Wireframe Prisms -->
+        <div class="floating-prisms-stage" id="floatingPrismsStage" aria-hidden="true">
+          <div class="prism-cube prism-1" id="prism1">
+            <div class="cube-face front"></div><div class="cube-face back"></div>
+            <div class="cube-face right"></div><div class="cube-face left"></div>
+            <div class="cube-face top"></div><div class="cube-face bottom"></div>
+          </div>
+          <div class="prism-cube prism-2" id="prism2">
+            <div class="cube-face front"></div><div class="cube-face back"></div>
+            <div class="cube-face right"></div><div class="cube-face left"></div>
+            <div class="cube-face top"></div><div class="cube-face bottom"></div>
+          </div>
+          <div class="prism-cube prism-3" id="prism3">
+            <div class="cube-face front"></div><div class="cube-face back"></div>
+            <div class="cube-face right"></div><div class="cube-face left"></div>
+            <div class="cube-face top"></div><div class="cube-face bottom"></div>
+          </div>
+        </div>
       </div>
 
       <!-- ====================================================================
@@ -209,6 +235,12 @@
            ==================================================================== -->
       <div class="laptop-wrapper" id="laptopWrapper">
         
+        <!-- Aerodynamic High-Velocity Descent Vapor Trails -->
+        <div class="aerodynamic-trails" id="aeroTrails" aria-hidden="true">
+          <div class="aero-trail trail-left"></div>
+          <div class="aero-trail trail-right"></div>
+        </div>
+
         <!-- 3D Orbiting Tech Halo Badges -->
         <div class="orbiting-tech-halo" id="orbitingTechHalo" aria-hidden="true">
           <div class="orbit-badge ob-1"><span class="ob-dot"></span>THREE.JS 3D</div>
@@ -236,6 +268,9 @@
               
               <!-- Screen Interior Display -->
               <div class="lid-screen" id="laptopScreen">
+                <!-- Holographic Laser Scanline -->
+                <div class="ide-scanline" id="ideScanline" aria-hidden="true"></div>
+
                 <div class="ide-container" id="ideContainer">
                   
                   <!-- IDE Top Titlebar -->
@@ -362,6 +397,7 @@
 
                   <!-- 4. Signature Code-to-UI Morph Tokens Layer (Scene 05) -->
                   <div class="code-morph-overlay" id="codeMorphOverlay">
+                    <canvas class="morph-sparks-canvas" id="morphSparksCanvas"></canvas>
                     <div class="morph-token token-navbar" id="tokenNavbar">&lt;Navbar /&gt;</div>
                     <div class="morph-token token-card" id="tokenCard">&lt;Card /&gt;</div>
                     <div class="morph-token token-btn" id="tokenBtn">&lt;Button /&gt;</div>
@@ -373,6 +409,9 @@
                       <div class="term-title-left">
                         <span class="term-glyph">&gt;_</span>
                         <span class="term-title">TERMINAL &mdash; zsh</span>
+                      </div>
+                      <div class="term-progress-track">
+                        <div class="term-progress-bar" id="termProgressBar"></div>
                       </div>
                       <div class="term-status-right">
                         <span class="term-status-badge" id="termStatusBadge">IDLE</span>

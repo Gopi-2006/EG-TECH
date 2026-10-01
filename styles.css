@@ -796,6 +796,52 @@ body.eg-body {
 }
 
 /* ==========================================================================
+   00. KINETIC FLUID GLOWING CURSOR FOLLOWER
+   Magnetic spring physics with dynamic hover expansion & chromatic halo
+   ========================================================================== */
+.kinetic-cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: screen;
+  transition: opacity 0.3s ease;
+}
+
+.cursor-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 12px var(--c-cyan), 0 0 20px #ffffff;
+  pointer-events: none;
+  transition: transform 0.1s ease;
+}
+
+.cursor-ring {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(6, 182, 212, 0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+  transition: width 0.25s var(--ease-snappy), height 0.25s var(--ease-snappy), border-color 0.25s ease, background 0.25s ease;
+}
+
+.cursor-ring.cursor-active {
+  width: 58px;
+  height: 58px;
+  border-color: var(--c-molten-gold);
+  background: rgba(245, 158, 11, 0.1);
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);
+}
+
+/* ==========================================================================
    3D PERSPECTIVE CYBER GRID FLOOR & VOLUMETRIC ATMOSPHERIC LIGHT
    ========================================================================== */
 .perspective-grid-floor {
@@ -845,15 +891,23 @@ body.eg-body {
   position: absolute;
   left: 50%;
   top: 65%;
-  width: 300px;
-  height: 120px;
+  width: 320px;
+  height: 130px;
   border-radius: 50%;
-  border: 2px solid var(--c-cyan);
-  box-shadow: 0 0 30px var(--c-cyan), inset 0 0 20px var(--c-cyan);
   transform: translate(-50%, -50%) scale(0.2);
   opacity: 0;
   pointer-events: none;
   filter: blur(2px);
+}
+
+.grid-shockwave-ring.ring-1 {
+  border: 2px solid var(--c-cyan);
+  box-shadow: 0 0 35px var(--c-cyan), inset 0 0 20px var(--c-cyan);
+}
+
+.grid-shockwave-ring.ring-2 {
+  border: 2px solid var(--c-molten-gold);
+  box-shadow: 0 0 30px var(--c-molten-gold), inset 0 0 20px var(--c-molten-gold);
 }
 
 .volumetric-light-cone {
@@ -965,6 +1019,147 @@ body.eg-body {
 .fcc-4 { right: 8%; bottom: 20%; transform: translate3d(0, -680px, 40px) rotateX(-8deg) rotateY(20deg) rotateZ(-5deg); }
 .fcc-5 { left: 22%; top: 6%;  transform: translate3d(0, -820px, 200px) rotateX(8deg) rotateY(10deg) rotateZ(-2deg); }
 .fcc-6 { right: 24%; top: 8%; transform: translate3d(0, -880px, 100px) rotateX(-12deg) rotateY(-15deg) rotateZ(4deg); }
+
+/* ==========================================================================
+   3D FLOATING CYBER WIREFRAME PRISMS (POLYHEDRA IN 3D PERSPECTIVE)
+   ========================================================================== */
+.floating-prisms-stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 18;
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+
+.prism-cube {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.prism-1 {
+  left: 10%;
+  top: 26%;
+  animation: rotatePrism1 20s linear infinite;
+}
+
+.prism-2 {
+  right: 12%;
+  top: 22%;
+  animation: rotatePrism2 25s linear infinite reverse;
+}
+
+.prism-3 {
+  right: 18%;
+  bottom: 24%;
+  animation: rotatePrism3 18s linear infinite;
+}
+
+.cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 1.5px solid rgba(6, 182, 212, 0.7);
+  background: rgba(6, 182, 212, 0.07);
+  box-shadow: inset 0 0 14px rgba(6, 182, 212, 0.25), 0 0 12px rgba(6, 182, 212, 0.35);
+  backdrop-filter: blur(2px);
+}
+
+.prism-2 .cube-face {
+  border-color: rgba(245, 158, 11, 0.75);
+  background: rgba(245, 158, 11, 0.07);
+  box-shadow: inset 0 0 14px rgba(245, 158, 11, 0.25), 0 0 12px rgba(245, 158, 11, 0.35);
+}
+
+.prism-3 .cube-face {
+  border-color: rgba(236, 72, 153, 0.75);
+  background: rgba(236, 72, 153, 0.07);
+  box-shadow: inset 0 0 14px rgba(236, 72, 153, 0.25), 0 0 12px rgba(236, 72, 153, 0.35);
+}
+
+.cube-face.front  { transform: translateZ(26px); }
+.cube-face.back   { transform: rotateY(180deg) translateZ(26px); }
+.cube-face.right  { transform: rotateY(90deg) translateZ(26px); }
+.cube-face.left   { transform: rotateY(-90deg) translateZ(26px); }
+.cube-face.top    { transform: rotateX(90deg) translateZ(26px); }
+.cube-face.bottom { transform: rotateX(-90deg) translateZ(26px); }
+
+@keyframes rotatePrism1 {
+  0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(0); }
+  50% { transform: rotateX(180deg) rotateY(180deg) rotateZ(90deg) translateY(-22px); }
+  100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg) translateY(0); }
+}
+
+@keyframes rotatePrism2 {
+  0% { transform: rotateX(25deg) rotateY(0deg) rotateZ(15deg) translateY(0); }
+  50% { transform: rotateX(205deg) rotateY(180deg) rotateZ(195deg) translateY(26px); }
+  100% { transform: rotateX(385deg) rotateY(360deg) rotateZ(375deg) translateY(0); }
+}
+
+@keyframes rotatePrism3 {
+  0% { transform: rotateX(45deg) rotateY(15deg) rotateZ(0deg) translateY(0); }
+  50% { transform: rotateX(225deg) rotateY(195deg) rotateZ(180deg) translateY(-18px); }
+  100% { transform: rotateX(405deg) rotateY(375deg) rotateZ(360deg) translateY(0); }
+}
+
+/* ==========================================================================
+   AERODYNAMIC HIGH-VELOCITY DESCENT VAPOR TRAILS
+   ========================================================================== */
+.aerodynamic-trails {
+  position: absolute;
+  top: -340px;
+  left: 0;
+  right: 0;
+  height: 400px;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12%;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.aero-trail {
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent 0%, rgba(6, 182, 212, 0.8) 65%, #ffffff 100%);
+  filter: blur(2px);
+  border-radius: 4px;
+  box-shadow: 0 0 20px var(--c-cyan), 0 0 45px var(--c-cyan);
+}
+
+.trail-right {
+  background: linear-gradient(180deg, transparent 0%, rgba(245, 158, 11, 0.8) 65%, #ffffff 100%);
+  box-shadow: 0 0 20px var(--c-molten-gold), 0 0 45px var(--c-molten-gold);
+}
+
+/* ==========================================================================
+   HOLOGRAPHIC IDE LASER SCANLINE
+   ========================================================================== */
+.ide-scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.8) 25%, #ffffff 50%, rgba(139, 92, 246, 0.8) 75%, transparent 100%);
+  box-shadow: 0 0 15px var(--c-cyan), 0 0 30px rgba(6, 182, 212, 0.7);
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.75;
+  animation: laserScanSweep 4.5s ease-in-out infinite;
+}
+
+@keyframes laserScanSweep {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 0.85; }
+  90% { opacity: 0.85; }
+  100% { transform: translateY(506px); opacity: 0; }
+}
 
 /* ==========================================================================
    3D ORBITING TECH HALO BADGES
@@ -1201,6 +1396,14 @@ body.eg-body {
   background: linear-gradient(180deg, #273656 0%, #162035 100%);
   border-color: rgba(6, 182, 212, 0.4);
   color: var(--c-cyan);
+}
+
+.key.key-active {
+  background: linear-gradient(180deg, #06B6D4 0%, #0891B2 100%) !important;
+  color: #050816 !important;
+  border-color: #67e8f9 !important;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.9), 0 0 20px rgba(6, 182, 212, 0.5) !important;
+  transform: translateY(-1px);
 }
 
 .kb-fn .key { height: 11px; font-size: 6.5px; color: #64748b; }
@@ -1693,6 +1896,15 @@ body.eg-body {
   z-index: 30;
 }
 
+.morph-sparks-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
 .morph-token {
   position: absolute;
   font-family: var(--font-mono);
@@ -1759,6 +1971,25 @@ body.eg-body {
   font-size: 0.65rem;
   color: var(--c-cyan);
   font-weight: 700;
+}
+
+.term-progress-track {
+  width: 140px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 0 12px;
+}
+
+.term-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--c-cyan), var(--c-electric-blue), #10B981);
+  box-shadow: 0 0 10px var(--c-cyan);
+  border-radius: 9999px;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .term-status-badge {
@@ -2383,6 +2614,26 @@ body.eg-body {
   background: var(--bg-card-hover);
 }
 
+.service-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(6, 182, 212, 0.16), transparent 75%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.service-item:hover::before {
+  opacity: 1;
+}
+
+.service-item > * {
+  position: relative;
+  z-index: 2;
+}
+
 /* 5 Distinct Chromatic Identities */
 .srv-blue {
   grid-column: span 7;
@@ -2538,6 +2789,26 @@ body.eg-body {
 
 .work-case-item:hover {
   transform: translateY(-4px);
+}
+
+.work-case-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(450px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.16), transparent 75%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.work-case-item:hover::before {
+  opacity: 1;
+}
+
+.work-case-item > * {
+  position: relative;
+  z-index: 2;
 }
 
 .case-visual {

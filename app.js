@@ -40,6 +40,10 @@ class EGTechCinematicEngine {
     // Master ScrollTrigger timeline (scrub: 1, strictly reversible)
     this.initMasterTimeline();
 
+    // Kinetic fluid cursor follower & sparks engine
+    this.bindKineticCursor();
+    this.initMorphSparksEngine();
+
     // UI interactions & form engine
     this.bindPillSelectors();
     this.bindProjectForm();
@@ -485,8 +489,8 @@ class EGTechCinematicEngine {
       duration: 1.5,
       ease: 'power2.out'
     }, 2.7)
-    // Shockwave pulse on landing
-    .fromTo('#gridShockwaveRing', {
+    // Dual Chromatic Shockwave pulse on landing
+    .fromTo('#gridShockwaveRing1', {
       scale: 0.2,
       opacity: 0.95
     }, {
@@ -495,6 +499,31 @@ class EGTechCinematicEngine {
       duration: 1.0,
       ease: 'power2.out'
     }, 3.5)
+    .fromTo('#gridShockwaveRing2', {
+      scale: 0.2,
+      opacity: 0.9
+    }, {
+      scale: 4.4,
+      opacity: 0,
+      duration: 1.25,
+      ease: 'power2.out'
+    }, 3.58)
+    // Aerodynamic descent vapor trails dissolve on touchdown
+    .fromTo('#aeroTrails', {
+      opacity: 0.95,
+      y: -120
+    }, {
+      opacity: 0,
+      y: 80,
+      duration: 1.1,
+      ease: 'power2.out'
+    }, 2.7)
+    // 3D Floating Cyber Geometry Wireframe Prisms materialize
+    .to('#floatingPrismsStage', {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power2.out'
+    }, 2.8)
     // 3D Codes dropping from the air in staggered formation
     .to('#fcc1', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 2.9)
     .to('#fcc2', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.05)
@@ -524,14 +553,20 @@ class EGTechCinematicEngine {
 
     /* ------------------------------------------------------------------------
        BEAT 4: SCENE 04 — INTEGRATED IDE & SCROLL-DRIVEN CODE REVEAL (4.20 – 6.60s)
-       Selected meaningful lines reveal with cursor
+       Selected meaningful lines reveal with cursor & dynamic backlit keycap ripple
        ------------------------------------------------------------------------ */
     tl.to('#cLine1', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 4.2)
+    .call(() => this.triggerKeyboardTyping(6), null, 4.2)
     .to('#cLine2', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 4.5)
+    .call(() => this.triggerKeyboardTyping(7), null, 4.5)
     .to('#cLine3', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 4.8)
+    .call(() => this.triggerKeyboardTyping(6), null, 4.8)
     .to('#cLine4', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 5.1)
+    .call(() => this.triggerKeyboardTyping(8), null, 5.1)
     .to('#cLine5', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 5.4)
+    .call(() => this.triggerKeyboardTyping(5), null, 5.4)
     .to('#cLine6', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 5.7)
+    .call(() => this.triggerKeyboardTyping(9), null, 5.7)
     .call(() => {
       const pill = document.getElementById('ideStatusText');
       if (pill) pill.textContent = 'COMPILING';
@@ -544,11 +579,17 @@ class EGTechCinematicEngine {
       stagger: 0.08,
       duration: 1.0,
       ease: 'power2.in'
-    }, 4.4);
+    }, 4.4)
+    .to('#floatingPrismsStage', {
+      opacity: 0.25,
+      duration: 1.0,
+      ease: 'power2.in'
+    }, 5.5);
 
     /* ------------------------------------------------------------------------
        BEAT 5: SCENE 05 — SIGNATURE CODE-TO-UI MORPH (6.20 – 8.50s)
        <Navbar /> morphs to Navbar, <Card /> to Card, <Button /> to Button
+       with energetic particle spark explosions
        ------------------------------------------------------------------------ */
     // <Navbar /> detaches & glides across into browser preview
     tl.to('#tokenNavbar', {
@@ -559,6 +600,7 @@ class EGTechCinematicEngine {
       duration: 0.6,
       ease: 'power2.out'
     }, 6.2)
+    .call(() => this.triggerMorphSparks && this.triggerMorphSparks(380, 40, 26), null, 6.6)
     .to('#tokenNavbar', {
       opacity: 0,
       scale: 1.35,
@@ -575,6 +617,7 @@ class EGTechCinematicEngine {
       duration: 0.6,
       ease: 'power2.out'
     }, 6.7)
+    .call(() => this.triggerMorphSparks && this.triggerMorphSparks(420, 160, 30), null, 7.1)
     .to('#tokenCard', {
       opacity: 0,
       scale: 1.35,
@@ -593,6 +636,7 @@ class EGTechCinematicEngine {
       duration: 0.6,
       ease: 'power2.out'
     }, 7.2)
+    .call(() => this.triggerMorphSparks && this.triggerMorphSparks(360, 220, 24), null, 7.6)
     .to('#tokenBtn', {
       opacity: 0,
       scale: 1.35,
@@ -602,20 +646,29 @@ class EGTechCinematicEngine {
 
     /* ------------------------------------------------------------------------
        BEAT 6: SCENE 06 & 07 — TERMINAL BUILD PROCESS & BUILD COMPLETE (8.00 – 10.40s)
-       $ npm install -> $ npm run build -> $ npm run deploy
+       $ npm install -> $ npm run build -> $ npm run deploy with neon progress fill
        ------------------------------------------------------------------------ */
     tl.to('#ideTerminalDrawer', {
       y: '0%',
       duration: 0.6,
       ease: 'power3.out'
     }, 8.0)
+    .to('#termProgressBar', {
+      width: '100%',
+      duration: 1.7,
+      ease: 'power2.inOut'
+    }, 8.1)
     .call(() => {
       const badge = document.getElementById('termStatusBadge');
-      if (badge) badge.textContent = 'BUILDING';
-    }, null, 8.1)
+      if (badge) badge.textContent = 'BUILDING 45%';
+    }, null, 8.2)
     .to('#tLine1', { opacity: 1, y: 0, duration: 0.3 }, 8.2)
     .to('#tLine2', { opacity: 1, y: 0, duration: 0.3 }, 8.4)
     .to('#tLine3', { opacity: 1, y: 0, duration: 0.3 }, 8.7)
+    .call(() => {
+      const badge = document.getElementById('termStatusBadge');
+      if (badge) badge.textContent = 'OPTIMIZING 85%';
+    }, null, 9.1)
     .to('#tLine4', { opacity: 1, y: 0, duration: 0.3 }, 9.0)
     .to('#tLine5', { opacity: 1, y: 0, duration: 0.3 }, 9.3)
     .to('#tLine6', { opacity: 1, y: 0, duration: 0.3 }, 9.6)
@@ -623,7 +676,7 @@ class EGTechCinematicEngine {
       const badge = document.getElementById('termStatusBadge');
       const ideStatus = document.getElementById('ideStatusText');
       const pbbLive = document.getElementById('pbbLivePill');
-      if (badge) badge.textContent = 'DEPLOYED';
+      if (badge) badge.textContent = 'DEPLOYED 100%';
       if (ideStatus) ideStatus.textContent = 'BUILD COMPLETE ✓';
       if (pbbLive) {
         pbbLive.textContent = '● LIVE';
@@ -1172,6 +1225,10 @@ class EGTechCinematicEngine {
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
 
+        // Dynamic flashlight glare coordinates
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+
         gsap.to(card, {
           rotateY: x * 6,
           rotateX: -y * 6,
@@ -1265,5 +1322,188 @@ class EGTechCinematicEngine {
     };
 
     update3DPhysics();
+  }
+
+  /* ==========================================================================
+     08. KINETIC FLUID GLOWING CURSOR FOLLOWER
+     Spring physics, smooth magnetic lag, hover scale & active touch safety
+     ========================================================================== */
+  bindKineticCursor() {
+    const cursorFollower = document.getElementById('cursorFollower');
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    if (!cursorFollower || !dot || !ring) return;
+
+    // Respect touch devices and reduced-motion preferences
+    if (!window.matchMedia('(pointer: fine)').matches || window.innerWidth < 1024) {
+      cursorFollower.style.display = 'none';
+      return;
+    }
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let dotX = mouseX;
+    let dotY = mouseY;
+    let ringX = mouseX;
+    let ringY = mouseY;
+    let isVisible = false;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!isVisible) {
+        isVisible = true;
+        cursorFollower.style.opacity = '1';
+      }
+    }, { passive: true });
+
+    document.addEventListener('mouseleave', () => {
+      cursorFollower.style.opacity = '0';
+      isVisible = false;
+    });
+
+    const interactiveSelector = 'a, button, input, textarea, select, .pill-btn, .falling-code-card, .service-item, .work-case-item, .key, .prism-cube, .v-card, .filter-chip, .editor-tab';
+
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(interactiveSelector)) {
+        ring.classList.add('cursor-active');
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(interactiveSelector)) {
+        ring.classList.remove('cursor-active');
+      }
+    });
+
+    document.addEventListener('mousedown', () => {
+      dot.style.transform = 'translate(-50%, -50%) scale(1.6)';
+      ring.style.transform = 'translate(-50%, -50%) scale(0.82)';
+    });
+
+    document.addEventListener('mouseup', () => {
+      dot.style.transform = 'translate(-50%, -50%) scale(1)';
+      ring.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
+
+    const renderCursor = () => {
+      // Fast responsive follow for core center dot
+      dotX += (mouseX - dotX) * 0.35;
+      dotY += (mouseY - dotY) * 0.35;
+
+      // Elastic spring lag for ambient luminous ring
+      ringX += (mouseX - ringX) * 0.16;
+      ringY += (mouseY - ringY) * 0.16;
+
+      dot.style.left = `${dotX}px`;
+      dot.style.top = `${dotY}px`;
+      ring.style.left = `${ringX}px`;
+      ring.style.top = `${ringY}px`;
+
+      requestAnimationFrame(renderCursor);
+    };
+    renderCursor();
+  }
+
+  /* ==========================================================================
+     09. HIGH-PERFORMANCE MORPH SPARKS PARTICLE ENGINE
+     Energetic particle burst on code-to-UI component transformations
+     ========================================================================== */
+  initMorphSparksEngine() {
+    const canvas = document.getElementById('morphSparksCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    const sparks = [];
+    let animId = null;
+
+    const resize = () => {
+      if (canvas.parentElement) {
+        width = canvas.width = canvas.parentElement.offsetWidth || 800;
+        height = canvas.height = canvas.parentElement.offsetHeight || 500;
+      }
+    };
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
+
+    this.triggerMorphSparks = (originX = width / 2, originY = height / 2, count = 28) => {
+      const palette = ['#06B6D4', '#8B5CF6', '#F59E0B', '#10B981', '#38BDF8', '#ffffff'];
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5.5 + 2.2;
+        sparks.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          radius: Math.random() * 2.8 + 1.2,
+          alpha: 1,
+          decay: Math.random() * 0.026 + 0.016,
+          color: palette[Math.floor(Math.random() * palette.length)]
+        });
+      }
+      if (!animId) {
+        animId = requestAnimationFrame(loop);
+      }
+    };
+
+    const loop = () => {
+      if (sparks.length === 0) {
+        ctx.clearRect(0, 0, width, height);
+        animId = null;
+        return;
+      }
+
+      ctx.clearRect(0, 0, width, height);
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vx *= 0.95;
+        s.vy *= 0.95;
+        s.alpha -= s.decay;
+
+        if (s.alpha <= 0) {
+          sparks.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, s.alpha);
+        ctx.fillStyle = s.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = s.color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      animId = requestAnimationFrame(loop);
+    };
+  }
+
+  /* ==========================================================================
+     10. BACKLIT KEYBOARD CHICLET TYPING RIPPLE
+     Simulates hardware keystrokes in real-time as lines appear in the IDE
+     ========================================================================== */
+  triggerKeyboardTyping(count = 6) {
+    const keys = document.querySelectorAll('#laptopBase .key');
+    if (!keys || keys.length === 0) return;
+    for (let i = 0; i < count; i++) {
+      const randomIdx = Math.floor(Math.random() * keys.length);
+      const key = keys[randomIdx];
+      if (key) {
+        setTimeout(() => {
+          key.classList.add('key-active');
+          setTimeout(() => {
+            key.classList.remove('key-active');
+          }, 110 + Math.random() * 60);
+        }, i * 28);
+      }
+    }
   }
 }
