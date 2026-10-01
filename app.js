@@ -59,9 +59,9 @@ class EGTechCinematicEngine {
   }
 
   /* ==========================================================================
-     00. TRUE 3D THREE.JS SPATIAL UNIVERSE (PAKA 3D ENGINE)
-     WebGL renderer: 2,500 volumetric stars, dynamic undulating cyber wave grid,
-     floating wireframe polyhedra, deep space torus knot & scroll-driven camera shifts
+     00. TRUE 3D THREE.JS SPATIAL UNIVERSE (PAKA 3D ENGINE) — OPTIMIZED
+     High-performance WebGL renderer: 1,200 stars, GPU-accelerated cyber grid runway,
+     floating wireframe polyhedra, deep space torus knot, throttled HUD & smart sleep/wake
      ========================================================================== */
   initThreeWebGLWorld() {
     if (typeof THREE === 'undefined') {
@@ -75,14 +75,14 @@ class EGTechCinematicEngine {
     let width = window.innerWidth;
     let height = window.innerHeight;
 
-    // High-performance WebGL Renderer
+    // High-performance WebGL Renderer with capped pixel ratio for buttery 60-120 FPS
     const renderer = new THREE.WebGLRenderer({
       canvas,
       alpha: true,
       antialias: true,
       powerPreference: 'high-performance'
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(width, height);
 
     // 3D Scene & Perspective Camera
@@ -103,8 +103,8 @@ class EGTechCinematicEngine {
     goldPoint.position.set(45, -15, 35);
     scene.add(goldPoint);
 
-    // 1. Dynamic Undulating Cyber Matrix Terrain Floor
-    const gridGeo = new THREE.PlaneGeometry(280, 280, 55, 55);
+    // 1. GPU-Accelerated Infinite Cyber Runway Grid Floor (0 CPU Overhead)
+    const gridGeo = new THREE.PlaneGeometry(280, 280, 28, 28);
     gridGeo.rotateX(-Math.PI / 2);
     const gridMat = new THREE.MeshBasicMaterial({
       color: 0x06B6D4,
@@ -116,14 +116,8 @@ class EGTechCinematicEngine {
     gridMesh.position.set(0, -32, 0);
     scene.add(gridMesh);
 
-    const gridPositions = gridGeo.attributes.position;
-    const baseGridY = new Float32Array(gridPositions.count);
-    for (let i = 0; i < gridPositions.count; i++) {
-      baseGridY[i] = gridPositions.getY(i);
-    }
-
-    // 2. Volumetric 3D Particle Starfield (2,500 particles in 3D Space)
-    const particleCount = width < 768 ? 1200 : 2500;
+    // 2. Volumetric 3D Particle Starfield (Optimized count with Additive Blending)
+    const particleCount = width < 768 ? 600 : 1200;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(particleCount * 3);
     const starColors = new Float32Array(particleCount * 3);
@@ -138,9 +132,9 @@ class EGTechCinematicEngine {
 
     for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3;
-      starPositions[i3] = (Math.random() - 0.5) * 700;
-      starPositions[i3 + 1] = (Math.random() - 0.5) * 600;
-      starPositions[i3 + 2] = (Math.random() - 0.5) * 800;
+      starPositions[i3] = (Math.random() - 0.5) * 650;
+      starPositions[i3 + 1] = (Math.random() - 0.5) * 550;
+      starPositions[i3 + 2] = (Math.random() - 0.5) * 750;
 
       const col = palette[Math.floor(Math.random() * palette.length)];
       starColors[i3] = col.r;
@@ -152,7 +146,7 @@ class EGTechCinematicEngine {
     starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
 
     const starMat = new THREE.PointsMaterial({
-      size: 2.6,
+      size: 2.8,
       vertexColors: true,
       transparent: true,
       opacity: 0.85,
@@ -163,7 +157,7 @@ class EGTechCinematicEngine {
 
     // 3. Floating 3D Cyber Geometries (Deep Space Wireframe Polyhedra)
     // Central Majestic Cyber Torus Knot in deep space
-    const torusGeo = new THREE.TorusKnotGeometry(15, 3.2, 120, 22);
+    const torusGeo = new THREE.TorusKnotGeometry(15, 3.2, 80, 16);
     const torusMat = new THREE.MeshBasicMaterial({
       color: 0x06B6D4,
       wireframe: true,
@@ -201,7 +195,7 @@ class EGTechCinematicEngine {
     scene.add(octMesh2);
 
     // 4. Expanding 3D Shockwave Ring on Cyber Grid
-    const ringGeo = new THREE.RingGeometry(0.8, 3.2, 64);
+    const ringGeo = new THREE.RingGeometry(0.8, 3.2, 48);
     ringGeo.rotateX(-Math.PI / 2);
     const ringMat = new THREE.MeshBasicMaterial({
       color: 0x00F0FF,
@@ -239,6 +233,9 @@ class EGTechCinematicEngine {
     let normMouseY = 0;
     let mouseOffsetX = 0;
     let mouseOffsetY = 0;
+    let isThreeActive = true;
+    let animFrameId = null;
+    let frameCount = 0;
 
     window.addEventListener('mousemove', (e) => {
       normMouseX = (e.clientX / window.innerWidth) * 2 - 1;
@@ -260,8 +257,14 @@ class EGTechCinematicEngine {
 
     let time = 0;
     const renderThree = () => {
-      requestAnimationFrame(renderThree);
+      if (!isThreeActive) {
+        animFrameId = null;
+        return;
+      }
+
+      animFrameId = requestAnimationFrame(renderThree);
       time += 0.016;
+      frameCount++;
 
       // Smooth progress interpolation
       currentProgress += (targetProgress - currentProgress) * 0.1;
@@ -280,7 +283,6 @@ class EGTechCinematicEngine {
 
       const segmentSpan = (wpB.p - wpA.p) || 1;
       const t = Math.max(0, Math.min(1, (currentProgress - wpA.p) / segmentSpan));
-      // Smooth Hermite blend
       const easeT = t * t * (3 - 2 * t);
 
       const targetX = wpA.x + (wpB.x - wpA.x) * easeT;
@@ -291,8 +293,8 @@ class EGTechCinematicEngine {
       const targetRz = wpA.rz + (wpB.rz - wpA.rz) * easeT;
 
       // Gyroscopic mouse parallax lag
-      mouseOffsetX += (normMouseX * 10 - mouseOffsetX) * 0.06;
-      mouseOffsetY += (-normMouseY * 7 - mouseOffsetY) * 0.06;
+      mouseOffsetX += (normMouseX * 8 - mouseOffsetX) * 0.05;
+      mouseOffsetY += (-normMouseY * 5 - mouseOffsetY) * 0.05;
 
       camera.position.x = targetX + mouseOffsetX;
       camera.position.y = targetY + mouseOffsetY;
@@ -300,49 +302,45 @@ class EGTechCinematicEngine {
 
       camera.rotation.x = targetRx;
       camera.rotation.y = targetRy;
-      camera.rotation.z = targetRz + mouseOffsetX * 0.005;
+      camera.rotation.z = targetRz + mouseOffsetX * 0.004;
 
-      // Undulate cyber matrix grid vertices
-      const posAttr = gridGeo.attributes.position;
-      for (let i = 0; i < posAttr.count; i++) {
-        const vx = posAttr.getX(i);
-        const vz = posAttr.getZ(i);
-        const wave = Math.sin(vx * 0.07 + time * 1.8) * Math.cos(vz * 0.07 + time * 1.8) * 3.8;
-        posAttr.setY(i, baseGridY[i] + wave);
-      }
-      posAttr.needsUpdate = true;
+      // GPU-accelerated infinite cyber grid runway drift (zero CPU vertex upload)
+      gridMesh.position.z = ((time * 16) % 35) - 17.5;
+      gridMesh.rotation.z = Math.sin(time * 0.3) * 0.015;
 
       // Rotate 3D spatial polyhedra
-      torusMesh.rotation.x += 0.004;
-      torusMesh.rotation.y += 0.007;
+      torusMesh.rotation.x += 0.003;
+      torusMesh.rotation.y += 0.005;
 
-      icoMesh1.rotation.x += 0.008;
-      icoMesh1.rotation.y += 0.012;
-      icoMesh1.position.y = 24 + Math.sin(time * 1.2) * 4;
+      icoMesh1.rotation.x += 0.006;
+      icoMesh1.rotation.y += 0.009;
+      icoMesh1.position.y = 24 + Math.sin(time * 1.2) * 3;
 
-      icoMesh2.rotation.x -= 0.007;
-      icoMesh2.rotation.y += 0.01;
-      icoMesh2.position.y = -12 + Math.cos(time * 1.4) * 4;
+      icoMesh2.rotation.x -= 0.005;
+      icoMesh2.rotation.y += 0.008;
+      icoMesh2.position.y = -12 + Math.cos(time * 1.4) * 3;
 
-      octMesh1.rotation.y += 0.015;
-      octMesh1.position.y = -18 + Math.sin(time * 1.5) * 3;
+      octMesh1.rotation.y += 0.012;
+      octMesh1.position.y = -18 + Math.sin(time * 1.5) * 2;
 
-      octMesh2.rotation.x += 0.012;
-      octMesh2.position.y = 32 + Math.cos(time * 1.3) * 3;
+      octMesh2.rotation.x += 0.01;
+      octMesh2.position.y = 32 + Math.cos(time * 1.3) * 2;
 
       // Starfield subtle rotation & hyperspace drift
-      starField.rotation.y = time * 0.02 + currentProgress * 0.8;
-      starField.rotation.x = currentProgress * 0.4;
+      starField.rotation.y = time * 0.015 + currentProgress * 0.6;
+      starField.rotation.x = currentProgress * 0.3;
 
-      // Update HUD Telemetry
-      if (hudCamPos) {
-        hudCamPos.textContent = `X: ${camera.position.x >= 0 ? '+' : ''}${camera.position.x.toFixed(1)}  Y: ${camera.position.y >= 0 ? '+' : ''}${camera.position.y.toFixed(1)}  Z: ${camera.position.z >= 0 ? '+' : ''}${camera.position.z.toFixed(1)}`;
-      }
-      if (hudCamRot) {
-        const pitchDeg = Math.round(camera.rotation.x * (180 / Math.PI));
-        const yawDeg = Math.round(camera.rotation.y * (180 / Math.PI));
-        const rollDeg = Math.round(camera.rotation.z * (180 / Math.PI));
-        hudCamRot.textContent = `PITCH: ${pitchDeg}°  YAW: ${yawDeg}°  ROLL: ${rollDeg}°`;
+      // Throttled HUD Telemetry updates (every 8 frames) to prevent DOM layout thrashing
+      if (frameCount % 8 === 0) {
+        if (hudCamPos) {
+          hudCamPos.textContent = `X: ${camera.position.x >= 0 ? '+' : ''}${camera.position.x.toFixed(1)}  Y: ${camera.position.y >= 0 ? '+' : ''}${camera.position.y.toFixed(1)}  Z: ${camera.position.z >= 0 ? '+' : ''}${camera.position.z.toFixed(1)}`;
+        }
+        if (hudCamRot) {
+          const pitchDeg = Math.round(camera.rotation.x * (180 / Math.PI));
+          const yawDeg = Math.round(camera.rotation.y * (180 / Math.PI));
+          const rollDeg = Math.round(camera.rotation.z * (180 / Math.PI));
+          hudCamRot.textContent = `PITCH: ${pitchDeg}°  YAW: ${yawDeg}°  ROLL: ${rollDeg}°`;
+        }
       }
 
       renderer.render(scene, camera);
@@ -353,6 +351,13 @@ class EGTechCinematicEngine {
     this.threeEngine = {
       updateScrollProgress: (prog) => {
         targetProgress = prog;
+        const shouldBeActive = prog < 0.98;
+        if (shouldBeActive !== isThreeActive) {
+          isThreeActive = shouldBeActive;
+          if (isThreeActive && !animFrameId) {
+            animFrameId = requestAnimationFrame(renderThree);
+          }
+        }
       }
     };
   }
@@ -364,6 +369,12 @@ class EGTechCinematicEngine {
   initDigitalBokeh() {
     const canvas = document.getElementById('digitalBokehCanvas');
     if (!canvas) return;
+
+    // When Three.js 3D WebGL engine is active, hide 2D canvas to save 100% 2D canvas draw operations
+    if (this.threeEngine) {
+      canvas.style.display = 'none';
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -531,6 +542,7 @@ class EGTechCinematicEngine {
       });
     }
 
+    let lastFont = '';
     const render = () => {
       if (!isActive) return;
 
@@ -546,7 +558,11 @@ class EGTechCinematicEngine {
           s.text = codeTokens[Math.floor(Math.random() * codeTokens.length)];
         }
 
-        ctx.font = `${s.fontSize}px 'JetBrains Mono', monospace`;
+        const fontStr = `${s.fontSize}px 'JetBrains Mono', monospace`;
+        if (lastFont !== fontStr) {
+          ctx.font = fontStr;
+          lastFont = fontStr;
+        }
         ctx.fillStyle = `${s.color}${s.alpha * s.z})`;
 
         // Draw glowing code token
@@ -601,7 +617,7 @@ class EGTechCinematicEngine {
     // Scene 03 - 07: 3D Laptop Dropping from the Air, Cyber Grid & Falling Code
     gsap.set('#perspectiveGridFloor', { opacity: 0, force3D: true });
     gsap.set('#volumetricLightCone', { opacity: 0, force3D: true });
-    gsap.set('#gridShockwaveRing', { scale: 0.1, opacity: 0, force3D: true });
+    gsap.set(['#gridShockwaveRing1', '#gridShockwaveRing2'], { scale: 0.1, opacity: 0, force3D: true });
     gsap.set('#fallingCodeStage', { opacity: 1, force3D: true });
     gsap.set('.falling-code-card', { opacity: 0, y: -800, force3D: true });
     gsap.set('#fallingCodeCanvas', { opacity: 0, force3D: true });
@@ -621,7 +637,6 @@ class EGTechCinematicEngine {
     gsap.set('#laptop3dShadow', {
       opacity: 0,
       scale: 0.35,
-      filter: 'blur(35px)',
       force3D: true
     });
     gsap.set('#metaphorBanner', { opacity: 0, y: 15, force3D: true });
@@ -792,15 +807,13 @@ class EGTechCinematicEngine {
       duration: 1.8,
       ease: 'power3.out'
     }, 2.55)
-    // 3D Shadow lands and sharpens with proximity
+    // 3D Shadow lands and scales with proximity (0 filter recalculations)
     .fromTo('#laptop3dShadow', {
       opacity: 0,
-      scale: 0.2,
-      filter: 'blur(35px)'
+      scale: 0.2
     }, {
       opacity: 0.85,
       scale: 1,
-      filter: 'blur(16px)',
       duration: 1.6,
       ease: 'power2.out'
     }, 2.7)
@@ -1593,67 +1606,64 @@ class EGTechCinematicEngine {
     let targetY = 0;
     let currentX = 0;
     let currentY = 0;
+    let isRunning = false;
+    let animId = null;
+
+    const startLoop = () => {
+      if (!isRunning) {
+        isRunning = true;
+        animId = requestAnimationFrame(update3DPhysics);
+      }
+    };
 
     window.addEventListener('mousemove', (e) => {
-      const normX = (e.clientX / window.innerWidth) * 2 - 1;
-      const normY = (e.clientY / window.innerHeight) * 2 - 1;
-      targetX = normX;
-      targetY = normY;
+      targetX = (e.clientX / window.innerWidth) * 2 - 1;
+      targetY = (e.clientY / window.innerHeight) * 2 - 1;
+      startLoop();
     }, { passive: true });
 
     const update3DPhysics = () => {
-      // Smooth lerp damping
-      currentX += (targetX - currentX) * 0.08;
-      currentY += (targetY - currentY) * 0.08;
+      const dx = targetX - currentX;
+      const dy = targetY - currentY;
+      currentX += dx * 0.08;
+      currentY += dy * 0.08;
 
       // 3D tilt angles for the laptop
       const tiltX = 6 - currentY * 14;
       const tiltY = -10 + currentX * 18;
       const tiltZ = 2 + currentX * 3;
 
-      gsap.set(laptop, {
-        rotateX: tiltX,
-        rotateY: tiltY,
-        rotateZ: tiltZ,
-        transformPerspective: 1800,
-        force3D: true
-      });
+      laptop.style.transform = `perspective(1800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) rotateZ(${tiltZ}deg)`;
 
       if (shadow) {
-        gsap.set(shadow, {
-          x: -currentX * 35,
-          y: currentY * 15,
-          rotateX: 75 + currentY * 5,
-          force3D: true
-        });
+        shadow.style.transform = `rotateX(${75 + currentY * 5}deg) translate(${ -currentX * 35 }px, ${ currentY * 15 }px)`;
       }
 
       if (halo) {
-        gsap.set(halo, {
-          rotateY: currentX * 22,
-          rotateX: -currentY * 16,
-          force3D: true
-        });
+        halo.style.transform = `rotateY(${ currentX * 22 }deg) rotateX(${ -currentY * 16 }deg)`;
       }
 
-      cards.forEach((card, idx) => {
-        const factor = (idx % 3 + 1) * 12;
-        gsap.set(card, {
-          x: currentX * factor,
-          y: currentY * factor * 0.8,
-          force3D: true
-        });
-      });
+      for (let i = 0; i < cards.length; i++) {
+        const factor = (i % 3 + 1) * 10;
+        cards[i].style.transform = `translate3d(${ currentX * factor }px, ${ currentY * factor * 0.8 }px, 0)`;
+      }
 
-      requestAnimationFrame(update3DPhysics);
+      // If difference is tiny, pause loop to save 100% CPU/GPU when idle
+      if (Math.abs(dx) < 0.0003 && Math.abs(dy) < 0.0003) {
+        isRunning = false;
+        animId = null;
+        return;
+      }
+
+      animId = requestAnimationFrame(update3DPhysics);
     };
 
-    update3DPhysics();
+    startLoop();
   }
 
   /* ==========================================================================
-     08. KINETIC FLUID GLOWING CURSOR FOLLOWER
-     Spring physics, smooth magnetic lag, hover scale & active touch safety
+     08. KINETIC FLUID GLOWING CURSOR FOLLOWER — HARDWARE-ACCELERATED
+     GPU translate3d with automatic sleep-on-idle for zero CPU consumption
      ========================================================================== */
   bindKineticCursor() {
     const cursorFollower = document.getElementById('cursorFollower');
@@ -1674,6 +1684,15 @@ class EGTechCinematicEngine {
     let ringX = mouseX;
     let ringY = mouseY;
     let isVisible = false;
+    let isCursorLooping = false;
+    let cursorAnimId = null;
+
+    const startCursorLoop = () => {
+      if (!isCursorLooping) {
+        isCursorLooping = true;
+        cursorAnimId = requestAnimationFrame(renderCursor);
+      }
+    };
 
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
@@ -1682,6 +1701,7 @@ class EGTechCinematicEngine {
         isVisible = true;
         cursorFollower.style.opacity = '1';
       }
+      startCursorLoop();
     }, { passive: true });
 
     document.addEventListener('mouseleave', () => {
@@ -1704,32 +1724,44 @@ class EGTechCinematicEngine {
     });
 
     document.addEventListener('mousedown', () => {
-      dot.style.transform = 'translate(-50%, -50%) scale(1.6)';
-      ring.style.transform = 'translate(-50%, -50%) scale(0.82)';
+      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%) scale(1.6)`;
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(0.82)`;
     });
 
     document.addEventListener('mouseup', () => {
-      dot.style.transform = 'translate(-50%, -50%) scale(1)';
-      ring.style.transform = 'translate(-50%, -50%) scale(1)';
+      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%) scale(1)`;
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(1)`;
     });
 
     const renderCursor = () => {
+      const dDotX = mouseX - dotX;
+      const dDotY = mouseY - dotY;
+      const dRingX = mouseX - ringX;
+      const dRingY = mouseY - ringY;
+
       // Fast responsive follow for core center dot
-      dotX += (mouseX - dotX) * 0.35;
-      dotY += (mouseY - dotY) * 0.35;
+      dotX += dDotX * 0.4;
+      dotY += dDotY * 0.4;
 
       // Elastic spring lag for ambient luminous ring
-      ringX += (mouseX - ringX) * 0.16;
-      ringY += (mouseY - ringY) * 0.16;
+      ringX += dRingX * 0.18;
+      ringY += dRingY * 0.18;
 
-      dot.style.left = `${dotX}px`;
-      dot.style.top = `${dotY}px`;
-      ring.style.left = `${ringX}px`;
-      ring.style.top = `${ringY}px`;
+      // GPU hardware-composited translate3d without reflow
+      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
 
-      requestAnimationFrame(renderCursor);
+      // Sleep when mouse is stationary to save 100% CPU
+      if (Math.abs(dDotX) < 0.1 && Math.abs(dDotY) < 0.1 && Math.abs(dRingX) < 0.1 && Math.abs(dRingY) < 0.1) {
+        isCursorLooping = false;
+        cursorAnimId = null;
+        return;
+      }
+
+      cursorAnimId = requestAnimationFrame(renderCursor);
     };
-    renderCursor();
+
+    startCursorLoop();
   }
 
   /* ==========================================================================

@@ -97,8 +97,7 @@ body.eg-body {
 .mesh-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  will-change: transform, opacity;
+  will-change: transform;
   opacity: 0.45;
 }
 
@@ -609,10 +608,8 @@ body.eg-body {
 .client-request-card {
   position: relative;
   width: min(620px, 92vw);
-  background: rgba(10, 16, 38, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1.5px solid rgba(6, 182, 212, 0.35);
+  background: rgba(10, 16, 38, 0.95);
+  border: 1.5px solid rgba(6, 182, 212, 0.4);
   border-radius: 18px;
   padding: 24px;
   box-shadow: 
@@ -630,11 +627,11 @@ body.eg-body {
   position: absolute;
   inset: -1px;
   border-radius: 18px;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.4) 0%, transparent 50%, rgba(139, 92, 246, 0.3) 100%);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, transparent 50%, rgba(139, 92, 246, 0.2) 100%);
+  box-shadow: 0 0 25px rgba(6, 182, 212, 0.3);
   pointer-events: none;
   z-index: -1;
-  filter: blur(12px);
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .request-card-header {
@@ -863,9 +860,7 @@ body.eg-body {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background: rgba(5, 8, 22, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(5, 8, 22, 0.96);
   border: 1px solid rgba(6, 182, 212, 0.4);
   border-radius: 10px;
   padding: 10px 14px;
@@ -976,13 +971,7 @@ body.eg-body {
   background-size: 60px 60px;
   mask-image: radial-gradient(ellipse at 50% 35%, black 15%, transparent 72%);
   -webkit-mask-image: radial-gradient(ellipse at 50% 35%, black 15%, transparent 72%);
-  animation: gridDrift 24s linear infinite;
   will-change: transform;
-}
-
-@keyframes gridDrift {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 600px; }
 }
 
 .grid-horizon-glow {
@@ -992,7 +981,6 @@ body.eg-body {
   top: 55%;
   height: 120px;
   background: radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.3) 0%, rgba(59, 130, 246, 0.15) 40%, transparent 75%);
-  filter: blur(25px);
   pointer-events: none;
 }
 
@@ -1006,7 +994,6 @@ body.eg-body {
   transform: translate(-50%, -50%) scale(0.2);
   opacity: 0;
   pointer-events: none;
-  filter: blur(2px);
 }
 
 .grid-shockwave-ring.ring-1 {
@@ -1028,7 +1015,6 @@ body.eg-body {
   transform: translateX(-50%);
   background: linear-gradient(180deg, rgba(6, 182, 212, 0.22) 0%, rgba(59, 130, 246, 0.08) 50%, transparent 100%);
   clip-path: polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%);
-  filter: blur(20px);
   pointer-events: none;
   z-index: 14;
   opacity: 0.6;
@@ -1058,10 +1044,8 @@ body.eg-body {
 
 .falling-code-card {
   position: absolute;
-  background: rgba(8, 14, 34, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(6, 182, 212, 0.4);
+  background: rgba(8, 14, 34, 0.94);
+  border: 1.5px solid rgba(6, 182, 212, 0.45);
   border-radius: 12px;
   padding: 12px 18px;
   font-family: var(--font-mono);
@@ -1172,9 +1156,8 @@ body.eg-body {
   width: 100%;
   height: 100%;
   border: 1.5px solid rgba(6, 182, 212, 0.7);
-  background: rgba(6, 182, 212, 0.07);
+  background: rgba(6, 182, 212, 0.08);
   box-shadow: inset 0 0 14px rgba(6, 182, 212, 0.25), 0 0 12px rgba(6, 182, 212, 0.35);
-  backdrop-filter: blur(2px);
 }
 
 .prism-2 .cube-face {
@@ -1236,7 +1219,6 @@ body.eg-body {
   width: 4px;
   height: 100%;
   background: linear-gradient(180deg, transparent 0%, rgba(6, 182, 212, 0.8) 65%, #ffffff 100%);
-  filter: blur(2px);
   border-radius: 4px;
   box-shadow: 0 0 20px var(--c-cyan), 0 0 45px var(--c-cyan);
 }
@@ -1287,8 +1269,7 @@ body.eg-body {
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(10, 16, 38, 0.82);
-  backdrop-filter: blur(12px);
+  background: rgba(10, 16, 38, 0.94);
   border: 1px solid rgba(6, 182, 212, 0.35);
   border-radius: 9999px;
   font-family: var(--font-mono);
@@ -1339,12 +1320,11 @@ body.eg-body {
   max-width: 88vw;
   height: 120px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.4) 0%, rgba(0, 0, 0, 0.85) 45%, transparent 72%);
-  filter: blur(20px);
+  background: radial-gradient(ellipse at center, rgba(6, 182, 212, 0.4) 0%, rgba(0, 0, 0, 0.75) 45%, transparent 70%);
   transform: rotateX(75deg);
   pointer-events: none;
   opacity: 0;
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
   z-index: -1;
 }
 
@@ -2569,7 +2549,7 @@ body.eg-body {
   inset: -10px;
   border-radius: 50%;
   background: conic-gradient(from 180deg, var(--c-cyan) 0%, var(--c-electric-blue) 35%, var(--c-molten-gold) 65%, var(--c-amber) 100%);
-  filter: blur(14px);
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
   opacity: 0.8;
   z-index: 1;
   animation: spinHalo 14s linear infinite;
