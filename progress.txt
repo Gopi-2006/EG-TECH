@@ -127,6 +127,19 @@ ITERATION LOGS
   - Local HTTP server test: PASS (200 OK).
   - Headless browser validation: Confirmed smooth 60 FPS across scroll scrubbing and mouse tracking, zero console errors, zero warnings.
 
-
-
-
+## 2026-10-03 - Task 12: External Libraries & Component Suites Installation
+- Objectives:
+  1. Clone and install the 5 requested library repositories into the local workspace:
+     - `https://github.com/SikandarJODD/svelte-animations.git`
+     - `https://github.com/Shreyas-29/luro-ai.git`
+     - `https://github.com/sanidhyy/next-portfolio.git`
+     - `https://github.com/DavidHDev/canvas-ui.git`
+     - `https://github.com/vercel-labs/vgpu.git`
+  2. Setup clean tracking with `.gitignore` to prevent git sub-repo pollution.
+  3. Install official `vgpu` agent skill into `.agents/skills/vgpu` and register in `skills-lock.json`.
+- Changes Made:
+  - Cloned all 5 repos into `libraries/` directory (`canvas-ui`, `vgpu`, `svelte-animations`, `luro-ai`, `next-portfolio`).
+  - Added `libraries/` to `.gitignore`.
+  - Copied `vgpu` agent skill to `.agents/skills/vgpu/SKILL.md` (with `scene.md` & `blender/`).
+  - Updated `skills-lock.json` with `vgpu` skill entry.
+  - Documented completion in `tasks/todo.md`.
