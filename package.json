@@ -1,0 +1,14 @@
+{
+  "name": "egtech-website",
+  "version": "2.0.0",
+  "private": true,
+  "description": "EG TECH — Empowering Growth Technology Master Digital Studio Website",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node scripts/build.js",
+    "preview": "npx serve dist"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
