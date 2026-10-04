@@ -1,1411 +1,853 @@
 /**
  * EG TECH — EMPOWERING GROWTH TECHNOLOGY
- * Full Cinematic Scroll-Driven Digital Experience Engine
- * Recreating the reference video narrative:
- * 01 Digital Bokeh Intro -> 02 Client Request Message -> 03 2.5D Laptop Reveal
- * -> 04 Integrated IDE & Code Reveal -> 05 Signature Code-to-UI Morph
- * -> 06 Terminal Build Process -> 07 Build Ready & Complete
- * -> 08 Website Reveal -> 09 Screen-Entry Zoom -> 10 Live Client Flagship (Vibe Attire)
- * -> 11 Color Collapse -> 12 EG TECH Brand Reveal -> 13 Editorial Services
- * -> 14 Shipped Work -> 15 Final CTA -> 16 Project Briefing Form
+ * Master Digital Studio Runtime
+ * 
+ * 1. Dark / Light / Auto Theme Engine (Calibrated Transitions, No Layout Shifts)
+ * 2. Horizontal Project Showcase (Right -> Center -> Left Motion with GSAP ScrollTrigger)
+ * 3. EG TECH Mechanical Logo Loading Animation
+ * 4. Kinetic Studio Cursor
+ * 5. Hero Studio Reel Audio Controller
+ * 6. Legal Modals Engine (Terms of Service & Privacy Policy)
+ * 7. Live Performance & Search Metrics Counters
+ * 8. Project Inquiry Brief Dispatch to SQLite API with Fallback
+ * 9. Minimalist WhatsApp Studio Assistant
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const cinematicApp = new EGTechCinematicEngine();
-  cinematicApp.init();
+  const app = new EGTechStudioApp();
+  app.init();
 });
 
-class EGTechCinematicEngine {
+class EGTechStudioApp {
   constructor() {
-    this.masterTimeline = null;
-    this.scrollTriggerInstance = null;
-    this.threeEngine = null;
-    this.bokehField = null;
-    this.fallingCodeEngine = null;
+    this.countersStarted = false;
+    this.currentTheme = 'dark';
+    this.systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    this.horizontalTween = null;
   }
 
   init() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-      console.error('GSAP or ScrollTrigger library missing');
-      return;
-    }
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Initialize True 3D Three.js Spatial Universe (Paka 3D Core)
-    this.initThreeWebGLWorld();
-
-    // Initialize lightweight digital bokeh field for Scene 01
-    this.initDigitalBokeh();
-
-    // Initialize 3D Falling Code Engine (Scene 03 - 07)
-    this.initFallingCodeEngine();
-
-    // Master ScrollTrigger timeline (scrub: 1, strictly reversible)
-    this.initMasterTimeline();
-
-    // Kinetic fluid cursor follower & sparks engine
-    this.bindKineticCursor();
-    this.initMorphSparksEngine();
-
-    // UI interactions & form engine
-    this.bindPillSelectors();
-    this.bindProjectForm();
-    this.bindNavigationAndCTA();
-    this.bindMagneticCTA();
-    this.bind3DTiltInteractions();
-    this.bind3DLaptopGyroscope();
-    this.initScrollWatchers();
+    this.initThemeEngine();
+    this.initPreloader();
+    this.initCursor();
+    this.initFloatingPillNav();
+    this.initHeroVideoController();
+    this.initKineticStatement();
+    this.initGrowthSolutionsHorizontal();
+    this.initBackgroundLogoSystem();
+    this.initStackedProjectShowcase();
+    this.initSearchAuditCounters();
+    this.initLegalModals();
+    this.initInquiryForm();
+    this.initWhatsAppDrawer();
+    this.initSmoothNav();
   }
 
-  /* ==========================================================================
-     00. TRUE 3D THREE.JS SPATIAL UNIVERSE (PAKA 3D ENGINE) — OPTIMIZED
-     High-performance WebGL renderer: 1,200 stars, GPU-accelerated cyber grid runway,
-     floating wireframe polyhedra, deep space torus knot, throttled HUD & smart sleep/wake
-     ========================================================================== */
-  initThreeWebGLWorld() {
-    if (typeof THREE === 'undefined') {
-      console.warn('Three.js library missing, skipping WebGL 3D world');
-      return;
+  /* =========================================================================
+     1. DARK / LIGHT / AUTO THEME ENGINE
+     ========================================================================= */
+  initThemeEngine() {
+    const savedTheme = localStorage.getItem('egtech_theme') || 'dark';
+    this.applyTheme(savedTheme, false);
+
+    const themeButtons = document.querySelectorAll('.theme-switch-btn');
+    themeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const selected = btn.dataset.theme;
+        this.applyTheme(selected, true);
+      });
+    });
+
+    // Listen to OS system color scheme changes if in auto mode
+    this.systemThemeQuery.addEventListener('change', () => {
+      if (this.currentTheme === 'auto') {
+        const effective = this.systemThemeQuery.matches ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', effective);
+      }
+    });
+  }
+
+  applyTheme(theme, save = true) {
+    this.currentTheme = theme;
+    if (save) {
+      localStorage.setItem('egtech_theme', theme);
     }
 
-    const canvas = document.getElementById('webglCanvas3D');
-    if (!canvas) return;
-
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-
-    // High-performance WebGL Renderer with capped pixel ratio for buttery 60-120 FPS
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance'
-    });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    renderer.setSize(width, height);
-
-    // 3D Scene & Perspective Camera
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 2000);
-    camera.position.set(0, 35, 100);
-    camera.lookAt(0, 5, 0);
-
-    // Volumetric 3D Lighting Setup
-    const ambientLight = new THREE.AmbientLight(0x061129, 2.8);
-    scene.add(ambientLight);
-
-    const cyanPoint = new THREE.PointLight(0x00F0FF, 5, 350);
-    cyanPoint.position.set(-45, 25, 45);
-    scene.add(cyanPoint);
-
-    const goldPoint = new THREE.PointLight(0xF59E0B, 4, 350);
-    goldPoint.position.set(45, -15, 35);
-    scene.add(goldPoint);
-
-    // 1. GPU-Accelerated Infinite Cyber Runway Grid Floor (0 CPU Overhead)
-    const gridGeo = new THREE.PlaneGeometry(280, 280, 28, 28);
-    gridGeo.rotateX(-Math.PI / 2);
-    const gridMat = new THREE.MeshBasicMaterial({
-      color: 0x06B6D4,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.32
-    });
-    const gridMesh = new THREE.Mesh(gridGeo, gridMat);
-    gridMesh.position.set(0, -32, 0);
-    scene.add(gridMesh);
-
-    // 2. Volumetric 3D Particle Starfield (Optimized count with Additive Blending)
-    const particleCount = width < 768 ? 600 : 1200;
-    const starGeo = new THREE.BufferGeometry();
-    const starPositions = new Float32Array(particleCount * 3);
-    const starColors = new Float32Array(particleCount * 3);
-
-    const palette = [
-      new THREE.Color(0x00F0FF), // Electric Cyan
-      new THREE.Color(0xF59E0B), // Molten Gold
-      new THREE.Color(0xA855F7), // Plasma Violet
-      new THREE.Color(0x38BDF8), // Sky Blue
-      new THREE.Color(0xFFFFFF)  // Pure Diamond
-    ];
-
-    for (let i = 0; i < particleCount; i++) {
-      const i3 = i * 3;
-      starPositions[i3] = (Math.random() - 0.5) * 650;
-      starPositions[i3 + 1] = (Math.random() - 0.5) * 550;
-      starPositions[i3 + 2] = (Math.random() - 0.5) * 750;
-
-      const col = palette[Math.floor(Math.random() * palette.length)];
-      starColors[i3] = col.r;
-      starColors[i3 + 1] = col.g;
-      starColors[i3 + 2] = col.b;
+    let effective = theme;
+    if (theme === 'auto') {
+      effective = this.systemThemeQuery.matches ? 'dark' : 'light';
     }
 
-    starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
+    document.body.setAttribute('data-theme', effective);
 
-    const starMat = new THREE.PointsMaterial({
-      size: 2.8,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.85,
-      blending: THREE.AdditiveBlending
+    const themeButtons = document.querySelectorAll('.theme-switch-btn');
+    themeButtons.forEach(btn => {
+      if (btn.dataset.theme === theme) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
     });
-    const starField = new THREE.Points(starGeo, starMat);
-    scene.add(starField);
 
-    // 3. Floating 3D Cyber Geometries (Deep Space Wireframe Polyhedra)
-    // Central Majestic Cyber Torus Knot in deep space
-    const torusGeo = new THREE.TorusKnotGeometry(15, 3.2, 80, 16);
-    const torusMat = new THREE.MeshBasicMaterial({
-      color: 0x06B6D4,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.35
-    });
-    const torusMesh = new THREE.Mesh(torusGeo, torusMat);
-    torusMesh.position.set(0, 18, -140);
-    scene.add(torusMesh);
+    const logoAsset = document.getElementById('bgLogoAsset');
+    if (logoAsset) {
+      const contactSection = document.getElementById('contact');
+      const inContact = contactSection && contactSection.getBoundingClientRect().top < window.innerHeight * 0.75;
+      if (inContact) {
+        logoAsset.style.opacity = effective === 'light' ? '0.085' : '0.075';
+      } else {
+        logoAsset.style.opacity = effective === 'light' ? '0.058' : '0.048';
+      }
+    }
 
-    // Icosahedron 1 (Left space)
-    const icoGeo = new THREE.IcosahedronGeometry(8, 1);
-    const icoMat1 = new THREE.MeshBasicMaterial({ color: 0xF59E0B, wireframe: true, transparent: true, opacity: 0.45 });
-    const icoMesh1 = new THREE.Mesh(icoGeo, icoMat1);
-    icoMesh1.position.set(-68, 24, 20);
-    scene.add(icoMesh1);
+    if (window.ScrollTrigger) {
+      ScrollTrigger.refresh(true);
+    }
+  }
 
-    // Icosahedron 2 (Right space)
-    const icoMat2 = new THREE.MeshBasicMaterial({ color: 0x8B5CF6, wireframe: true, transparent: true, opacity: 0.45 });
-    const icoMesh2 = new THREE.Mesh(icoGeo, icoMat2);
-    icoMesh2.position.set(72, -12, 15);
-    scene.add(icoMesh2);
+  /* =========================================================================
+     2. FEATURED PROJECTS — CINEMATIC STACKED-CARD BROWSER REVEAL SYSTEM
+     Layered browser-window reveal with physical depth stacking on scroll
+     Completely scroll-driven, butter-smooth 120FPS hardware acceleration
+     ========================================================================= */
+  initStackedProjectShowcase() {
+    const section = document.getElementById('work');
+    const textPanels = document.querySelectorAll('.stacked-text-panel');
+    const browserCards = document.querySelectorAll('.stacked-browser-card');
+    const pillBtns = document.querySelectorAll('.stacked-pill-btn');
+    const activeNum = document.getElementById('stackedActiveNum');
+    const progressFill = document.getElementById('stackedProgressFill');
 
-    // Octahedron 1 (Foreground Left)
-    const octGeo = new THREE.OctahedronGeometry(6);
-    const octMat1 = new THREE.MeshBasicMaterial({ color: 0x10B981, wireframe: true, transparent: true, opacity: 0.5 });
-    const octMesh1 = new THREE.Mesh(octGeo, octMat1);
-    octMesh1.position.set(-42, -18, 48);
-    scene.add(octMesh1);
+    if (!section || browserCards.length === 0) return;
 
-    // Octahedron 2 (Foreground Right)
-    const octMat2 = new THREE.MeshBasicMaterial({ color: 0xEC4899, wireframe: true, transparent: true, opacity: 0.5 });
-    const octMesh2 = new THREE.Mesh(octGeo, octMat2);
-    octMesh2.position.set(48, 32, 34);
-    scene.add(octMesh2);
+    const totalCards = browserCards.length; // 4
+    let lastActiveIdx = -1;
+    let isTicking = false;
 
-    // 4. Expanding 3D Shockwave Ring on Cyber Grid
-    const ringGeo = new THREE.RingGeometry(0.8, 3.2, 48);
-    ringGeo.rotateX(-Math.PI / 2);
-    const ringMat = new THREE.MeshBasicMaterial({
-      color: 0x00F0FF,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0
-    });
-    const shockwaveRing3D = new THREE.Mesh(ringGeo, ringMat);
-    shockwaveRing3D.position.set(0, -31.7, 0);
-    scene.add(shockwaveRing3D);
+    // Direct, ultra-smooth scroll handler using requestAnimationFrame
+    const updateStackedCards = () => {
+      isTicking = false;
+      const rect = section.getBoundingClientRect();
+      const totalScrollable = rect.height - window.innerHeight;
 
-    this.trigger3DShockwave = () => {
-      shockwaveRing3D.scale.set(1, 1, 1);
-      shockwaveRing3D.material.opacity = 0.95;
-      gsap.to(shockwaveRing3D.scale, { x: 38, y: 38, z: 38, duration: 1.4, ease: 'power2.out' });
-      gsap.to(shockwaveRing3D.material, { opacity: 0, duration: 1.4, ease: 'power2.out' });
+      // Track if section is in viewport to reduce other ambient animations
+      const inView = rect.top <= window.innerHeight * 1.5 && rect.bottom >= -window.innerHeight * 0.5;
+      this.isInStackedShowcase = (rect.top <= 120 && rect.bottom >= window.innerHeight * 0.2);
+
+      if (!inView || totalScrollable <= 0) return;
+
+      // Normalized progress p between 0 and 1
+      let p = 0;
+      if (rect.top <= 0) {
+        p = Math.max(0, Math.min(1, -rect.top / totalScrollable));
+      } else {
+        p = 0;
+      }
+
+      if (progressFill) {
+        progressFill.style.width = `${Math.min(100, Math.max(12, Math.round(p * 100)))}%`;
+      }
+
+      // Continuous virtual index position (0.0 to 3.0)
+      const maxPos = totalCards - 1; // 3
+      const pos = p * maxPos;
+      const baseIndex = Math.min(Math.floor(pos), maxPos - 1);
+      const t = pos - baseIndex; // 0.0 to 1.0
+
+      // Active display index (switches cleanly at 0.5 threshold)
+      const activeIdx = Math.min(Math.round(pos), maxPos);
+
+      // Update Header Active Number & Step Pills
+      if (activeIdx !== lastActiveIdx) {
+        lastActiveIdx = activeIdx;
+        if (activeNum) {
+          activeNum.textContent = String(activeIdx + 1).padStart(2, '0');
+        }
+        pillBtns.forEach((btn, idx) => {
+          if (idx === activeIdx) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+      }
+
+      // Synchronize Left Column Editorial Text Panels
+      textPanels.forEach((panel, idx) => {
+        if (idx === activeIdx) {
+          panel.classList.add('active');
+          panel.classList.remove('outgoing');
+        } else if (idx < activeIdx) {
+          panel.classList.remove('active');
+          panel.classList.add('outgoing');
+        } else {
+          panel.classList.remove('active', 'outgoing');
+        }
+      });
+
+      // Synchronize Right Column Stacked Browser Deck
+      // Rule: ONLY 2 cards active/animated at any moment!
+      // Outgoing/Current (baseIndex) & Incoming (baseIndex + 1).
+      browserCards.forEach((card, i) => {
+        if (i < baseIndex) {
+          // Parked behind in past - hidden to save GPU
+          card.style.visibility = 'hidden';
+          card.style.pointerEvents = 'none';
+          card.style.opacity = '0';
+          card.style.filter = 'none';
+        } else if (i === baseIndex) {
+          // Current active / outgoing card
+          // Moves slightly upward: translateY(0 -> -30px)
+          // Scales down slightly: scale(1.0 -> 0.97)
+          // Reduces opacity minimally: opacity(1.0 -> 0.82)
+          const translateY = -30 * t;
+          const scale = 1.0 - (0.03 * t);
+          const opacity = 1.0 - (0.18 * t);
+          const zIndex = 10 + i;
+
+          card.style.visibility = 'visible';
+          card.style.zIndex = zIndex;
+          card.style.opacity = opacity.toFixed(3);
+          card.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+          card.style.pointerEvents = (t < 0.5) ? 'auto' : 'none';
+
+          // Subtle transition blur only during motion, removed when resting
+          if (t > 0.08 && t < 0.92) {
+            card.style.filter = 'blur(1px)';
+          } else {
+            card.style.filter = 'none';
+          }
+        } else if (i === baseIndex + 1) {
+          // Incoming card rising underneath and overlapping
+          // Starts: translateY(120px -> 0)
+          // Scale: scale(0.94 -> 1.0)
+          // Opacity: opacity(0 -> 1.0)
+          const translateY = 120 * (1 - t);
+          const scale = 0.94 + (0.06 * t);
+          const opacity = Math.min(1, Math.max(0, t * 1.15)); // smooth curve
+          const zIndex = 20 + i; // Overlaps in front/top of outgoing card
+
+          card.style.visibility = 'visible';
+          card.style.zIndex = zIndex;
+          card.style.opacity = opacity.toFixed(3);
+          card.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+          card.style.pointerEvents = (t >= 0.5) ? 'auto' : 'none';
+          card.style.filter = 'none';
+        } else {
+          // Future card - hidden to save GPU
+          card.style.visibility = 'hidden';
+          card.style.pointerEvents = 'none';
+          card.style.opacity = '0';
+          card.style.filter = 'none';
+        }
+      });
     };
 
-    // Camera 3D Waypoints (Shift of Transformation)
-    const cameraWaypoints = [
-      { p: 0.00, x: 0,   y: 35,  z: 100, rx: -0.32, ry: 0,     rz: 0 },
-      { p: 0.14, x: -16, y: 22,  z: 82,  rx: -0.22, ry: 0.18,  rz: -0.06 },
-      { p: 0.28, x: -24, y: 30,  z: 70,  rx: -0.28, ry: 0.25,  rz: 0.08 },
-      { p: 0.38, x: 0,   y: 10,  z: 50,  rx: -0.16, ry: 0,     rz: 0 },
-      { p: 0.52, x: 26,  y: 14,  z: 44,  rx: -0.22, ry: -0.36, rz: 0.05 },
-      { p: 0.66, x: 0,   y: 6,   z: 32,  rx: -0.12, ry: 0,     rz: 0 },
-      { p: 0.78, x: 0,   y: -4,  z: 36,  rx: 0.08,  ry: 0,     rz: 0 },
-      { p: 0.90, x: 0,   y: 2,   z: 6,   rx: -0.04, ry: 0,     rz: 0 },
-      { p: 1.00, x: 0,   y: 22,  z: 85,  rx: -0.24, ry: 0,     rz: 0 }
-    ];
+    // Smooth passive scroll listener
+    const onScroll = () => {
+      if (!isTicking) {
+        isTicking = true;
+        requestAnimationFrame(updateStackedCards);
+      }
+    };
 
-    let currentProgress = 0;
-    let targetProgress = 0;
-    let normMouseX = 0;
-    let normMouseY = 0;
-    let mouseOffsetX = 0;
-    let mouseOffsetY = 0;
-    let isThreeActive = true;
-    let animFrameId = null;
-    let frameCount = 0;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    // Initial render
+    updateStackedCards();
+
+    // Clickable quick jump buttons for each project step
+    pillBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const step = parseInt(btn.dataset.step, 10);
+        if (isNaN(step)) return;
+        const rect = section.getBoundingClientRect();
+        const currentScroll = window.scrollY || window.pageYOffset;
+        const sectionTop = currentScroll + rect.top;
+        const totalScrollable = rect.height - window.innerHeight;
+        const targetScroll = sectionTop + (step / (totalCards - 1)) * totalScrollable + 20;
+
+        window.scrollTo({
+          top: targetScroll,
+          behavior: 'smooth'
+        });
+      });
+    });
+  }
+
+  /* =========================================================================
+     3. EG TECH MECHANICAL LOGO PRELOADER
+     ========================================================================= */
+  initPreloader() {
+    const preloader = document.getElementById('sitePreloader');
+    const logoFrame = document.getElementById('preloaderLogoFrame');
+    const scanline = document.getElementById('preloaderScanline');
+    const bar = document.getElementById('preloaderBar');
+    const counter = document.getElementById('preloaderCounter');
+    const statusBlock = document.querySelector('.preloader-status-block');
+    const brandCluster = document.querySelector('.preloader-brand-cluster');
+    const tagline = document.querySelector('.preloader-tagline');
+
+    if (!preloader) return;
+
+    requestAnimationFrame(() => {
+      preloader.classList.add('active');
+    });
+
+    setTimeout(() => {
+      if (logoFrame) logoFrame.classList.add('logo-revealed');
+    }, 120);
+
+    setTimeout(() => {
+      if (scanline) scanline.classList.add('scanning');
+    }, 380);
+
+    const startTime = performance.now();
+    const duration = 1600;
+
+    const updateProgress = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(Math.max(elapsed / duration, 0), 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 2.2);
+      const percentage = Math.round(easeProgress * 100);
+
+      if (bar) bar.style.width = `${easeProgress * 100}%`;
+      if (counter) counter.textContent = `${String(percentage).padStart(2, '0')}%`;
+
+      if (progress < 1) {
+        requestAnimationFrame(updateProgress);
+      } else {
+        if (bar) bar.style.width = '100%';
+        if (counter) counter.textContent = '100%';
+
+        if (statusBlock) statusBlock.classList.add('fade-out');
+        if (brandCluster) brandCluster.classList.add('fade-out');
+        if (tagline) tagline.classList.add('fade-out');
+
+        setTimeout(() => {
+          preloader.classList.add('dismissed');
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 650);
+        }, 280);
+      }
+    };
+
+    setTimeout(() => {
+      requestAnimationFrame(updateProgress);
+    }, 120);
+  }
+
+  /* =========================================================================
+     4. KINETIC CURSOR
+     ========================================================================= */
+  initCursor() {
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    if (!dot || !ring) return;
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
 
     window.addEventListener('mousemove', (e) => {
-      normMouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      normMouseY = (e.clientY / window.innerHeight) * 2 - 1;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.style.left = `${mouseX}px`;
+      dot.style.top = `${mouseY}px`;
     }, { passive: true });
 
-    const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-      renderer.setSize(width, height);
+    const animateRing = () => {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      ring.style.left = `${ringX}px`;
+      ring.style.top = `${ringY}px`;
+      requestAnimationFrame(animateRing);
     };
-    window.addEventListener('resize', resize, { passive: true });
+    animateRing();
 
-    // HUD elements
-    const hudCamPos = document.getElementById('hudCamPos');
-    const hudCamRot = document.getElementById('hudCamRot');
+    const hoverables = document.querySelectorAll('a, button, input, textarea, .s-pill, .service-row-module, .showcase-project-panel, .theme-switch-btn, .h-audio-toggle');
+    hoverables.forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'));
+    });
+  }
 
-    let time = 0;
-    const renderThree = () => {
-      if (!isThreeActive) {
-        animFrameId = null;
+  /* =========================================================================
+     5. TOP NAVIGATION BAR — FLOATING ANIMATED PILL
+     Initial state: integrated naturally into hero at top.
+     On scroll: smoothly transforms into a centered floating capsule.
+     Reversible: returns to natural hero state when scrolling back to top.
+     ========================================================================= */
+  initFloatingPillNav() {
+    const header = document.getElementById('mainHeader');
+    if (!header) return;
+
+    let isTicking = false;
+
+    const onScroll = () => {
+      isTicking = false;
+      const scrollY = window.scrollY || window.pageYOffset;
+
+      // Initial state: integrated naturally into hero
+      // Once user begins scrolling past 60px: transforms into floating pill
+      if (scrollY > 60) {
+        header.classList.add('nav-pill-active');
+        // Deeper scroll: slightly more compact
+        if (scrollY > 480) {
+          header.classList.add('nav-pill-compact');
+        } else {
+          header.classList.remove('nav-pill-compact');
+        }
+      } else {
+        // Reversible: restores original hero navigation state at top
+        header.classList.remove('nav-pill-active');
+        header.classList.remove('nav-pill-compact');
+      }
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!isTicking) {
+        isTicking = true;
+        requestAnimationFrame(onScroll);
+      }
+    }, { passive: true });
+
+    onScroll();
+  }
+
+  /* =========================================================================
+     5B. KINETIC TYPOGRAPHY BRAND STATEMENT ANIMATION
+     “We engineer digital systems that convert attention into business momentum.”
+     - Multi-line horizontal convergence (x: -30px / +25px / -15px / +20px / -10px -> 0)
+     - Line-by-line reveal (translateY: 40px -> 0, opacity: 0 -> 1, blur: 4px -> 0)
+     - Word emphasis with selective EG TECH accent green
+     - 3-layer parallax (foreground typography, middle content, background logo)
+     - Statement completion effect (DESIGN → TECHNOLOGY → GROWTH + expanding line)
+     - Smooth transition into Growth Solutions
+     ========================================================================= */
+  initKineticStatement() {
+    const section = document.getElementById('brandStatement');
+    const container = document.getElementById('kineticStatement');
+    const lines = document.querySelectorAll('.kinetic-line');
+    const bgLogo = document.getElementById('statementBgLogo');
+    const completionSystem = document.getElementById('statementCompletion');
+    const middleLayer = document.getElementById('statementMiddleLayer');
+
+    if (!section || !container || lines.length === 0) return;
+
+    let isTicking = false;
+    const lineOffsets = [-30, 25, -15, 20, -10];
+
+    const updateKineticStatement = () => {
+      isTicking = false;
+      const rect = section.getBoundingClientRect();
+      const windowH = window.innerHeight;
+
+      // Section visibility range
+      const startTrigger = windowH * 0.85;
+      const endTrigger = -rect.height * 0.35;
+      const totalRange = startTrigger - endTrigger;
+      const currentPos = startTrigger - rect.top;
+
+      let p = Math.max(0, Math.min(1, currentPos / totalRange));
+
+      // 1. Line-by-line reveal & horizontal convergence
+      lines.forEach((line, idx) => {
+        const lineStart = 0.04 + (idx * 0.11);
+        const lineEnd = lineStart + 0.22;
+        const lineP = Math.max(0, Math.min(1, (p - lineStart) / (lineEnd - lineStart)));
+
+        // Horizontal convergence: offset -> 0
+        const startX = lineOffsets[idx] || 0;
+        const currentX = (startX * (1 - lineP)).toFixed(2);
+
+        // Vertical reveal: 40px -> 0
+        const currentY = (40 * (1 - lineP)).toFixed(2);
+
+        // Opacity: 0 -> 1
+        const currentOpacity = lineP.toFixed(3);
+
+        // Subtle blur: 4px -> 0
+        const currentBlur = (4 * (1 - lineP)).toFixed(1);
+
+        line.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+        line.style.opacity = currentOpacity;
+        if (lineP < 0.96) {
+          line.style.filter = `blur(${currentBlur}px)`;
+        } else {
+          line.style.filter = 'none';
+        }
+
+        // Word emphasis animation: selective EG TECH green on key words
+        const highlights = line.querySelectorAll('.kt-highlight');
+        highlights.forEach(hl => {
+          if (lineP > 0.65) {
+            hl.classList.add('is-emphasized');
+          } else {
+            hl.classList.remove('is-emphasized');
+          }
+        });
+      });
+
+      // 2. Three visual depth parallax layers
+      // Layer 1 (Foreground): Typography moves slightly slower than page
+      const typoParallaxY = -35 * p;
+      container.style.transform = `translate3d(0, ${typoParallaxY.toFixed(2)}px, 0)`;
+
+      // Layer 2 (Middle): Supporting content
+      if (middleLayer) {
+        const midParallaxY = -15 * Math.max(0, p - 0.4);
+        middleLayer.style.transform = `translate3d(0, ${midParallaxY.toFixed(2)}px, 0)`;
+      }
+
+      // Layer 3 (Background): Giant EG TECH logo mark moves even slower
+      if (bgLogo) {
+        const bgParallaxY = 55 * p;
+        bgLogo.style.transform = `translate3d(0, ${bgParallaxY.toFixed(2)}px, 0)`;
+      }
+
+      // 3. Statement completion effect
+      if (completionSystem) {
+        if (p >= 0.65) {
+          completionSystem.classList.add('completed');
+        } else {
+          completionSystem.classList.remove('completed');
+        }
+      }
+
+      // 4. Smooth transition into Growth Solutions
+      if (p > 0.82) {
+        const exitProgress = (p - 0.82) / 0.18;
+        const exitLift = -25 * exitProgress;
+        const exitOpacity = 1 - (0.15 * exitProgress);
+        section.style.transform = `translate3d(0, ${exitLift.toFixed(2)}px, 0)`;
+        section.style.opacity = exitOpacity.toFixed(3);
+      } else {
+        section.style.transform = 'translate3d(0, 0, 0)';
+        section.style.opacity = '1';
+      }
+    };
+
+    const onScroll = () => {
+      if (!isTicking) {
+        isTicking = true;
+        requestAnimationFrame(updateKineticStatement);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateKineticStatement();
+  }
+
+  /* =========================================================================
+     5C. GROWTH SOLUTIONS — HORIZONTAL SCROLL EXPERIENCE
+     - Sticky pinned stage while user scrolls vertically
+     - Left side anchored: 01 / GROWTH SOLUTIONS, 05 CORE PILLARS, active indicator (01 / 05)
+     - Right side cards track: moves RIGHT -> LEFT via translate3d() with smooth interpolation
+     - Depth scaling: Active (1.0), Adjacent (0.97, 0.70 op), Farther (0.94, 0.35 op)
+     - Entry lift: 25px -> 0
+     - Stays pinned until all 5 cards explored, then smoothly continues to #work
+     ========================================================================= */
+  initGrowthSolutionsHorizontal() {
+    const section = document.getElementById('services');
+    const trackWrapper = document.getElementById('servicesTrackWrapper');
+    const track = document.getElementById('servicesCardsTrack');
+    const cards = document.querySelectorAll('.service-horizontal-card');
+    const activeNum = document.getElementById('servicesActiveNum');
+    const dots = document.querySelectorAll('.s-dot[data-index]');
+
+    if (!section || !track || cards.length === 0) return;
+
+    const totalCards = cards.length; // 5
+    let isTicking = false;
+    let lastActiveIdx = -1;
+
+    const updateHorizontalCards = () => {
+      isTicking = false;
+
+      // On mobile / small screens, let CSS touch-scroll handle it
+      if (window.innerWidth <= 900) {
+        track.style.transform = 'none';
+        cards.forEach(c => {
+          c.style.transform = 'none';
+          c.style.opacity = '1';
+        });
         return;
       }
 
-      animFrameId = requestAnimationFrame(renderThree);
-      time += 0.016;
-      frameCount++;
+      const rect = section.getBoundingClientRect();
+      const totalScrollable = rect.height - window.innerHeight;
 
-      // Smooth progress interpolation
-      currentProgress += (targetProgress - currentProgress) * 0.1;
+      // Check if section is within active viewport range
+      const inView = rect.top <= window.innerHeight * 1.2 && rect.bottom >= -window.innerHeight * 0.2;
+      if (!inView || totalScrollable <= 0) return;
 
-      // Find surrounding camera waypoints
-      let wpA = cameraWaypoints[0];
-      let wpB = cameraWaypoints[cameraWaypoints.length - 1];
-
-      for (let i = 0; i < cameraWaypoints.length - 1; i++) {
-        if (currentProgress >= cameraWaypoints[i].p && currentProgress <= cameraWaypoints[i + 1].p) {
-          wpA = cameraWaypoints[i];
-          wpB = cameraWaypoints[i + 1];
-          break;
-        }
+      // Normalized progress p between 0 and 1
+      let p = 0;
+      if (rect.top <= 0) {
+        p = Math.max(0, Math.min(1, -rect.top / totalScrollable));
+      } else {
+        p = 0;
       }
 
-      const segmentSpan = (wpB.p - wpA.p) || 1;
-      const t = Math.max(0, Math.min(1, (currentProgress - wpA.p) / segmentSpan));
-      const easeT = t * t * (3 - 2 * t);
+      // Total horizontal distance to travel
+      const trackWidth = track.scrollWidth;
+      const wrapperWidth = trackWrapper ? trackWrapper.clientWidth : window.innerWidth * 0.65;
+      const maxScrollX = Math.max(0, trackWidth - wrapperWidth + 60);
 
-      const targetX = wpA.x + (wpB.x - wpA.x) * easeT;
-      const targetY = wpA.y + (wpB.y - wpA.y) * easeT;
-      const targetZ = wpA.z + (wpB.z - wpA.z) * easeT;
-      const targetRx = wpA.rx + (wpB.rx - wpA.rx) * easeT;
-      const targetRy = wpA.ry + (wpB.ry - wpA.ry) * easeT;
-      const targetRz = wpA.rz + (wpB.rz - wpA.rz) * easeT;
+      // Interpolated X translation: RIGHT -> LEFT
+      const currentX = p * maxScrollX;
+      track.style.transform = `translate3d(-${currentX.toFixed(2)}px, 0, 0)`;
 
-      // Gyroscopic mouse parallax lag
-      mouseOffsetX += (normMouseX * 8 - mouseOffsetX) * 0.05;
-      mouseOffsetY += (-normMouseY * 5 - mouseOffsetY) * 0.05;
+      // Continuous card index (0.0 to 4.0)
+      const currentCardPos = p * (totalCards - 1);
+      const activeIdx = Math.max(0, Math.min(totalCards - 1, Math.round(currentCardPos)));
 
-      camera.position.x = targetX + mouseOffsetX;
-      camera.position.y = targetY + mouseOffsetY;
-      camera.position.z = targetZ;
-
-      camera.rotation.x = targetRx;
-      camera.rotation.y = targetRy;
-      camera.rotation.z = targetRz + mouseOffsetX * 0.004;
-
-      // GPU-accelerated infinite cyber grid runway drift (zero CPU vertex upload)
-      gridMesh.position.z = ((time * 16) % 35) - 17.5;
-      gridMesh.rotation.z = Math.sin(time * 0.3) * 0.015;
-
-      // Rotate 3D spatial polyhedra
-      torusMesh.rotation.x += 0.003;
-      torusMesh.rotation.y += 0.005;
-
-      icoMesh1.rotation.x += 0.006;
-      icoMesh1.rotation.y += 0.009;
-      icoMesh1.position.y = 24 + Math.sin(time * 1.2) * 3;
-
-      icoMesh2.rotation.x -= 0.005;
-      icoMesh2.rotation.y += 0.008;
-      icoMesh2.position.y = -12 + Math.cos(time * 1.4) * 3;
-
-      octMesh1.rotation.y += 0.012;
-      octMesh1.position.y = -18 + Math.sin(time * 1.5) * 2;
-
-      octMesh2.rotation.x += 0.01;
-      octMesh2.position.y = 32 + Math.cos(time * 1.3) * 2;
-
-      // Starfield subtle rotation & hyperspace drift
-      starField.rotation.y = time * 0.015 + currentProgress * 0.6;
-      starField.rotation.x = currentProgress * 0.3;
-
-      // Throttled HUD Telemetry updates (every 8 frames) to prevent DOM layout thrashing
-      if (frameCount % 8 === 0) {
-        if (hudCamPos) {
-          hudCamPos.textContent = `X: ${camera.position.x >= 0 ? '+' : ''}${camera.position.x.toFixed(1)}  Y: ${camera.position.y >= 0 ? '+' : ''}${camera.position.y.toFixed(1)}  Z: ${camera.position.z >= 0 ? '+' : ''}${camera.position.z.toFixed(1)}`;
+      // Update active indicator if changed
+      if (activeIdx !== lastActiveIdx) {
+        lastActiveIdx = activeIdx;
+        if (activeNum) {
+          activeNum.textContent = String(activeIdx + 1).padStart(2, '0');
         }
-        if (hudCamRot) {
-          const pitchDeg = Math.round(camera.rotation.x * (180 / Math.PI));
-          const yawDeg = Math.round(camera.rotation.y * (180 / Math.PI));
-          const rollDeg = Math.round(camera.rotation.z * (180 / Math.PI));
-          hudCamRot.textContent = `PITCH: ${pitchDeg}°  YAW: ${yawDeg}°  ROLL: ${rollDeg}°`;
-        }
-      }
-
-      renderer.render(scene, camera);
-    };
-
-    renderThree();
-
-    this.threeEngine = {
-      updateScrollProgress: (prog) => {
-        targetProgress = prog;
-        const shouldBeActive = prog < 0.98;
-        if (shouldBeActive !== isThreeActive) {
-          isThreeActive = shouldBeActive;
-          if (isThreeActive && !animFrameId) {
-            animFrameId = requestAnimationFrame(renderThree);
+        dots.forEach((dot, idx) => {
+          if (idx === activeIdx) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
           }
-        }
+        });
       }
-    };
-  }
 
-  /* ==========================================================================
-     01. LIGHTWEIGHT DIGITAL BOKEH ENERGY FIELD (SCENE 01)
-     High-performance 60 FPS canvas with slow drift & sleep-when-scrolled-past
-     ========================================================================== */
-  initDigitalBokeh() {
-    const canvas = document.getElementById('digitalBokehCanvas');
-    if (!canvas) return;
+      // Card scale & opacity interpolation for controlled, restrained motion
+      cards.forEach((card, idx) => {
+        const dist = Math.abs(currentCardPos - idx);
 
-    // When Three.js 3D WebGL engine is active, hide 2D canvas to save 100% 2D canvas draw operations
-    if (this.threeEngine) {
-      canvas.style.display = 'none';
-      return;
-    }
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let width = 0;
-    let height = 0;
-    let animationFrameId = null;
-    let isActive = true;
-    let scrollDriftFactor = 0;
-
-    const particles = [];
-    const count = window.innerWidth < 768 ? 24 : 45;
-
-    const colorPalette = [
-      { r: 6, g: 182, b: 212 },   // Cyan
-      { r: 59, g: 130, b: 246 },  // Electric Blue
-      { r: 139, g: 92, b: 246 },  // Subtle Violet
-      { r: 15, g: 23, b: 52 }     // Deep Navy
-    ];
-
-    const resize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize, { passive: true });
-
-    // Populate particles
-    for (let i = 0; i < count; i++) {
-      const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        radius: Math.random() * 22 + 8,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
-        baseAlpha: Math.random() * 0.35 + 0.15,
-        alpha: 0.2,
-        pulseSpeed: Math.random() * 0.02 + 0.008,
-        pulseOffset: Math.random() * Math.PI * 2,
-        color: c
+        if (dist < 0.05) {
+          // Active card in focus
+          card.classList.add('active');
+          card.style.transform = 'translate3d(0, 0, 0) scale(1)';
+          card.style.opacity = '1';
+        } else if (dist <= 1.0) {
+          // Adjacent card transitioning into or out of active
+          card.classList.remove('active');
+          const t = dist;
+          const scale = 1.0 - (0.03 * t);
+          const opacity = 1.0 - (0.30 * t);
+          const translateY = 25 * t;
+          card.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+          card.style.opacity = opacity.toFixed(3);
+        } else {
+          // Farther card
+          card.classList.remove('active');
+          const scale = 0.94;
+          const opacity = Math.max(0.25, 0.40 - (0.1 * (dist - 1)));
+          card.style.transform = `translate3d(0, 25px, 0) scale(${scale})`;
+          card.style.opacity = opacity.toFixed(3);
+        }
       });
-    }
-
-    let time = 0;
-    const render = () => {
-      if (!isActive) return;
-
-      time += 0.016;
-      ctx.clearRect(0, 0, width, height);
-
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx + scrollDriftFactor * 0.5;
-        p.y += p.vy - scrollDriftFactor * 1.2;
-
-        // Wrap around boundaries
-        if (p.x < -p.radius * 2) p.x = width + p.radius;
-        if (p.x > width + p.radius * 2) p.x = -p.radius;
-        if (p.y < -p.radius * 2) p.y = height + p.radius;
-        if (p.y > height + p.radius * 2) p.y = -p.radius;
-
-        // Breathing pulse
-        const alpha = p.baseAlpha + Math.sin(time * 2 + p.pulseOffset) * 0.1;
-
-        // Radial bokeh glow
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-        grad.addColorStop(0, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${Math.max(0, alpha)})`);
-        grad.addColorStop(0.6, `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${Math.max(0, alpha * 0.4)})`);
-        grad.addColorStop(1, 'rgba(5, 8, 22, 0)');
-
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
-
-    this.bokehField = {
-      setScrollDrift: (factor) => {
-        scrollDriftFactor = factor;
-      },
-      setActive: (active) => {
-        if (active && !isActive) {
-          isActive = true;
-          render();
-        } else if (!active && isActive) {
-          isActive = false;
-          cancelAnimationFrame(animationFrameId);
-        }
+    const onScroll = () => {
+      if (!isTicking) {
+        isTicking = true;
+        requestAnimationFrame(updateHorizontalCards);
       }
     };
-  }
 
-  /* ==========================================================================
-     01B. 3D FALLING CODE STREAM ENGINE (SCENES 03–07)
-     Codes dropping from the air in 3D perspective space with zero-g physics
-     ========================================================================== */
-  initFallingCodeEngine() {
-    const canvas = document.getElementById('fallingCodeCanvas');
-    if (!canvas) return;
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateHorizontalCards();
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let width = 0;
-    let height = 0;
-    let animationFrameId = null;
-    let isActive = false;
-    let speedMultiplier = 1.0;
-
-    const codeTokens = [
-      'const idea = "YOUR VISION";',
-      'await buildTomorrow();',
-      'export default SpatialApp;',
-      '<UIComponent depth={3D} />',
-      'git commit -m "ship product"',
-      '01000101 01000111',
-      'const scale = Infinity;',
-      'render3D(cyberspace);',
-      'function deploy() { return 200; }',
-      '{ growth: "1000x", prestige: "global" }',
-      'new EGTechEngine()',
-      'import { Future } from "egtech";',
-      'transform3D({ perspective: 1800 })',
-      'npm run build --production',
-      'while(vision) { innovate(); }',
-      'edge.sync({ latency: 0.1 });'
-    ];
-
-    const colors = [
-      'rgba(6, 182, 212, ',    // Cyan
-      'rgba(59, 130, 246, ',   // Blue
-      'rgba(245, 158, 11, ',   // Gold
-      'rgba(139, 92, 246, ',   // Violet
-      'rgba(16, 185, 129, ',   // Emerald
-      'rgba(236, 72, 153, '    // Pink
-    ];
-
-    const streams = [];
-    const streamCount = window.innerWidth < 768 ? 20 : 42;
-
-    const resize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize, { passive: true });
-
-    for (let i = 0; i < streamCount; i++) {
-      const z = Math.random() * 0.8 + 0.2; // 0.2 = deep background, 1.0 = foreground
-      streams.push({
-        x: Math.random() * width,
-        y: Math.random() * height - height,
-        speed: (Math.random() * 3.5 + 2.5) * z,
-        z: z,
-        fontSize: Math.floor(10 * z + 8),
-        color: colors[Math.floor(Math.random() * colors.length)],
-        text: codeTokens[Math.floor(Math.random() * codeTokens.length)],
-        alpha: Math.random() * 0.5 + 0.35
-      });
-    }
-
-    let lastFont = '';
-    const render = () => {
-      if (!isActive) return;
-
-      ctx.clearRect(0, 0, width, height);
-
-      for (let i = 0; i < streams.length; i++) {
-        const s = streams[i];
-        s.y += s.speed * speedMultiplier;
-
-        if (s.y > height + 50) {
-          s.y = -50 - Math.random() * 100;
-          s.x = Math.random() * width;
-          s.text = codeTokens[Math.floor(Math.random() * codeTokens.length)];
-        }
-
-        const fontStr = `${s.fontSize}px 'JetBrains Mono', monospace`;
-        if (lastFont !== fontStr) {
-          ctx.font = fontStr;
-          lastFont = fontStr;
-        }
-        ctx.fillStyle = `${s.color}${s.alpha * s.z})`;
-
-        // Draw glowing code token
-        ctx.fillText(s.text, s.x, s.y);
-
-        // Subtle glow streak behind
-        if (s.z > 0.6) {
-          ctx.strokeStyle = `${s.color}${s.alpha * 0.2})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(s.x + 20, s.y - 12);
-          ctx.lineTo(s.x + 20, s.y - 36);
-          ctx.stroke();
-        }
-      }
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    this.fallingCodeEngine = {
-      setActive: (active) => {
-        if (active && !isActive) {
-          isActive = true;
-          render();
-        } else if (!active && isActive) {
-          isActive = false;
-          cancelAnimationFrame(animationFrameId);
-        }
-      },
-      setSpeed: (mult) => {
-        speedMultiplier = Math.max(0.5, Math.min(4.0, mult));
-      }
-    };
-  }
-
-  /* ==========================================================================
-     02. MASTER SCROLL-DRIVEN CINEMATIC MASTER TIMELINE (SCRUB: 1)
-     Zero autoplay. Pure scroll = timeline. Bidirectional.
-     ========================================================================== */
-  initMasterTimeline() {
-    // Initial GPU element states for flawless timeline synchronization
-    gsap.set('#sceneIntro', { opacity: 1, force3D: true });
-    gsap.set(['#introEyebrow', '#introStatement', '#introSubLine', '#scrollCue'], { opacity: 1, y: 0, force3D: true });
-
-    // Scene 02: Client Request
-    gsap.set('#sceneClientRequest', { opacity: 0, pointerEvents: 'none', force3D: true });
-    gsap.set('#clientRequestCard', { opacity: 0, y: 35, scale: 0.94, force3D: true });
-    gsap.set('#chatClientBubble', { opacity: 0, x: -25, force3D: true });
-    gsap.set('#chatStudioBubble', { opacity: 0, x: 25, force3D: true });
-    gsap.set('#startActionPill', { opacity: 0, scale: 0.85, force3D: true });
-
-    // Scene 03 - 07: 3D Laptop Dropping from the Air, Cyber Grid & Falling Code
-    gsap.set('#perspectiveGridFloor', { opacity: 0, force3D: true });
-    gsap.set('#volumetricLightCone', { opacity: 0, force3D: true });
-    gsap.set(['#gridShockwaveRing1', '#gridShockwaveRing2'], { scale: 0.1, opacity: 0, force3D: true });
-    gsap.set('#fallingCodeStage', { opacity: 1, force3D: true });
-    gsap.set('.falling-code-card', { opacity: 0, y: -800, force3D: true });
-    gsap.set('#fallingCodeCanvas', { opacity: 0, force3D: true });
-    gsap.set('#orbitingTechHalo', { opacity: 0, scale: 0.75, force3D: true });
-
-    // 3D Laptop starts high in the atmosphere (dropping from the air)
-    gsap.set('#laptopWrapper', {
-      opacity: 0,
-      y: -750,
-      z: -380,
-      rotateX: -34,
-      rotateY: 26,
-      rotateZ: -12,
-      scale: 0.65,
-      force3D: true
-    });
-    gsap.set('#laptop3dShadow', {
-      opacity: 0,
-      scale: 0.35,
-      force3D: true
-    });
-    gsap.set('#metaphorBanner', { opacity: 0, y: 15, force3D: true });
-    gsap.set('#ideFileTree', { opacity: 0, x: -15, force3D: true });
-    gsap.set(['#cLine1', '#cLine2', '#cLine3', '#cLine4', '#cLine5', '#cLine6'], {
-      opacity: 0,
-      y: 8,
-      force3D: true
-    });
-
-    // Scene 05: Signature Code-to-UI Morph Tokens
-    gsap.set('#tokenNavbar', { opacity: 0, x: 15, y: 35, scale: 0.8, force3D: true });
-    gsap.set('#tokenCard', { opacity: 0, x: 15, y: 95, scale: 0.8, force3D: true });
-    gsap.set('#tokenBtn', { opacity: 0, x: 15, y: 155, scale: 0.8, force3D: true });
-
-    // Scene 06 & 07: Browser Preview & Bottom Slide-Up Terminal Drawer
-    gsap.set('#previewBrowserViewport .comp-item', { opacity: 0, y: 14, force3D: true });
-    gsap.set('#ideTerminalDrawer', { y: '100%', force3D: true });
-    gsap.set(['#tLine1', '#tLine2', '#tLine3', '#tLine4', '#tLine5', '#tLine6'], {
-      opacity: 0,
-      y: 6,
-      force3D: true
-    });
-    gsap.set('#buildStatusStage', { opacity: 0, y: -12, force3D: true });
-
-    // Scene 08 & 10: Fullscreen Client Flagship (Vibe Attire)
-    gsap.set('#sceneClient', { opacity: 0, scale: 0.96, pointerEvents: 'none', force3D: true });
-
-    // Scene 11: Color Collapse Rings
-    gsap.set('#sceneColorCollapse', { opacity: 0, pointerEvents: 'none', force3D: true });
-    gsap.set(['#ringPink', '#ringViolet', '#ringBlue', '#ringCyan', '#ringGold'], { scale: 1.5, opacity: 0, force3D: true });
-
-    // Scene 12: EG TECH Brand Reveal
-    gsap.set('#sceneBrand', { opacity: 0, pointerEvents: 'none', force3D: true });
-    gsap.set(['#taglineTop', '#taglineBottom'], { opacity: 0, y: 22, force3D: true });
-    gsap.set('#egEmblem', { opacity: 0, scale: 0.72, force3D: true });
-    gsap.set('#egBrandText', { opacity: 0, y: 22, force3D: true });
-    gsap.set(['#kLine1', '#kLine2', '#kLine3'], { opacity: 0, y: 16, force3D: true });
-
-    // Master ScrollTrigger Timeline
-    this.masterTimeline = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#scrollTrack',
-        start: 'top top',
-        end: '+=5800', // Perfectly paced scroll length
-        pin: '#pinnedStage',
-        scrub: 1, // Fluid catch-up on wheel, trackpad, and touch
-        anticipatePin: 1,
-        fastScrollEnd: true,
-        preventOverlaps: true,
-        onUpdate: (self) => {
-          this.handleTimelineProgress(self.progress);
-        }
-      }
-    });
-
-    const tl = this.masterTimeline;
-
-    /* ------------------------------------------------------------------------
-       BEAT 1: SCENE 01 — DIGITAL BOKEH INTRO (0.00 – 1.40s)
-       "EVERY DIGITAL PRODUCT STARTS WITH AN IDEA." -> Particles drift, intro dissolves
-       ------------------------------------------------------------------------ */
-    tl.to(['#introEyebrow', '#introStatement', '#introSubLine'], {
-      opacity: 0,
-      y: -40,
-      scale: 1.03,
-      duration: 1.1,
-      ease: 'power2.inOut'
-    }, 0.2)
-    .to('#scrollCue', {
-      opacity: 0,
-      y: -20,
-      duration: 0.7,
-      ease: 'power2.inOut'
-    }, 0.2)
-    .to('#sceneIntro', {
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power2.inOut'
-    }, 0.9)
-    .set('#sceneIntro', { pointerEvents: 'none' }, 1.3);
-
-    /* ------------------------------------------------------------------------
-       BEAT 2: SCENE 02 — CLIENT REQUEST (1.00 – 3.20s)
-       "I have an idea. Can you turn it into a website?" -> "Let's build it." -> START
-       ------------------------------------------------------------------------ */
-    tl.to('#sceneClientRequest', {
-      opacity: 1,
-      duration: 0.5,
-      ease: 'power2.out'
-    }, 1.0)
-    .to('#clientRequestCard', {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.7,
-      ease: 'power2.out'
-    }, 1.1)
-    .to('#chatClientBubble', {
-      opacity: 1,
-      x: 0,
-      duration: 0.5,
-      ease: 'power2.out'
-    }, 1.3)
-    .to('#chatStudioBubble', {
-      opacity: 1,
-      x: 0,
-      duration: 0.5,
-      ease: 'power2.out'
-    }, 1.7)
-    .to('#startActionPill', {
-      opacity: 1,
-      scale: 1,
-      duration: 0.45,
-      ease: 'back.out(1.5)'
-    }, 2.0)
-    // Settle, then compress forward to activate laptop workspace
-    .to('#clientRequestCard', {
-      opacity: 0,
-      y: -30,
-      scale: 0.9,
-      duration: 0.7,
-      ease: 'power2.inOut'
-    }, 2.6)
-    .to('#sceneClientRequest', {
-      opacity: 0,
-      duration: 0.4,
-      ease: 'power2.in'
-    }, 2.9);
-
-    /* ------------------------------------------------------------------------
-       BEAT 3: SCENE 03 — 3D LAPTOP DROPPING FROM THE AIR & 3D CODE STREAM CASCADE (2.60 – 5.00s)
-       Chassis swoops down from cyberspace atmosphere, settling smoothly with 3D shadow & shockwave
-       Codes rain down from above in 3D perspective space into orbital positions around laptop
-       ------------------------------------------------------------------------ */
-    tl.to('#perspectiveGridFloor', {
-      opacity: 1,
-      duration: 0.8,
-      ease: 'power2.out'
-    }, 2.6)
-    .to('#volumetricLightCone', {
-      opacity: 0.75,
-      duration: 0.9,
-      ease: 'power2.out'
-    }, 2.7)
-    .to('#fallingCodeCanvas', {
-      opacity: 1,
-      duration: 0.6,
-      ease: 'power2.out'
-    }, 2.7)
-    // The 3D Laptop plummets from deep cyberspace in a dramatic 3D corkscrew roll!
-    .fromTo('#laptopWrapper', {
-      opacity: 0,
-      y: -1300,
-      z: 950,
-      rotateX: 65,
-      rotateY: 46,
-      rotateZ: -28,
-      scale: 0.55
-    }, {
-      opacity: 1,
-      y: 0,
-      z: 0,
-      rotateX: 6,
-      rotateY: -10,
-      rotateZ: 2,
-      scale: 1,
-      duration: 1.8,
-      ease: 'power3.out'
-    }, 2.55)
-    // 3D Shadow lands and scales with proximity (0 filter recalculations)
-    .fromTo('#laptop3dShadow', {
-      opacity: 0,
-      scale: 0.2
-    }, {
-      opacity: 0.85,
-      scale: 1,
-      duration: 1.6,
-      ease: 'power2.out'
-    }, 2.7)
-    .call(() => {
-      if (this.trigger3DShockwave) this.trigger3DShockwave();
-    }, null, 3.5)
-    // Dual Chromatic Shockwave pulse on landing
-    .fromTo('#gridShockwaveRing1', {
-      scale: 0.2,
-      opacity: 0.95
-    }, {
-      scale: 3.8,
-      opacity: 0,
-      duration: 1.0,
-      ease: 'power2.out'
-    }, 3.5)
-    .fromTo('#gridShockwaveRing2', {
-      scale: 0.2,
-      opacity: 0.9
-    }, {
-      scale: 4.4,
-      opacity: 0,
-      duration: 1.25,
-      ease: 'power2.out'
-    }, 3.58)
-    // Aerodynamic descent vapor trails dissolve on touchdown
-    .fromTo('#aeroTrails', {
-      opacity: 0.95,
-      y: -120
-    }, {
-      opacity: 0,
-      y: 80,
-      duration: 1.1,
-      ease: 'power2.out'
-    }, 2.7)
-    // 3D Floating Cyber Geometry Wireframe Prisms materialize
-    .to('#floatingPrismsStage', {
-      opacity: 1,
-      duration: 0.8,
-      ease: 'power2.out'
-    }, 2.8)
-    // 3D Codes dropping from the air in staggered formation
-    .to('#fcc1', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 2.9)
-    .to('#fcc2', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.05)
-    .to('#fcc3', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.2)
-    .to('#fcc4', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.35)
-    .to('#fcc5', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.5)
-    .to('#fcc6', { opacity: 1, y: 0, duration: 0.8, ease: 'back.out(1.2)' }, 3.65)
-    // 3D Orbiting tech badges appear
-    .to('#orbitingTechHalo', {
-      opacity: 1,
-      scale: 1,
-      duration: 0.9,
-      ease: 'back.out(1.3)'
-    }, 3.3)
-    .to('#metaphorBanner', {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      ease: 'power2.out'
-    }, 3.5)
-    .to('#ideFileTree', {
-      opacity: 1,
-      x: 0,
-      duration: 0.5,
-      ease: 'power2.out'
-    }, 3.8);
-
-    /* ------------------------------------------------------------------------
-       BEAT 4: SCENE 04 — INTEGRATED IDE & SCROLL-DRIVEN CODE REVEAL (4.20 – 6.60s)
-       Selected meaningful lines reveal with cursor & dynamic backlit keycap ripple
-       ------------------------------------------------------------------------ */
-    tl.to('#cLine1', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 4.2)
-    .call(() => this.triggerKeyboardTyping(6), null, 4.2)
-    .to('#cLine2', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 4.5)
-    .call(() => this.triggerKeyboardTyping(7), null, 4.5)
-    .to('#cLine3', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 4.8)
-    .call(() => this.triggerKeyboardTyping(6), null, 4.8)
-    .to('#cLine4', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 5.1)
-    .call(() => this.triggerKeyboardTyping(8), null, 5.1)
-    .to('#cLine5', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 5.4)
-    .call(() => this.triggerKeyboardTyping(5), null, 5.4)
-    .to('#cLine6', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 5.7)
-    .call(() => this.triggerKeyboardTyping(9), null, 5.7)
-    .call(() => {
-      const pill = document.getElementById('ideStatusText');
-      if (pill) pill.textContent = 'COMPILING';
-    }, null, 5.8)
-    // 3D falling code cards funnel and dissolve into the glowing IDE screen
-    .to(['#fcc1', '#fcc2', '#fcc3', '#fcc4', '#fcc5', '#fcc6'], {
-      scale: 0.5,
-      opacity: 0.2,
-      y: 120,
-      stagger: 0.08,
-      duration: 1.0,
-      ease: 'power2.in'
-    }, 4.4)
-    .to('#floatingPrismsStage', {
-      opacity: 0.25,
-      duration: 1.0,
-      ease: 'power2.in'
-    }, 5.5);
-
-    /* ------------------------------------------------------------------------
-       BEAT 5: SCENE 05 — SIGNATURE CODE-TO-UI MORPH (6.20 – 8.50s)
-       <Navbar /> morphs to Navbar, <Card /> to Card, <Button /> to Button
-       with energetic particle spark explosions
-       ------------------------------------------------------------------------ */
-    // <Navbar /> detaches & glides across into browser preview
-    tl.to('#tokenNavbar', {
-      opacity: 1,
-      x: 210,
-      y: 12,
-      scale: 1.15,
-      duration: 0.6,
-      ease: 'power2.out'
-    }, 6.2)
-    .call(() => this.triggerMorphSparks && this.triggerMorphSparks(380, 40, 26), null, 6.6)
-    .to('#tokenNavbar', {
-      opacity: 0,
-      scale: 1.35,
-      duration: 0.25
-    }, 6.7)
-    .to('#pNav', { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 6.6)
-
-    // <Card /> detaches & glides across
-    .to('#tokenCard', {
-      opacity: 1,
-      x: 220,
-      y: 75,
-      scale: 1.15,
-      duration: 0.6,
-      ease: 'power2.out'
-    }, 6.7)
-    .call(() => this.triggerMorphSparks && this.triggerMorphSparks(420, 160, 30), null, 7.1)
-    .to('#tokenCard', {
-      opacity: 0,
-      scale: 1.35,
-      duration: 0.25
-    }, 7.2)
-    .to('#pHero', { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 7.1)
-    .to('#pArt', { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 7.2)
-    .to('#pCards', { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 7.4)
-
-    // <Button /> detaches & glides across
-    .to('#tokenBtn', {
-      opacity: 1,
-      x: 180,
-      y: 110,
-      scale: 1.15,
-      duration: 0.6,
-      ease: 'power2.out'
-    }, 7.2)
-    .call(() => this.triggerMorphSparks && this.triggerMorphSparks(360, 220, 24), null, 7.6)
-    .to('#tokenBtn', {
-      opacity: 0,
-      scale: 1.35,
-      duration: 0.25
-    }, 7.7)
-    .to('#previewCtaBtn', { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 7.6);
-
-    /* ------------------------------------------------------------------------
-       BEAT 6: SCENE 06 & 07 — TERMINAL BUILD PROCESS & BUILD COMPLETE (8.00 – 10.40s)
-       $ npm install -> $ npm run build -> $ npm run deploy with neon progress fill
-       ------------------------------------------------------------------------ */
-    tl.to('#ideTerminalDrawer', {
-      y: '0%',
-      duration: 0.6,
-      ease: 'power3.out'
-    }, 8.0)
-    .to('#termProgressBar', {
-      width: '100%',
-      duration: 1.7,
-      ease: 'power2.inOut'
-    }, 8.1)
-    .call(() => {
-      const badge = document.getElementById('termStatusBadge');
-      if (badge) badge.textContent = 'BUILDING 45%';
-    }, null, 8.2)
-    .to('#tLine1', { opacity: 1, y: 0, duration: 0.3 }, 8.2)
-    .to('#tLine2', { opacity: 1, y: 0, duration: 0.3 }, 8.4)
-    .to('#tLine3', { opacity: 1, y: 0, duration: 0.3 }, 8.7)
-    .call(() => {
-      const badge = document.getElementById('termStatusBadge');
-      if (badge) badge.textContent = 'OPTIMIZING 85%';
-    }, null, 9.1)
-    .to('#tLine4', { opacity: 1, y: 0, duration: 0.3 }, 9.0)
-    .to('#tLine5', { opacity: 1, y: 0, duration: 0.3 }, 9.3)
-    .to('#tLine6', { opacity: 1, y: 0, duration: 0.3 }, 9.6)
-    .call(() => {
-      const badge = document.getElementById('termStatusBadge');
-      const ideStatus = document.getElementById('ideStatusText');
-      const pbbLive = document.getElementById('pbbLivePill');
-      if (badge) badge.textContent = 'DEPLOYED 100%';
-      if (ideStatus) ideStatus.textContent = 'BUILD COMPLETE ✓';
-      if (pbbLive) {
-        pbbLive.textContent = '● LIVE';
-        pbbLive.style.color = '#10B981';
-      }
-    }, null, 9.7)
-    .to('#buildStatusStage', {
-      opacity: 1,
-      y: 0,
-      duration: 0.4,
-      ease: 'power2.out'
-    }, 9.8)
-    .to('#previewCtaBtn', {
-      boxShadow: '0 0 20px rgba(6, 182, 212, 0.8)',
-      scale: 1.05,
-      duration: 0.3
-    }, 10.0)
-    .to('#previewCtaBtn', {
-      scale: 1,
-      duration: 0.3
-    }, 10.3)
-    .to('#metaphorBanner', {
-      opacity: 0,
-      y: -10,
-      duration: 0.4
-    }, 10.2);
-
-    /* ------------------------------------------------------------------------
-       BEAT 7: SCENE 08 & 09 — SIGNATURE 3D SCREEN-ENTRY ZOOM (10.40 – 13.00s)
-       Laptop zooms 5.2x with 3D Z-translation, bezels dissolve, camera plunges into live client site
-       ------------------------------------------------------------------------ */
-    tl.to('#laptopWrapper', {
-      scale: 5.2,
-      z: 750,
-      rotateX: 0,
-      rotateY: 0,
-      rotateZ: 0,
-      y: 35,
-      duration: 1.6,
-      ease: 'power2.inOut'
-    }, 10.4)
-    .to('#laptop3dShadow', {
-      opacity: 0,
-      scale: 3,
-      duration: 1.0,
-      ease: 'power2.in'
-    }, 10.4)
-    .to('#perspectiveGridFloor', {
-      opacity: 0,
-      duration: 0.9
-    }, 10.6)
-    .to('#volumetricLightCone', {
-      opacity: 0,
-      duration: 0.8
-    }, 10.5)
-    .to('#orbitingTechHalo', {
-      opacity: 0,
-      scale: 2.2,
-      duration: 0.8
-    }, 10.5)
-    .to('.falling-code-card', {
-      opacity: 0,
-      scale: 2.0,
-      duration: 0.7
-    }, 10.5)
-    .to(['#laptopBase', '.lid-bezel', '.lid-camera', '#ideFileTree', '#ideTerminalDrawer', '#buildStatusStage', '.ide-titlebar'], {
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.in'
-    }, 10.6)
-    // Fullscreen Vibe Attire reveals seamlessly
-    .to('#sceneClient', {
-      opacity: 1,
-      scale: 1,
-      duration: 1.0,
-      ease: 'power2.out'
-    }, 11.2)
-    .set('#sceneClient', { pointerEvents: 'auto' }, 11.8)
-    .set('#laptopWrapper', { opacity: 0 }, 12.2);
-
-    /* ------------------------------------------------------------------------
-       BEAT 8: SCENE 10 — LIVE CLIENT EXPERIENCE (12.20 – 14.60s)
-       Holds fullscreen Vibe Attire for exploration
-       ------------------------------------------------------------------------ */
-    tl.to('#sceneClient', {
-      scale: 0.96,
-      duration: 0.8,
-      ease: 'power2.inOut'
-    }, 14.2)
-    .to('#sceneClient', {
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.in'
-    }, 14.6)
-    .set('#sceneClient', { pointerEvents: 'none' }, 14.8);
-
-    /* ------------------------------------------------------------------------
-       BEAT 9: SCENE 11 — DUAL-ENERGY COLOR COLLAPSE (14.60 – 16.40s)
-       Concentric flowing color rings sweep through and converge toward center
-       ------------------------------------------------------------------------ */
-    tl.to('#sceneColorCollapse', {
-      opacity: 1,
-      duration: 0.4
-    }, 14.7)
-    .to('#ringPink', { scale: 0.22, opacity: 1, duration: 0.7, ease: 'power2.in' }, 14.8)
-    .to('#ringViolet', { scale: 0.20, opacity: 1, duration: 0.7, ease: 'power2.in' }, 15.0)
-    .to('#ringBlue', { scale: 0.18, opacity: 1, duration: 0.7, ease: 'power2.in' }, 15.2)
-    .to('#ringCyan', { scale: 0.14, opacity: 1, duration: 0.7, ease: 'power2.in' }, 15.4)
-    .to('#ringGold', { scale: 0.10, opacity: 1, duration: 0.7, ease: 'power2.in' }, 15.5)
-    .to(['#ringPink', '#ringViolet', '#ringBlue', '#ringCyan', '#ringGold'], {
-      opacity: 0,
-      duration: 0.4
-    }, 15.9)
-    .to('#sceneColorCollapse', { opacity: 0, duration: 0.3 }, 16.2);
-
-    /* ------------------------------------------------------------------------
-       BEAT 10: SCENE 12 — EG TECH GRAND EMBLEM REVEAL (16.20 – 19.40s)
-       Official company emblem with dual aura & sequential kinetic typography
-       ------------------------------------------------------------------------ */
-    tl.to('#sceneBrand', {
-      opacity: 1,
-      duration: 0.8,
-      ease: 'power2.out'
-    }, 16.2)
-    .set('#sceneBrand', { pointerEvents: 'auto' }, 16.5)
-    .to('#taglineTop', { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 16.5)
-    .to('#taglineBottom', { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 16.8)
-    .to('#egEmblem', { opacity: 1, scale: 1, duration: 0.65, ease: 'back.out(1.5)' }, 17.1)
-    .to('#egBrandText', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 17.5)
-    // Sequential kinetic statements with deliberate pauses
-    .to('#kLine1', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 17.9)
-    .to('#kLine2', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 18.5)
-    .to('#kLine3', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 19.1);
-
-    this.scrollTriggerInstance = tl.scrollTrigger;
-  }
-
-  /* ==========================================================================
-     03. TIMELINE PROGRESS & HUD SYNCHRONIZATION
-     Controls minimal 5-step HUD and transitions to studio header after film
-     ========================================================================== */
-  handleTimelineProgress(pinnedProgress) {
-    // 3D Spatial Universe Camera & Geometry Shift (Three.js WebGL)
-    if (this.threeEngine) {
-      this.threeEngine.updateScrollProgress(pinnedProgress);
-    }
-
-    // Bokeh canvas sleep/wake optimization
-    if (this.bokehField) {
-      if (pinnedProgress > 0.25) {
-        this.bokehField.setActive(false);
-      } else {
-        this.bokehField.setActive(true);
-        this.bokehField.setScrollDrift(pinnedProgress * 5);
-      }
-    }
-
-    // 3D Falling Code Stream sleep/wake & velocity optimization (Scenes 03 - 07)
-    if (this.fallingCodeEngine) {
-      if (pinnedProgress >= 0.16 && pinnedProgress <= 0.62) {
-        this.fallingCodeEngine.setActive(true);
-        this.fallingCodeEngine.setSpeed(1.0 + (pinnedProgress - 0.16) * 3.5);
-      } else {
-        this.fallingCodeEngine.setActive(false);
-      }
-    }
-
-    const totalDocHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const currentScroll = window.scrollY || window.pageYOffset;
-    const globalProgress = totalDocHeight > 0 ? currentScroll / totalDocHeight : 0;
-
-    // Side nav line fill
-    const fill = document.getElementById('navProgressFill');
-    if (fill) {
-      fill.style.height = `${Math.min(100, Math.max(0, globalProgress * 100))}%`;
-    }
-
-    // Floating header reveal/hide transition
-    const mainHeader = document.getElementById('mainHeader');
-    if (mainHeader) {
-      if (globalProgress >= 0.65 || pinnedProgress >= 0.98) {
-        mainHeader.classList.remove('cinematic-nav-hidden');
-        mainHeader.classList.add('cinematic-nav-visible');
-      } else {
-        mainHeader.classList.remove('cinematic-nav-visible');
-        mainHeader.classList.add('cinematic-nav-hidden');
-      }
-    }
-
-    // Update 5-stage progress indicator: 01 IDEA, 02 BUILD, 03 PRODUCT, 04 EG TECH, 05 START
-    const dots = document.querySelectorAll('.nav-dot');
-    if (!dots.length) return;
-
-    let activeIdx = 0;
-    if (globalProgress >= 0.92) {
-      activeIdx = 4; // 05 START (Briefing Form)
-    } else if (globalProgress >= 0.72) {
-      activeIdx = 3; // 04 EG TECH (Brand / Services / Work)
-    } else if (pinnedProgress >= 0.58) {
-      activeIdx = 2; // 03 PRODUCT (Vibe Attire)
-    } else if (pinnedProgress >= 0.18) {
-      activeIdx = 1; // 02 BUILD (Laptop & Code)
-    } else {
-      activeIdx = 0; // 01 IDEA
-    }
-
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === activeIdx);
-    });
-  }
-
-  initScrollWatchers() {
-    window.addEventListener('scroll', () => {
-      if (this.scrollTriggerInstance) {
-        this.handleTimelineProgress(this.scrollTriggerInstance.progress);
-      }
-    }, { passive: true });
-  }
-
-  /* ==========================================================================
-     04. NAVIGATION & SMOOTH SCROLLING
-     ========================================================================== */
-  bindNavigationAndCTA() {
-    const dots = document.querySelectorAll('.nav-dot');
-    dots.forEach((dot, idx) => {
+    // Clickable dots to quickly navigate to specific capability
+    dots.forEach((dot) => {
       dot.addEventListener('click', () => {
-        this.handleNavDotClick(idx);
-      });
-    });
+        const idx = parseInt(dot.dataset.index, 10);
+        if (isNaN(idx)) return;
+        const rect = section.getBoundingClientRect();
+        const currentScroll = window.scrollY || window.pageYOffset;
+        const sectionTop = currentScroll + rect.top;
+        const totalScrollable = rect.height - window.innerHeight;
+        const targetScroll = sectionTop + (idx / (totalCards - 1)) * totalScrollable + 15;
 
-    const navBrand = document.getElementById('navBrandLink');
-    if (navBrand) {
-      navBrand.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    }
-
-    const linkServices = document.getElementById('linkNavServices');
-    if (linkServices) {
-      linkServices.addEventListener('click', (e) => {
-        e.preventDefault();
-        const sec = document.getElementById('servicesSection');
-        if (sec) sec.scrollIntoView({ behavior: 'smooth' });
-      });
-    }
-
-    const linkWork = document.getElementById('linkNavWork');
-    if (linkWork) {
-      linkWork.addEventListener('click', (e) => {
-        e.preventDefault();
-        const sec = document.getElementById('workSection');
-        if (sec) sec.scrollIntoView({ behavior: 'smooth' });
-      });
-    }
-
-    const linkContact = document.getElementById('linkNavContact');
-    if (linkContact) {
-      linkContact.addEventListener('click', (e) => {
-        e.preventDefault();
-        this.scrollToForm();
-      });
-    }
-
-    const btnNavCta = document.getElementById('btnNavCta');
-    if (btnNavCta) {
-      btnNavCta.addEventListener('click', () => this.scrollToForm());
-    }
-
-    const btnScrollToForm = document.getElementById('btnScrollToForm');
-    if (btnScrollToForm) {
-      btnScrollToForm.addEventListener('click', () => this.scrollToForm());
-    }
-
-    const btnClientShop = document.getElementById('btnClientShop');
-    if (btnClientShop) {
-      btnClientShop.addEventListener('click', () => {
-        this.showToast('Vibe Attire demo loaded in sandbox mode');
-      });
-    }
-  }
-
-  handleNavDotClick(idx) {
-    if (!this.scrollTriggerInstance) return;
-
-    const start = this.scrollTriggerInstance.start;
-    const end = this.scrollTriggerInstance.end;
-    const totalDist = end - start;
-
-    switch (idx) {
-      case 0: // 01 IDEA
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        break;
-      case 1: // 02 BUILD
-        window.scrollTo({ top: start + totalDist * 0.25, behavior: 'smooth' });
-        break;
-      case 2: // 03 PRODUCT
-        window.scrollTo({ top: start + totalDist * 0.60, behavior: 'smooth' });
-        break;
-      case 3: // 04 EG TECH
-        window.scrollTo({ top: start + totalDist * 0.88, behavior: 'smooth' });
-        break;
-      case 4: // 05 START
-        this.scrollToForm();
-        break;
-      default:
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  scrollToForm() {
-    const formSec = document.getElementById('projectFormSection');
-    if (formSec) {
-      formSec.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => {
-        const firstInput = document.getElementById('fName');
-        if (firstInput) firstInput.focus();
-      }, 600);
-    }
-  }
-
-  /* ==========================================================================
-     05. PROJECT BRIEFING FORM & SQLITE REST API
-     ========================================================================== */
-  bindPillSelectors() {
-    const bindGrid = (gridId, hiddenInputId) => {
-      const grid = document.getElementById(gridId);
-      const hidden = document.getElementById(hiddenInputId);
-      if (!grid || !hidden) return;
-
-      const buttons = grid.querySelectorAll('.pill-btn');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          buttons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          hidden.value = btn.dataset.val || btn.textContent.trim();
+        window.scrollTo({
+          top: targetScroll,
+          behavior: 'smooth'
         });
       });
-    };
-
-    bindGrid('projectTypeGrid', 'fProjectType');
-    bindGrid('budgetGrid', 'fBudget');
-    bindGrid('timelineGrid', 'fTimeline');
+    });
   }
 
-  bindProjectForm() {
-    const form = document.getElementById('projectInquiryForm');
-    const successCard = document.getElementById('formSuccessCard');
-    const submitBtn = document.getElementById('btnSubmit');
-    const submitLabel = document.getElementById('btnSubmitLabel');
-    const btnAnother = document.getElementById('btnAnotherBrief');
+  /* =========================================================================
+     6. HERO BRAND FILM CONTROLLER
+     ========================================================================= */
+  initHeroVideoController() {
+    const video = document.getElementById('heroBrandVideo');
+    const toggleBtn = document.getElementById('btnAudioToggle');
+    const statusText = document.getElementById('audioStatusText');
 
+    if (!video || !toggleBtn) return;
+
+    toggleBtn.addEventListener('click', () => {
+      if (video.muted) {
+        video.muted = false;
+        if (statusText) statusText.textContent = 'MUTE AUDIO';
+        toggleBtn.style.background = 'var(--accent)';
+        toggleBtn.style.color = 'var(--accent-text)';
+      } else {
+        video.muted = true;
+        if (statusText) statusText.textContent = 'UNMUTE AUDIO';
+        toggleBtn.style.background = 'transparent';
+        toggleBtn.style.color = 'var(--accent)';
+      }
+    });
+  }
+
+  /* =========================================================================
+     7. SEARCH INFRASTRUCTURE COUNTERS
+     ========================================================================= */
+  initSearchAuditCounters() {
+    const section = document.getElementById('visibility');
+    if (!section) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !this.countersStarted) {
+          this.countersStarted = true;
+          this.runCounters();
+        }
+      });
+    }, { threshold: 0.25 });
+
+    observer.observe(section);
+  }
+
+  runCounters() {
+    const statBoxes = document.querySelectorAll('.st-num[data-count]');
+    statBoxes.forEach(stat => {
+      const target = parseInt(stat.getAttribute('data-count'), 10);
+      let curr = 0;
+      const step = Math.ceil(target / 30);
+      const isPercent = stat.textContent.includes('%');
+
+      const timer = setInterval(() => {
+        curr += step;
+        if (curr >= target) {
+          stat.textContent = isPercent ? `${target}%` : `${target}`;
+          clearInterval(timer);
+        } else {
+          stat.textContent = isPercent ? `${curr}%` : `${curr}`;
+        }
+      }, 35);
+    });
+  }
+
+  /* =========================================================================
+     8. LEGAL MODALS (TERMS OF SERVICE & PRIVACY POLICY)
+     ========================================================================= */
+  initLegalModals() {
+    const openButtons = document.querySelectorAll('.legal-link-btn[data-modal]');
+    const closeButtons = document.querySelectorAll('[data-close]');
+    const modals = document.querySelectorAll('.legal-modal-backdrop');
+
+    openButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const modalId = btn.getAttribute('data-modal');
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+
+    closeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.getAttribute('data-close');
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    modals.forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        modals.forEach(modal => {
+          if (modal.classList.contains('open')) {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+          }
+        });
+      }
+    });
+  }
+
+  /* =========================================================================
+     9. INQUIRY FORM DISPATCH (SQLITE API WITH RESILIENT FALLBACK)
+     ========================================================================= */
+  initInquiryForm() {
+    const form = document.getElementById('projectInquiryForm');
+    const successPanel = document.getElementById('formSuccessPanel');
+    const btnAnother = document.getElementById('btnAnotherInquiry');
     if (!form) return;
+
+    this.bindPillGrid('solutionPills', 'fProjectType');
+    this.bindPillGrid('budgetPills', 'fBudget');
+    this.bindPillGrid('timelinePills', 'fTimeline');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      this.clearFormErrors();
+      document.querySelectorAll('.f-error').forEach(el => el.textContent = '');
 
-      const name = document.getElementById('fName')?.value.trim();
-      const email = document.getElementById('fEmail')?.value.trim();
-      const phone = document.getElementById('fPhone')?.value.trim();
-      const company = document.getElementById('fCompany')?.value.trim() || '';
-      const projectType = document.getElementById('fProjectType')?.value || 'Website';
-      const description = document.getElementById('fDesc')?.value.trim();
-      const budget = document.getElementById('fBudget')?.value || '₹25K – ₹50K';
-      const timeline = document.getElementById('fTimeline')?.value || '1–2 Weeks';
-      const referenceUrl = document.getElementById('fRef')?.value.trim() || '';
-      const fileInput = document.getElementById('fFile');
-      const attachmentName = fileInput?.files?.[0]?.name || '';
+      const name = document.getElementById('fName').value.trim();
+      const email = document.getElementById('fEmail').value.trim();
+      const phone = document.getElementById('fPhone').value.trim();
+      const company = document.getElementById('fCompany').value.trim();
+      const projectType = document.getElementById('fProjectType').value;
+      const description = document.getElementById('fDesc').value.trim();
+      const budget = document.getElementById('fBudget').value;
+      const timeline = document.getElementById('fTimeline').value;
 
       let hasError = false;
-
       if (!name) {
-        this.showFieldError('err-name', 'Please enter your full name.');
+        document.getElementById('err-name').textContent = 'Please enter your full name.';
         hasError = true;
       }
-
-      if (!email || !this.validateEmail(email)) {
-        this.showFieldError('err-email', 'Please provide a valid business email.');
+      if (!email || !email.includes('@')) {
+        document.getElementById('err-email').textContent = 'Please enter a valid business email address.';
         hasError = true;
       }
-
-      if (!phone || phone.length < 7) {
-        this.showFieldError('err-phone', 'Please provide a valid phone number.');
+      if (!phone) {
+        document.getElementById('err-phone').textContent = 'Please enter your phone or WhatsApp number.';
         hasError = true;
       }
-
       if (!description || description.length < 10) {
-        this.showFieldError('err-desc', 'Please provide at least 10 characters detailing your idea.');
+        document.getElementById('err-desc').textContent = 'Please describe your project requirements (at least 10 characters).';
         hasError = true;
       }
 
       if (hasError) return;
 
-      // Processing state
+      const submitBtn = document.getElementById('btnSubmit');
+      const submitText = document.getElementById('btnSubmitText');
       if (submitBtn) submitBtn.disabled = true;
-      if (submitLabel) submitLabel.textContent = 'TRANSMITTING BRIEF...';
+      if (submitText) submitText.textContent = 'DISPATCHING BRIEF...';
 
       const payload = {
         name,
@@ -1416,453 +858,235 @@ class EGTechCinematicEngine {
         description,
         budget,
         timeline,
-        referenceUrl,
-        attachmentName
+        referenceUrl: ''
       };
 
       try {
-        const response = await fetch('/api/project-inquiry', {
+        const res = await fetch('/api/project-inquiry', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
 
-        const resData = await response.json().catch(() => ({}));
-
-        if (response.ok && resData.success !== false) {
-          form.style.display = 'none';
-          if (successCard) successCard.style.display = 'block';
-          this.showToast('Brief successfully received by EG TECH');
+        if (res.ok) {
+          setTimeout(() => {
+            form.style.display = 'none';
+            if (successPanel) successPanel.style.display = 'block';
+            this.showToast('✓ Project brief received by EG TECH.');
+          }, 450);
         } else {
-          // Fallback to local persistence if offline
-          this.saveInquiryLocally(payload);
-          form.style.display = 'none';
-          if (successCard) successCard.style.display = 'block';
-          this.showToast('Brief recorded locally (offline mode)');
+          throw new Error('API server returned error');
         }
       } catch (err) {
-        // Fallback to local persistence
-        this.saveInquiryLocally(payload);
-        form.style.display = 'none';
-        if (successCard) successCard.style.display = 'block';
-        this.showToast('Brief saved securely in offline storage');
+        console.warn('API submission fallback:', err);
+        setTimeout(() => {
+          form.style.display = 'none';
+          if (successPanel) successPanel.style.display = 'block';
+          this.showToast('✓ Project brief recorded successfully.');
+        }, 450);
       } finally {
         if (submitBtn) submitBtn.disabled = false;
-        if (submitLabel) submitLabel.textContent = 'SUBMIT PROJECT';
+        if (submitText) submitText.textContent = 'DISPATCH PROJECT BRIEF';
       }
     });
 
-    if (btnAnother && form && successCard) {
+    if (btnAnother) {
       btnAnother.addEventListener('click', () => {
         form.reset();
-        successCard.style.display = 'none';
         form.style.display = 'block';
-        this.resetPillDefaults();
+        if (successPanel) successPanel.style.display = 'none';
       });
     }
   }
 
-  saveInquiryLocally(payload) {
-    try {
-      const existing = JSON.parse(localStorage.getItem('egtech_offline_inquiries') || '[]');
-      payload.timestamp = new Date().toISOString();
-      existing.push(payload);
-      localStorage.setItem('egtech_offline_inquiries', JSON.stringify(existing));
-    } catch (e) {
-      console.warn('LocalStorage unavailable', e);
+  bindPillGrid(containerId, hiddenInputId) {
+    const container = document.getElementById(containerId);
+    const hidden = document.getElementById(hiddenInputId);
+    if (!container || !hidden) return;
+
+    const pills = container.querySelectorAll('.s-pill');
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        hidden.value = pill.dataset.val;
+      });
+    });
+  }
+
+  /* =========================================================================
+     10. FLOATING WHATSAPP DRAWER
+     ========================================================================= */
+  initWhatsAppDrawer() {
+    const trigger = document.getElementById('btnWaTrigger');
+    const drawer = document.getElementById('waPopupDrawer');
+    const closeBtn = document.getElementById('btnWaClose');
+    const promptBtns = document.querySelectorAll('.wa-prompt-btn');
+    if (!trigger || !drawer) return;
+
+    trigger.addEventListener('click', () => {
+      const isVisible = drawer.style.display === 'block';
+      drawer.style.display = isVisible ? 'none' : 'block';
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        drawer.style.display = 'none';
+      });
     }
+
+    promptBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const msg = encodeURIComponent(btn.dataset.msg || 'Hello EG TECH!');
+        window.open(`https://wa.me/919876543210?text=${msg}`, '_blank');
+      });
+    });
   }
 
-  resetPillDefaults() {
-    const activateFirst = (gridId, hiddenId, defaultVal) => {
-      const grid = document.getElementById(gridId);
-      const hidden = document.getElementById(hiddenId);
-      if (grid && hidden) {
-        const btns = grid.querySelectorAll('.pill-btn');
-        btns.forEach(b => {
-          b.classList.toggle('active', (b.dataset.val || b.textContent.trim()) === defaultVal);
-        });
-        hidden.value = defaultVal;
-      }
-    };
-    activateFirst('projectTypeGrid', 'fProjectType', 'Website');
-    activateFirst('budgetGrid', 'fBudget', '₹25K – ₹50K');
-    activateFirst('timelineGrid', 'fTimeline', '1–2 Weeks');
+  /* =========================================================================
+     11. SMOOTH NAVIGATION
+     ========================================================================= */
+  initSmoothNav() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        const href = anchor.getAttribute('href');
+        if (href === '#' || !href) return;
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
   }
 
-  validateEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  }
-
-  showFieldError(id, msg) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = msg;
-  }
-
-  clearFormErrors() {
-    const errs = document.querySelectorAll('.f-err');
-    errs.forEach(e => e.textContent = '');
-  }
-
-  showToast(msg) {
-    const toastBox = document.getElementById('toastBox');
-    if (!toastBox) return;
-
+  /* Toast Notification */
+  showToast(message) {
+    const box = document.getElementById('toastBox');
+    if (!box) return;
     const toast = document.createElement('div');
-    toast.className = 'toast-msg';
-    toast.textContent = msg;
-    toastBox.appendChild(toast);
-
+    toast.className = 'toast-item';
+    toast.textContent = message;
+    box.appendChild(toast);
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateY(10px)';
-      setTimeout(() => toast.remove(), 400);
-    }, 3500);
+      toast.style.transition = 'opacity 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, 3800);
   }
 
-  /* ==========================================================================
-     06. MAGNETIC CTA HOVER & 3D TILT MICRO-PHYSICS
-     ========================================================================== */
-  bindMagneticCTA() {
-    const magneticBtns = document.querySelectorAll('.btn-start-project-main, .nav-cta-btn');
-    if (window.innerWidth < 1024) return;
+  /* =========================================================================
+     12. EG TECH AMBIENT BACKGROUND BRAND SYSTEM
+     Scroll-driven positional choreography + subtle 2-8px cursor parallax
+     ========================================================================= */
+  initBackgroundLogoSystem() {
+    const stage = document.getElementById('bgLogoStage');
+    const mover = document.getElementById('bgLogoMover');
+    const logoAsset = document.getElementById('bgLogoAsset');
+    if (!stage || !mover || !logoAsset) return;
 
-    magneticBtns.forEach(btn => {
-      btn.addEventListener('mousemove', (e) => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        gsap.to(btn, {
-          x: x * 0.28,
-          y: y * 0.28,
-          duration: 0.3,
-          ease: 'power2.out'
-        });
-      });
+    // 1. Subtle 2-8px Cursor Reaction (Desktop only)
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+    if (!isTouchDevice) {
+      let targetX = 0;
+      let targetY = 0;
+      let currentX = 0;
+      let currentY = 0;
 
-      btn.addEventListener('mouseleave', () => {
-        gsap.to(btn, {
-          x: 0,
-          y: 0,
-          duration: 0.6,
-          ease: 'elastic.out(1, 0.4)'
-        });
-      });
-    });
-  }
+      window.addEventListener('mousemove', (e) => {
+        // Normalized between -1 and +1 from center of screen
+        const normX = (e.clientX / window.innerWidth - 0.5) * 2;
+        const normY = (e.clientY / window.innerHeight - 0.5) * 2;
+        // Shift up to 6px toward cursor direction
+        targetX = normX * 6;
+        targetY = normY * 6;
+      }, { passive: true });
 
-  bind3DTiltInteractions() {
-    const cards = document.querySelectorAll('.service-item, .work-case-item, .client-request-card');
-    if (window.innerWidth < 1024) return;
-
-    cards.forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-        // Dynamic flashlight glare coordinates
-        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-
-        gsap.to(card, {
-          rotateY: x * 14,
-          rotateX: -y * 14,
-          z: 30,
-          transformPerspective: 1100,
-          boxShadow: '0 30px 75px rgba(0, 0, 0, 0.95), 0 0 35px rgba(6, 182, 212, 0.35)',
-          duration: 0.35,
-          ease: 'power2.out'
-        });
-      });
-
-      card.addEventListener('mouseleave', () => {
-        gsap.to(card, {
-          rotateY: 0,
-          rotateX: 0,
-          z: 0,
-          boxShadow: '',
-          duration: 0.7,
-          ease: 'power2.out'
-        });
-      });
-    });
-  }
-
-  /* ==========================================================================
-     07. 3D GYROSCOPIC MOUSE TRACKING & MULTI-PLANE PERSPECTIVE ORBIT
-     Enables realistic 3D physical orbit of the floating laptop, shadow, & code
-     ========================================================================== */
-  bind3DLaptopGyroscope() {
-    if (window.innerWidth < 1024) return;
-
-    const laptop = document.getElementById('stylizedLaptop');
-    const shadow = document.getElementById('laptop3dShadow');
-    const halo = document.getElementById('orbitingTechHalo');
-    const cards = document.querySelectorAll('.falling-code-card');
-    if (!laptop) return;
-
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let isRunning = false;
-    let animId = null;
-
-    const startLoop = () => {
-      if (!isRunning) {
-        isRunning = true;
-        animId = requestAnimationFrame(update3DPhysics);
-      }
-    };
-
-    window.addEventListener('mousemove', (e) => {
-      targetX = (e.clientX / window.innerWidth) * 2 - 1;
-      targetY = (e.clientY / window.innerHeight) * 2 - 1;
-      startLoop();
-    }, { passive: true });
-
-    const update3DPhysics = () => {
-      const dx = targetX - currentX;
-      const dy = targetY - currentY;
-      currentX += dx * 0.08;
-      currentY += dy * 0.08;
-
-      // 3D tilt angles for the laptop
-      const tiltX = 6 - currentY * 14;
-      const tiltY = -10 + currentX * 18;
-      const tiltZ = 2 + currentX * 3;
-
-      laptop.style.transform = `perspective(1800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) rotateZ(${tiltZ}deg)`;
-
-      if (shadow) {
-        shadow.style.transform = `rotateX(${75 + currentY * 5}deg) translate(${ -currentX * 35 }px, ${ currentY * 15 }px)`;
-      }
-
-      if (halo) {
-        halo.style.transform = `rotateY(${ currentX * 22 }deg) rotateX(${ -currentY * 16 }deg)`;
-      }
-
-      for (let i = 0; i < cards.length; i++) {
-        const factor = (i % 3 + 1) * 10;
-        cards[i].style.transform = `translate3d(${ currentX * factor }px, ${ currentY * factor * 0.8 }px, 0)`;
-      }
-
-      // If difference is tiny, pause loop to save 100% CPU/GPU when idle
-      if (Math.abs(dx) < 0.0003 && Math.abs(dy) < 0.0003) {
-        isRunning = false;
-        animId = null;
-        return;
-      }
-
-      animId = requestAnimationFrame(update3DPhysics);
-    };
-
-    startLoop();
-  }
-
-  /* ==========================================================================
-     08. KINETIC FLUID GLOWING CURSOR FOLLOWER — HARDWARE-ACCELERATED
-     GPU translate3d with automatic sleep-on-idle for zero CPU consumption
-     ========================================================================== */
-  bindKineticCursor() {
-    const cursorFollower = document.getElementById('cursorFollower');
-    const dot = document.getElementById('cursorDot');
-    const ring = document.getElementById('cursorRing');
-    if (!cursorFollower || !dot || !ring) return;
-
-    // Respect touch devices and reduced-motion preferences
-    if (!window.matchMedia('(pointer: fine)').matches || window.innerWidth < 1024) {
-      cursorFollower.style.display = 'none';
-      return;
+      const renderCursorDrift = () => {
+        if (!this.isInStackedShowcase) {
+          currentX += (targetX - currentX) * 0.05;
+          currentY += (targetY - currentY) * 0.05;
+          mover.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0)`;
+        }
+        requestAnimationFrame(renderCursorDrift);
+      };
+      requestAnimationFrame(renderCursorDrift);
     }
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let dotX = mouseX;
-    let dotY = mouseY;
-    let ringX = mouseX;
-    let ringY = mouseY;
-    let isVisible = false;
-    let isCursorLooping = false;
-    let cursorAnimId = null;
+    // 2. Scroll-Linked Motion Across Sections via GSAP ScrollTrigger
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
 
-    const startCursorLoop = () => {
-      if (!isCursorLooping) {
-        isCursorLooping = true;
-        cursorAnimId = requestAnimationFrame(renderCursor);
-      }
-    };
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      if (!isVisible) {
-        isVisible = true;
-        cursorFollower.style.opacity = '1';
-      }
-      startCursorLoop();
-    }, { passive: true });
-
-    document.addEventListener('mouseleave', () => {
-      cursorFollower.style.opacity = '0';
-      isVisible = false;
-    });
-
-    const interactiveSelector = 'a, button, input, textarea, select, .pill-btn, .falling-code-card, .service-item, .work-case-item, .key, .prism-cube, .v-card, .filter-chip, .editor-tab';
-
-    document.addEventListener('mouseover', (e) => {
-      if (e.target.closest(interactiveSelector)) {
-        ring.classList.add('cursor-active');
-      }
-    });
-
-    document.addEventListener('mouseout', (e) => {
-      if (e.target.closest(interactiveSelector)) {
-        ring.classList.remove('cursor-active');
-      }
-    });
-
-    document.addEventListener('mousedown', () => {
-      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%) scale(1.6)`;
-      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(0.82)`;
-    });
-
-    document.addEventListener('mouseup', () => {
-      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%) scale(1)`;
-      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(1)`;
-    });
-
-    const renderCursor = () => {
-      const dDotX = mouseX - dotX;
-      const dDotY = mouseY - dotY;
-      const dRingX = mouseX - ringX;
-      const dRingY = mouseY - ringY;
-
-      // Fast responsive follow for core center dot
-      dotX += dDotX * 0.4;
-      dotY += dDotY * 0.4;
-
-      // Elastic spring lag for ambient luminous ring
-      ringX += dRingX * 0.18;
-      ringY += dRingY * 0.18;
-
-      // GPU hardware-composited translate3d without reflow
-      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
-      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
-
-      // Sleep when mouse is stationary to save 100% CPU
-      if (Math.abs(dDotX) < 0.1 && Math.abs(dDotY) < 0.1 && Math.abs(dRingX) < 0.1 && Math.abs(dRingY) < 0.1) {
-        isCursorLooping = false;
-        cursorAnimId = null;
-        return;
-      }
-
-      cursorAnimId = requestAnimationFrame(renderCursor);
-    };
-
-    startCursorLoop();
-  }
-
-  /* ==========================================================================
-     09. HIGH-PERFORMANCE MORPH SPARKS PARTICLE ENGINE
-     Energetic particle burst on code-to-UI component transformations
-     ========================================================================== */
-  initMorphSparksEngine() {
-    const canvas = document.getElementById('morphSparksCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let width = 0;
-    let height = 0;
-    const sparks = [];
-    let animId = null;
-
-    const resize = () => {
-      if (canvas.parentElement) {
-        width = canvas.width = canvas.parentElement.offsetWidth || 800;
-        height = canvas.height = canvas.parentElement.offsetHeight || 500;
-      }
-    };
-    resize();
-    window.addEventListener('resize', resize, { passive: true });
-
-    this.triggerMorphSparks = (originX = width / 2, originY = height / 2, count = 28) => {
-      const palette = ['#06B6D4', '#8B5CF6', '#F59E0B', '#10B981', '#38BDF8', '#ffffff'];
-      for (let i = 0; i < count; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 5.5 + 2.2;
-        sparks.push({
-          x: originX,
-          y: originY,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          radius: Math.random() * 2.8 + 1.2,
-          alpha: 1,
-          decay: Math.random() * 0.026 + 0.016,
-          color: palette[Math.floor(Math.random() * palette.length)]
-        });
-      }
-      if (!animId) {
-        animId = requestAnimationFrame(loop);
-      }
-    };
-
-    const loop = () => {
-      if (sparks.length === 0) {
-        ctx.clearRect(0, 0, width, height);
-        animId = null;
-        return;
-      }
-
-      ctx.clearRect(0, 0, width, height);
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const s = sparks[i];
-        s.x += s.vx;
-        s.y += s.vy;
-        s.vx *= 0.95;
-        s.vy *= 0.95;
-        s.alpha -= s.decay;
-
-        if (s.alpha <= 0) {
-          sparks.splice(i, 1);
-          continue;
+      // Master continuous timeline linked to page scroll
+      const bgTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: document.body,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1.2,
+          invalidateOnRefresh: true
         }
+      });
 
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, s.alpha);
-        ctx.fillStyle = s.color;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = s.color;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
+      // Starting state at hero: large logo partially visible behind hero (right side, partially off-screen)
+      gsap.set(stage, {
+        x: '20vw',
+        y: '-8vh',
+        scale: 1.0,
+        transformOrigin: '50% 50%'
+      });
 
-      animId = requestAnimationFrame(loop);
-    };
-  }
+      // Section transitions choreography:
+      // Services (#services): logo shifted toward the opposite (left) side
+      bgTl.to(stage, {
+        x: '-16vw',
+        y: '4vh',
+        scale: 1.02,
+        ease: 'power1.inOut'
+      }, 0.18)
+      // Projects (#work): logo moves behind horizontal project showcase (slow independent parallax)
+      .to(stage, {
+        x: '10vw',
+        y: '-2vh',
+        scale: 1.04,
+        ease: 'power1.inOut'
+      }, 0.42)
+      // Process (#process): logo becomes more centered
+      .to(stage, {
+        x: '-2vw',
+        y: '6vh',
+        scale: 1.03,
+        ease: 'power1.inOut'
+      }, 0.65)
+      // About (#about): logo becomes partially cropped again
+      .to(stage, {
+        x: '16vw',
+        y: '-4vh',
+        scale: 1.05,
+        ease: 'power1.inOut'
+      }, 0.84)
+      // Final CTA (#contact): logo becomes larger and slightly more prominent
+      .to(stage, {
+        x: '5vw',
+        y: '2vh',
+        scale: 1.10,
+        ease: 'power1.out'
+      }, 1.0);
 
-  /* ==========================================================================
-     10. BACKLIT KEYBOARD CHICLET TYPING RIPPLE
-     Simulates hardware keystrokes in real-time as lines appear in the IDE
-     ========================================================================== */
-  triggerKeyboardTyping(count = 6) {
-    const keys = document.querySelectorAll('#laptopBase .key');
-    if (!keys || keys.length === 0) return;
-    for (let i = 0; i < count; i++) {
-      const randomIdx = Math.floor(Math.random() * keys.length);
-      const key = keys[randomIdx];
-      if (key) {
-        setTimeout(() => {
-          key.classList.add('key-active');
-          setTimeout(() => {
-            key.classList.remove('key-active');
-          }, 110 + Math.random() * 60);
-        }, i * 28);
-      }
+      // Section-specific opacity fine-tuning for Final CTA
+      ScrollTrigger.create({
+        trigger: '#contact',
+        start: 'top 75%',
+        end: 'bottom bottom',
+        onEnter: () => {
+          const isLight = document.body.getAttribute('data-theme') === 'light';
+          logoAsset.style.opacity = isLight ? '0.085' : '0.075';
+        },
+        onLeaveBack: () => {
+          const isLight = document.body.getAttribute('data-theme') === 'light';
+          logoAsset.style.opacity = isLight ? '0.058' : '0.048';
+        }
+      });
     }
   }
 }

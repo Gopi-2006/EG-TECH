@@ -103,3 +103,42 @@
   - Registered `vgpu` in `skills-lock.json`.
   - Configured `.gitignore` to track libraries cleanly.
   - Files: `libraries/*`, `.agents/skills/vgpu/*`, `skills-lock.json`, `.gitignore`, `tasks/todo.md`
+
+- [x] Task 13: Video Extraction into Exactly 120 Frames Sequence & Video
+  - Extracted 120 evenly-spaced 1280x720 frames from `egtech_brand_film.mp4` (downsampled from original 240 frames).
+  - Generated high-quality JPG image sequence (`frame_001.jpg` to `frame_120.jpg`) in `frames/` and `assets/frames/`.
+  - Generated lightweight WebP image sequence (`frame_001.webp` to `frame_120.webp`, 5.69 MB total) in `frames/webp/` and `assets/frames/webp/` for web canvas scroll playback.
+  - Rendered 120-frame MP4 video files:
+    - `egtech_brand_film_120frames.mp4` (120 frames @ 12 FPS, 10s duration)
+    - `egtech_brand_film_120frames_24fps.mp4` (120 frames @ 24 FPS, 5s duration)
+  - Files: `frames/*`, `assets/frames/*`, `egtech_brand_film_120frames.mp4`, `egtech_brand_film_120frames_24fps.mp4`, `tasks/todo.md`, `progress.txt`
+
+- [x] Task 14: Production-Quality Interactive Product Demo & Brand Alignment
+  - Reinforced signature brand narrative: "Idea -> Client Request -> Laptop Opens -> Code Written -> Code Becomes UI -> Build Runs -> Website Goes Live -> Color Transition -> EG TECH Reveal -> Services -> Work -> Project Form".
+  - Featured the brand message: "You bring the idea. EG TECH builds the digital product." across Intro, Brand Reveal, CTA, and confirmation state.
+  - Implemented real React/TSX code editor showing components `<Card />`, `<Button />`, and `<Navbar />` morphing into the browser preview.
+  - Aligned color transition sequence to blue -> cyan -> violet -> pink, collapsing into "EG TECH — Empowering Growth Technology".
+  - Updated studio services to the exact required list: Website design and development, E-commerce websites, Web applications, UI/UX design, Website redesigns.
+  - Re-anchored Work section with Vibe Attire as featured e-commerce flagship preview; removed all invented metrics, stats, and testimonials.
+  - Refined closing CTA: "Have an idea? Let’s turn it into something real." with prominent "START YOUR PROJECT" button.
+  - Hardened project requirement form: Name, Email, Project Type, Budget Range, Desired Timeline, Project Details, transparent API connection indicator, and live SQLite backend persistence (`/api/project-inquiry`).
+  - Added comprehensive `@media (prefers-reduced-motion: reduce)` accessibility and mobile touch support.
+  - Files: `index.html`, `styles.css`, `app.js`, `server.js`, `tasks/todo.md`, `progress.txt`
+
+- [x] Task 15: Cinematic Commercial Redesign (Space-Gray Laptop & Colorful Midnight-Blue Studio Theme)
+  - Replaced plain dark technical look with a luxurious midnight-blue studio environment (`#060B1E` to `#0B132B`).
+  - Implemented refined electric-blue, sky-blue, cyan, violet, and rose-pink gradients with frosted glass surfaces and subtle reflections.
+  - Built physical cinematic studio lighting rig: overhead softbox beam (`#volumetricLightCone`), cyan key rim wash, and violet/pink fill washes.
+  - Engineered realistic space-gray/silver aluminum unibody commercial laptop:
+    - CNC anodized aluminum chassis with precision chamfered bevels.
+    - 16:10 glass display with diagonal studio softbox glare sheen (`#lidScreenGlare`).
+    - Camera notch with blue-green anti-reflective optical glass coating glint.
+    - Dark anodized CNC clutch hinge (`#laptopHinge`).
+    - Micro-perforated acoustic speaker grilles flanking the keyboard well.
+    - Recessed chiclet keyboard well with soft LED under-glow backlighting and active keystroke glow.
+    - Frosted Force Touch glass trackpad with studio sheen.
+    - Soft mirrored studio floor reflection (`#laptopFloorReflection`) beneath display.
+  - Replaced matrix cyberpunk elements with 6 translucent architectural concept glass cards (`#fcc1`–`#fcc6`) and floating specular polyhedra.
+  - Overhauled Three.js WebGL scene with studio lighting rig and smooth floating laptop glide.
+  - Preserved full scroll-driven narrative from Idea -> Code -> UI -> Website -> EG TECH -> Services -> Work -> Form.
+  - Files: `index.html`, `styles.css`, `app.js`, `tasks/todo.md`, `progress.txt`
