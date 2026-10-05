@@ -347,26 +347,36 @@ class EGTechStudioApp {
     const ring = document.getElementById('cursorRing');
     if (!dot || !ring) return;
 
+    // V2 POLISH: respect reduced motion (decorative cursor is hidden by CSS)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // V2 doctrine: compositor-only cursor — translate3d writes, never left/top layout writes
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
-    let ringX = mouseX;
-    let ringY = mouseY;
+    let dotX = mouseX, dotY = mouseY;
+    let ringX = mouseX, ringY = mouseY;
+    let raf = 0;
+
+    const writeCursor = () => {
+      raf = 0;
+      dotX += (mouseX - dotX) * 0.55;
+      dotY += (mouseY - dotY) * 0.55;
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      dot.style.transform = `translate3d(${dotX.toFixed(1)}px, ${dotY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      ring.style.transform = `translate3d(${ringX.toFixed(1)}px, ${ringY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      if (Math.abs(mouseX - ringX) > 0.1 || Math.abs(mouseY - ringY) > 0.1) {
+        raf = requestAnimationFrame(writeCursor);
+      }
+    };
 
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      dot.style.left = `${mouseX}px`;
-      dot.style.top = `${mouseY}px`;
+      if (!raf) raf = requestAnimationFrame(writeCursor);
     }, { passive: true });
 
-    const animateRing = () => {
-      ringX += (mouseX - ringX) * 0.18;
-      ringY += (mouseY - ringY) * 0.18;
-      ring.style.left = `${ringX}px`;
-      ring.style.top = `${ringY}px`;
-      requestAnimationFrame(animateRing);
-    };
-    animateRing();
+    writeCursor();
 
     const hoverables = document.querySelectorAll('a, button, input, textarea, .s-pill, .service-row-module, .showcase-project-panel, .theme-switch-btn, .h-audio-toggle');
     hoverables.forEach(el => {
@@ -1090,3 +1100,343 @@ class EGTechStudioApp {
     }
   }
 }
+
+/* =========================================================================
+   13. V2 POLISH LAYER — ported from egtech-portfolio v2 (MYTHOS doctrine)
+   Zero new dependencies. Fully disabled under prefers-reduced-motion.
+   Modules: boot-skip · scroll progress · back-to-top · scroll reveals ·
+            card tilt · flashlight glare · magnetic CTAs · hero 3D depth
+            field · copy-number chip. All writes rAF-batched, rects cached.
+   ========================================================================= */
+(() => {
+  'use strict';
+
+  const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const reduced = () => RM.matches;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  document.documentElement.classList.add('v2-js');
+
+  // Shared rect cache: one getBoundingClientRect per element per scroll position
+  const rectCache = new WeakMap();
+  const liveRect = (el) => {
+    const y = window.scrollY;
+    let c = rectCache.get(el);
+    if (!c || c.y !== y) {
+      c = { y, rect: el.getBoundingClientRect() };
+      rectCache.set(el, c);
+    }
+    return c.rect;
+  };
+
+  /* --- 13a. BOOT SKIP: click or any key finishes the preloader instantly --- */
+  (() => {
+    const pre = document.getElementById('sitePreloader');
+    if (!pre) return;
+    const cleanup = () => {
+      window.removeEventListener('pointerdown', skip);
+      window.removeEventListener('keydown', skip);
+    };
+    function skip() {
+      cleanup();
+      if (pre.classList.contains('dismissed')) return;
+      const bar = document.getElementById('preloaderBar');
+      const counter = document.getElementById('preloaderCounter');
+      if (bar) bar.style.width = '100%';
+      if (counter) counter.textContent = '100%';
+      pre.querySelectorAll('.preloader-status-block, .preloader-brand-cluster, .preloader-tagline, .v2-skip-hint')
+        .forEach((el) => el.classList.add('fade-out'));
+      setTimeout(() => {
+        pre.classList.add('dismissed');
+        setTimeout(() => { pre.style.display = 'none'; }, 650);
+      }, 180);
+    }
+    window.addEventListener('pointerdown', skip, { passive: true });
+    window.addEventListener('keydown', skip);
+  })();
+
+  /* --- 13b. SCROLL PROGRESS + BACK TO TOP (one rAF-batched handler) --- */
+  (() => {
+    const bar = document.querySelector('.v2-progress i');
+    const topBtn = document.getElementById('v2TopBtn');
+    if (!bar && !topBtn) return;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+      if (bar) bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+      if (topBtn) topBtn.classList.toggle('v2-show', window.scrollY > 700);
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }, { passive: true });
+    if (topBtn) {
+      topBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' });
+      });
+    }
+    update();
+  })();
+
+  /* --- 13c. SCROLL REVEALS (IntersectionObserver + stagger) ---
+     GSAP-driven zones are excluded so this never fights their timelines. */
+  (() => {
+    const SEL = [
+      '.section-label-row', '.editorial-section-heading', '.editorial-lead-para',
+      '.contact-dramatic-headline', '.contact-intro-copy', '.editorial-form-wrap',
+      '.process-step-row', '.audit-specimen-card', '.monolith-card',
+      '.case-spotlight-card', '.commitments-stack', '.manifesto-triad'
+    ];
+    const zones = ['#hero', '#brandStatement', '#services', '#work'];
+    const nodes = [];
+    document.querySelectorAll(SEL.join(',')).forEach((el) => {
+      if (zones.some((z) => el.closest(z))) return;
+      el.setAttribute('data-v2-reveal', '');
+      nodes.push(el);
+    });
+    if (!nodes.length) return;
+    if (reduced() || !('IntersectionObserver' in window)) {
+      nodes.forEach((el) => el.classList.add('v2-in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('v2-in');
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -7% 0px' });
+    nodes.forEach((el, i) => {
+      el.style.setProperty('--vd', ((i % 5) * 70) + 'ms');
+      io.observe(el);
+    });
+  })();
+
+  /* --- 13d. 3D TILT (v2 doctrine: cached rect, rAF writes, instant reset) --- */
+  (() => {
+    if (reduced()) return;
+    document.querySelectorAll('.h-frame, .audit-specimen-card, .monolith-card, .case-spotlight-card')
+      .forEach((el) => {
+        if (el.dataset.v2Tilt) return;
+        el.dataset.v2Tilt = '1';
+        el.setAttribute('data-v2-tilt', '');
+        el.classList.add('v2-tilting');
+        let raf = 0, px = 0.5, py = 0.5;
+        const apply = () => {
+          raf = 0;
+          const rx = ((0.5 - py) * 5).toFixed(2);
+          const ry = ((px - 0.5) * 6).toFixed(2);
+          el.style.transform = 'perspective(1100px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(10px)';
+        };
+        el.addEventListener('pointerenter', () => {
+          if (reduced()) return;
+          liveRect(el);
+        });
+        el.addEventListener('pointermove', (e) => {
+          if (reduced()) return;
+          const rect = liveRect(el);
+          px = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+          py = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+          if (!raf) raf = requestAnimationFrame(apply);
+        });
+        el.addEventListener('pointerleave', () => {
+          if (raf) { cancelAnimationFrame(raf); raf = 0; }
+          el.style.transform = '';
+        });
+      });
+  })();
+
+  /* --- 13e. FLASHLIGHT CARD GLARE (CSS vars only, one rAF-batched write) --- */
+  (() => {
+    if (reduced()) return;
+    document.querySelectorAll('.h-frame, .audit-specimen-card, .monolith-card, .case-spotlight-card, .editorial-form-wrap')
+      .forEach((el) => {
+        if (el.dataset.v2Glare) return;
+        el.dataset.v2Glare = '1';
+        el.setAttribute('data-v2-glare', '');
+        let raf = 0, mx = 50, my = 50;
+        const apply = () => {
+          raf = 0;
+          el.style.setProperty('--mx', mx + '%');
+          el.style.setProperty('--my', my + '%');
+        };
+        el.addEventListener('pointermove', (e) => {
+          if (reduced()) return;
+          const rect = liveRect(el);
+          mx = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+          my = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+          if (!raf) raf = requestAnimationFrame(apply);
+        });
+      });
+  })();
+
+  /* --- 13f. MAGNETIC CTAs (subtle 8px pull, spring-back on leave) --- */
+  (() => {
+    if (reduced()) return;
+    document.querySelectorAll('.btn-primary-form, .btn-whatsapp-form, .wa-btn-direct')
+      .forEach((el) => {
+        if (el.dataset.v2Magnetic) return;
+        el.dataset.v2Magnetic = '1';
+        el.setAttribute('data-v2-magnetic', '');
+        let raf = 0, dx = 0, dy = 0;
+        const apply = () => {
+          raf = 0;
+          el.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+        };
+        el.addEventListener('pointerenter', () => {
+          liveRect(el);
+          el.classList.add('v2-magnet-on');
+        });
+        el.addEventListener('pointermove', (e) => {
+          const rect = liveRect(el);
+          dx = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
+          dy = ((e.clientY - rect.top) / rect.height - 0.5) * 6;
+          if (!raf) raf = requestAnimationFrame(apply);
+        });
+        el.addEventListener('pointerleave', () => {
+          el.classList.remove('v2-magnet-on');
+          el.style.transform = '';
+          if (raf) { cancelAnimationFrame(raf); raf = 0; }
+        });
+      });
+  })();
+
+  /* --- 13g. COPY NUMBER CHIP in the WhatsApp drawer (beginner-friendly) --- */
+  (() => {
+    const waFooter = document.querySelector('.wa-drawer-footer');
+    if (!waFooter || document.getElementById('v2CopyNum')) return;
+    const waLink = document.querySelector('a[href*="wa.me"]');
+    const num = waLink ? ((waLink.getAttribute('href').match(/wa\.me\/(\d+)/) || [])[1] || '') : '';
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'v2-copy-chip';
+    chip.id = 'v2CopyNum';
+    chip.textContent = 'COPY NUMBER';
+    chip.addEventListener('click', async () => {
+      const text = num ? '+' + num : '';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (_) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (_e) { /* noop */ }
+        ta.remove();
+      }
+      const box = document.getElementById('toastBox');
+      if (box) {
+        const t = document.createElement('div');
+        t.className = 'toast-item';
+        t.textContent = '✓ WhatsApp number copied.';
+        box.appendChild(t);
+        setTimeout(() => {
+          t.style.opacity = '0';
+          t.style.transition = 'opacity 0.3s ease';
+          setTimeout(() => t.remove(), 300);
+        }, 3200);
+      }
+    });
+    waFooter.appendChild(chip);
+  })();
+
+  /* --- 13h. HERO 3D DEPTH FIELD (vanilla canvas starfield + mouse parallax) ---
+     Replaces the WebGL engine dropped in their redesign, with zero libraries.
+     DPR-capped, sleeps when the hero is off-screen or the tab is hidden. */
+  (() => {
+    if (reduced()) return;
+    const cv = document.getElementById('v2Field3D');
+    const hero = document.getElementById('hero');
+    if (!cv || !hero) return;
+    const ctx = cv.getContext('2d');
+    if (!ctx) return;
+    const COLORS = ['201, 240, 0', '56, 189, 248', '139, 92, 246'];
+    let W = 0, H = 0, dots = [], running = false, raf = 0, last = 0;
+    let tx = 0, ty = 0, mx = 0, my = 0;
+    const build = () => {
+      const r = hero.getBoundingClientRect();
+      W = Math.max(1, Math.floor(r.width * DPR));
+      H = Math.max(1, Math.floor(r.height * DPR));
+      cv.width = W;
+      cv.height = H;
+      const n = Math.min(85, Math.max(26, Math.floor(r.width / 17)));
+      dots = [];
+      for (let i = 0; i < n; i++) {
+        dots.push({
+          x: Math.random() * 2 - 1,
+          y: Math.random() * 2 - 1,
+          z: 0.3 + Math.random() * 0.7,
+          c: COLORS[(Math.random() * COLORS.length) | 0],
+          tw: Math.random() * 6.28
+        });
+      }
+    };
+    const draw = (t) => {
+      if (!running) { raf = 0; return; }
+      if (!last) last = t;
+      const dt = Math.min(50, t - last);
+      last = t;
+      mx += (tx - mx) * 0.05;
+      my += (ty - my) * 0.05;
+      ctx.clearRect(0, 0, W, H);
+      const cx = W / 2, cy = H / 2;
+      for (const d of dots) {
+        d.z -= 0.00009 * dt * (0.4 + d.z);
+        if (d.z <= 0.08) {
+          d.x = Math.random() * 2 - 1;
+          d.y = Math.random() * 2 - 1;
+          d.z = 1;
+        }
+        const k = 0.85 / d.z;
+        const px = cx + d.x * k * cx * 0.5 + mx * 24 * DPR * (1.3 - d.z);
+        const py = cy + d.y * k * cy * 0.5 + my * 24 * DPR * (1.3 - d.z);
+        if (px < -30 || px > W + 30 || py < -30 || py > H + 30) continue;
+        const size = Math.max(0.6, 2.2 * DPR * (1.15 - d.z));
+        const a = (0.34 * (1.05 - d.z) * (0.72 + 0.28 * Math.sin(t * 0.0016 + d.tw))).toFixed(3);
+        ctx.fillStyle = 'rgba(' + d.c + ',' + a + ')';
+        ctx.beginPath();
+        ctx.arc(px, py, size, 0, 6.2832);
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    const start = () => {
+      if (!running && !raf) {
+        running = true;
+        last = 0;
+        raf = requestAnimationFrame(draw);
+      }
+    };
+    const stop = () => { running = false; };
+    build();
+    let rto = 0;
+    window.addEventListener('resize', () => {
+      clearTimeout(rto);
+      rto = setTimeout(build, 150);
+    }, { passive: true });
+    window.addEventListener('mousemove', (e) => {
+      tx = (e.clientX / window.innerWidth - 0.5) * 2;
+      ty = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((es) => {
+        es.forEach((en) => {
+          if (en.isIntersecting) {
+            if (!document.hidden) start();
+          } else {
+            stop();
+          }
+        });
+      }, { threshold: 0.02 }).observe(hero);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop(); else start();
+      });
+    } else {
+      start();
+    }
+  })();
+})();

@@ -26,6 +26,9 @@
 </head>
 <body class="eg-body" data-theme="dark">
 
+  <!-- V2 POLISH LAYER: scroll progress bar (GPU scaleX, reduced-motion safe) -->
+  <div class="v2-progress" aria-hidden="true"><i></i></div>
+
   <!-- =========================================================================
        EG TECH MECHANICAL LOGO PRELOADER
        Uses the official uploaded EG TECH logo
@@ -60,6 +63,9 @@
 
       <!-- Tagline -->
       <div class="preloader-tagline">IDEAS TODAY / IMPACT TOMORROW</div>
+
+      <!-- V2 POLISH LAYER: boot-skip affordance (click or any key finishes boot) -->
+      <span class="v2-skip-hint">CLICK OR PRESS ANY KEY TO SKIP</span>
 
       <!-- Status Line & Progress Track -->
       <div class="preloader-status-block">
@@ -150,6 +156,8 @@
          Editorial, Confident, Asymmetric, Reel Showcase
          ========================================================================= -->
     <section class="section-hero" id="hero">
+      <!-- V2 POLISH LAYER: 3D depth field (vanilla canvas starfield + mouse parallax, sleeps off-screen) -->
+      <canvas class="v2-field3d" id="v2Field3D" aria-hidden="true"></canvas>
       <div class="editorial-container">
         <div class="hero-grid">
           <!-- Left Column: Editorial Headline & Narrative -->
@@ -1593,6 +1601,11 @@
       <span class="wa-trigger-text">WHATSAPP</span>
     </button>
   </div>
+
+  <!-- V2 POLISH LAYER: back to top (bottom-left, clear of the WhatsApp trigger) -->
+  <button type="button" class="v2-top-btn" id="v2TopBtn" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+  </button>
 
   <!-- Toast Notification Container -->
   <div class="toast-box" id="toastBox" aria-live="polite"></div>

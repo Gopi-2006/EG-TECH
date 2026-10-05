@@ -3755,3 +3755,195 @@ body[data-theme="light"] .b-live-pill {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   V2 POLISH LAYER — ported from egtech-portfolio v2 doctrine
+   (hover FX · scroll reveals · glass finishing · 3D depth field · a11y)
+   Zero dependencies. Everything honors prefers-reduced-motion (bottom block).
+   ========================================================================== */
+
+:root {
+  --v2-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- Scroll progress bar (GPU scaleX only) --- */
+.v2-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 999999;
+  pointer-events: none;
+}
+.v2-progress i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), rgba(56, 189, 248, 0.85));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+
+/* --- Boot skip hint --- */
+.v2-skip-hint {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: var(--text-tertiary, rgba(255, 255, 255, 0.38));
+  opacity: 0;
+  animation: v2HintIn 0.6s var(--v2-ease) 0.9s forwards;
+  pointer-events: none;
+}
+@keyframes v2HintIn { to { opacity: 1; } }
+.v2-skip-hint.fade-out { opacity: 0 !important; transition: opacity 0.3s ease; }
+
+/* --- Scroll reveals (gated on html.v2-js so no-JS users see everything) --- */
+html.v2-js [data-v2-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  will-change: opacity, transform;
+}
+html.v2-js [data-v2-reveal].v2-in {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+  transition: opacity 0.7s var(--v2-ease) var(--vd, 0ms), transform 0.7s var(--v2-ease) var(--vd, 0ms);
+}
+
+/* --- 3D tilt + flashlight glare (compositor-only) --- */
+[data-v2-tilt] {
+  transform-style: preserve-3d;
+  transition: transform 0.45s var(--v2-ease), box-shadow 0.45s var(--v2-ease);
+}
+[data-v2-tilt].v2-tilting { transition: box-shadow 0.45s var(--v2-ease); }
+[data-v2-glare] {
+  position: relative;
+  overflow: hidden;
+}
+[data-v2-glare]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s var(--v2-ease);
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), var(--accent-dim), transparent 72%);
+}
+[data-v2-glare]:hover::after { opacity: 1; }
+
+/* --- Magnetic CTAs --- */
+[data-v2-magnetic] { transition: transform 0.22s var(--v2-ease); }
+[data-v2-magnetic].v2-magnet-on { transition: none; }
+
+/* --- Glass finishing (backdrop blur only where it is cheap, @supports-guarded) --- */
+@supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
+  .editorial-form-wrap {
+    background: color-mix(in srgb, var(--bg-surface) 72%, transparent);
+    border: 1px solid var(--accent-border);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px) saturate(1.1);
+    -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  }
+  .eg-header.nav-pill-active {
+    backdrop-filter: blur(14px) saturate(1.15);
+    -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  }
+  .toast-item {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+/* --- Back to top (bottom-left, clear of the WhatsApp trigger) --- */
+.v2-top-btn {
+  position: fixed;
+  left: 22px;
+  bottom: 22px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--accent-border);
+  background: var(--bg-surface);
+  color: var(--accent);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(14px) scale(0.9);
+  pointer-events: none;
+  transition: opacity 0.3s var(--v2-ease), transform 0.3s var(--v2-ease), box-shadow 0.3s var(--v2-ease);
+  z-index: 9000;
+}
+.v2-top-btn.v2-show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+.v2-top-btn:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px) scale(1.05);
+}
+.v2-top-btn svg { width: 18px; height: 18px; }
+
+/* --- Copy-number chip (WhatsApp drawer footer) --- */
+.v2-copy-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  padding: 7px 12px;
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.22s var(--v2-ease), color 0.22s var(--v2-ease);
+}
+.v2-copy-chip:hover {
+  background: var(--accent);
+  color: var(--accent-text, #050505);
+}
+
+/* --- Hero 3D depth field canvas (overlay dust, very low alpha) --- */
+.v2-field3d {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- Focus-visible rings (a11y) --- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ==========================================================================
+   REDUCED MOTION — full a11y contract (v2 doctrine §5)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .cursor-system { display: none !important; }
+  .v2-field3d { display: none !important; }
+  .v2-progress { display: none !important; }
+  .v2-skip-hint { display: none !important; }
+  html.v2-js [data-v2-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

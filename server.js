@@ -189,7 +189,12 @@ const server = http.createServer((req, res) => {
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
-    res.writeHead(200, { 'Content-Type': contentType });
+    // V2 POLISH: always revalidate static assets so edits show up on refresh
+    res.writeHead(200, {
+      'Content-Type': contentType,
+      'Cache-Control': 'no-cache',
+      'Last-Modified': stats.mtime.toUTCString()
+    });
     const stream = fs.createReadStream(filePath);
     stream.pipe(res);
   });
