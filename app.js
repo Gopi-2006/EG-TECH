@@ -41,6 +41,22 @@ class EGTechStudioApp {
     this.initInquiryForm();
     this.initWhatsAppDrawer();
     this.initSmoothNav();
+
+    window.addEventListener('load', () => {
+      if (window.ScrollTrigger) {
+        ScrollTrigger.refresh(true);
+      }
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        if (window.ScrollTrigger) {
+          ScrollTrigger.refresh(true);
+        }
+        window.dispatchEvent(new Event('resize'));
+      });
+    }
   }
 
   /* =========================================================================
@@ -188,9 +204,56 @@ class EGTechStudioApp {
     const update = () => {
       isTicking = false;
 
-      /* Narrow screens: delegate to mobile switcher */
+      /* Narrow screens: delegate to mobile switcher and reveal kinetic headline */
       if (window.innerWidth <= 992) {
         setMobileProject(mobileActiveIdx);
+
+        if (footerHint && footerHint.textContent !== 'TAP 01–04 OR SWIPE TO EXPLORE') {
+          footerHint.textContent = 'TAP 01–04 OR SWIPE TO EXPLORE';
+        }
+
+        const rect = section.getBoundingClientRect();
+        const headingEl = heading || section.querySelector('.stacked-heading');
+        const hRect = headingEl ? headingEl.getBoundingClientRect() : rect;
+        const triggerY = window.innerHeight * 0.90;
+        const scrollDist = triggerY - hRect.top;
+        const revealDist = window.innerHeight * 0.40;
+        const hp = clamp(scrollDist / revealDist, 0, 1);
+
+        if (wordSpans.length > 0) {
+          const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          wordSpans.forEach((word, i) => {
+            if (isReduced) {
+              word.classList.add('sh-revealed');
+              word.style.transform = 'translate3d(0, 0, 0)';
+              word.style.opacity = '1';
+              return;
+            }
+
+            const staggerStart = i * 0.10;
+            const staggerEnd = staggerStart + 0.35;
+            const wt = easeOut(norm(hp, staggerStart, staggerEnd));
+            const isAccent = word.classList.contains('sh-word--accent');
+
+            if (wt >= 0.96 || hp >= 0.95) {
+              word.classList.add('sh-revealed');
+              word.style.transform = 'translate3d(0, 0, 0) scale(1)';
+              word.style.opacity = '1';
+              if (isAccent) word.classList.add('is-emphasized');
+            } else if (wt > 0) {
+              const wy = lerp(28, 0, wt);
+              const wsc = lerp(0.96, 1.0, wt);
+              word.style.transform = `translate3d(0, ${wy.toFixed(1)}px, 0) scale(${wsc.toFixed(3)})`;
+              word.style.opacity = wt.toFixed(3);
+              if (isAccent && wt > 0.4) word.classList.add('is-emphasized');
+              else if (isAccent) word.classList.remove('is-emphasized');
+            } else {
+              word.classList.remove('sh-revealed');
+              word.style.transform = 'translate3d(0, 28px, 0)';
+              word.style.opacity = '0';
+            }
+          });
+        }
         return;
       }
 
@@ -268,7 +331,7 @@ class EGTechStudioApp {
             }
           }
 
-          if (t >= 0.98) {
+          if (t >= 0.98 || p >= 0.26) {
             word.classList.add('sh-revealed');
           } else {
             word.classList.remove('sh-revealed');
@@ -528,6 +591,45 @@ class EGTechStudioApp {
         window.scrollTo({ top: targetScroll, behavior: 'smooth' });
       });
     });
+
+    // Resilient fallback & load listeners for preview media
+    browserCards.forEach((card) => {
+      const img = card.querySelector('.b-preview-img');
+      const iframe = card.querySelector('.b-preview-iframe');
+
+      if (img) {
+        if (img.complete && img.naturalWidth === 0 && !iframe) {
+          card.classList.add('has-error');
+        }
+        img.addEventListener('error', () => {
+          if (!iframe) {
+            card.classList.add('has-error');
+          }
+        });
+      }
+
+      if (iframe) {
+        let iframeLoaded = false;
+        iframe.addEventListener('load', () => {
+          iframeLoaded = true;
+          const pic = card.querySelector('.b-preview-picture');
+          if (pic) pic.style.display = 'none';
+        });
+        iframe.addEventListener('error', () => {
+          iframe.style.display = 'none';
+          const pic = card.querySelector('.b-preview-picture');
+          if (pic) pic.style.display = 'block';
+        });
+        setTimeout(() => {
+          if (!iframeLoaded) {
+            const pic = card.querySelector('.b-preview-picture');
+            if (pic && pic.style.display === 'none') {
+              pic.style.display = 'block';
+            }
+          }
+        }, 4500);
+      }
+    });
   }
 
   /* =========================================================================
@@ -692,6 +794,53 @@ class EGTechStudioApp {
     }, { passive: true });
 
     onScroll();
+
+    // Mobile Navigation Drawer Toggle & Interactions
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const mobileDrawer = document.getElementById('mobileNavDrawer');
+    if (mobileToggle && mobileDrawer) {
+      const closeDrawer = () => {
+        mobileDrawer.classList.remove('active');
+        mobileToggle.classList.remove('active');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('nav-drawer-open');
+      };
+      const openDrawer = () => {
+        mobileDrawer.classList.add('active');
+        mobileToggle.classList.add('active');
+        mobileToggle.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('nav-drawer-open');
+      };
+
+      mobileToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = mobileDrawer.classList.contains('active');
+        if (isOpen) closeDrawer();
+        else openDrawer();
+      });
+
+      // Close on click outside
+      document.addEventListener('click', (e) => {
+        if (mobileDrawer.classList.contains('active') && !mobileDrawer.contains(e.target) && !mobileToggle.contains(e.target)) {
+          closeDrawer();
+        }
+      });
+
+      // Close on ESC
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileDrawer.classList.contains('active')) {
+          closeDrawer();
+        }
+      });
+
+      // Close when clicking nav links in drawer
+      const drawerLinks = mobileDrawer.querySelectorAll('.drawer-nav-item, .drawer-cta-btn');
+      drawerLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          closeDrawer();
+        });
+      });
+    }
   }
 
   /* =========================================================================

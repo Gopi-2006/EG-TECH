@@ -199,6 +199,57 @@
           <span>LET'S TALK</span>
           <span class="btn-arrow">&rarr;</span>
         </a>
+
+        <!-- Accessible Mobile Menu Toggle -->
+        <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Navigation Menu"
+          aria-expanded="false" aria-controls="mobileNavDrawer">
+          <span class="mm-icon">
+            <span class="mm-line mm-line-1"></span>
+            <span class="mm-line mm-line-2"></span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Accessible Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer" aria-hidden="true">
+      <div class="mobile-drawer-inner">
+        <nav class="mobile-drawer-links" aria-label="Mobile Navigation">
+          <a href="#work" class="m-nav-link" data-index="01">
+            <span class="mnl-num">01</span>
+            <span class="mnl-text">SELECTED WORK</span>
+            <span class="mnl-arrow">&nearr;</span>
+          </a>
+          <a href="#services" class="m-nav-link" data-index="02">
+            <span class="mnl-num">02</span>
+            <span class="mnl-text">GROWTH SOLUTIONS</span>
+            <span class="mnl-arrow">&nearr;</span>
+          </a>
+          <a href="#about" class="m-nav-link" data-index="03">
+            <span class="mnl-num">03</span>
+            <span class="mnl-text">STUDIO PROFILE</span>
+            <span class="mnl-arrow">&nearr;</span>
+          </a>
+          <a href="#contact" class="m-nav-link" data-index="04">
+            <span class="mnl-num">04</span>
+            <span class="mnl-text">DISCUSS PROJECT</span>
+            <span class="mnl-arrow">&nearr;</span>
+          </a>
+        </nav>
+        <div class="mobile-drawer-footer">
+          <div class="m-theme-row">
+            <span class="m-theme-lbl">THEME</span>
+            <div class="theme-toggle-control m-theme-control">
+              <button type="button" class="theme-switch-btn" data-theme="light">LIGHT</button>
+              <button type="button" class="theme-switch-btn" data-theme="auto">AUTO</button>
+              <button type="button" class="theme-switch-btn active" data-theme="dark">DARK</button>
+            </div>
+          </div>
+          <a href="#contact" class="btn-primary m-drawer-cta">
+            <span>START A PROJECT</span>
+            <span class="arrow-ico">&rarr;</span>
+          </a>
+        </div>
       </div>
     </div>
   </header>
@@ -877,19 +928,41 @@
                       <span class="b-url-badge">LIVE PLATFORM</span>
                     </div>
                   </div>
-                  <div class="b-shell-viewport">
+                  <div class="b-shell-viewport" id="viewportCard0">
+                    <!-- Designed Fallback State -->
+                    <div class="b-fallback-view" id="fallbackCard0" aria-hidden="true">
+                      <div class="bf-grid-decor"></div>
+                      <div class="bf-content">
+                        <div class="bf-badge"><span class="b-pulse-dot"></span> LIVE WEB PLATFORM</div>
+                        <h4 class="bf-title">Tiruttani Quick</h4>
+                        <p class="bf-desc">Digital grocery and daily essentials ordering platform for Renuka Store, Tiruttani, Tamil Nadu.</p>
+                        <div class="bf-meta">
+                          <span>SUB-50MS EDGE</span>
+                          <span>•</span>
+                          <span>LOCAL LOGISTICS</span>
+                        </div>
+                        <a href="https://gopi-2006.github.io/tiruttani-quick-privacy-policy/index.html" target="_blank" rel="noopener noreferrer" class="bf-btn">
+                          <span>VISIT LIVE PLATFORM &rarr;</span>
+                        </a>
+                      </div>
+                    </div>
+
                     <a href="https://gopi-2006.github.io/tiruttani-quick-privacy-policy/index.html" target="_blank"
                       rel="noopener noreferrer" class="b-viewport-link"
                       aria-label="Visit Tiruttani Quick Live Platform">
-                      <picture>
+                      <!-- Live Embed Iframe (Priority 1) -->
+                      <iframe src="https://gopi-2006.github.io/tiruttani-quick-privacy-policy/index.html"
+                        title="Tiruttani Quick Live Platform" class="b-preview-iframe" id="iframeCard0"
+                        loading="eager" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+                      <picture class="b-preview-picture">
                         <source srcset="assets/images/tiruttani_quick_front.webp" type="image/webp" />
                         <img src="assets/images/tiruttani_quick_front.png"
                           alt="Tiruttani Quick Live E-commerce Platform" class="b-preview-img" loading="eager"
                           width="1200" height="750" decoding="async" />
                       </picture>
                       <div class="b-viewport-overlay">
-                        <span class="b-live-pill"><span class="b-pulse-dot"></span> LIVE WEB PLATFORM &bull; TIRUTTANI,
-                          TN</span>
+                        <span class="b-live-pill"><span class="b-pulse-dot"></span> LIVE WEB PLATFORM &bull; TIRUTTANI, TN</span>
+                        <span class="b-visit-cta">VISIT PLATFORM &nearr;</span>
                       </div>
                     </a>
                   </div>
@@ -923,16 +996,36 @@
                       <span class="b-url-badge">AI AUDIT ENGINE</span>
                     </div>
                   </div>
-                  <div class="b-shell-viewport">
-                    <picture>
-                      <source srcset="assets/images/bidverify_ui.webp" type="image/webp" />
-                      <img src="assets/images/bidverify_ui.jpg" alt="BidVerify AI Procurement Compliance Dashboard"
-                        class="b-preview-img" loading="lazy" width="1200" height="750" decoding="async" />
-                    </picture>
-                    <div class="b-viewport-overlay">
-                      <span class="b-live-pill"><span class="b-pulse-dot"></span> AI AUDIT ENGINE &bull; ENTERPRISE
-                        SOC2</span>
+                  <div class="b-shell-viewport" id="viewportCard1">
+                    <!-- Designed Fallback State -->
+                    <div class="b-fallback-view" id="fallbackCard1" aria-hidden="true">
+                      <div class="bf-grid-decor"></div>
+                      <div class="bf-content">
+                        <div class="bf-badge"><span class="b-pulse-dot"></span> AI AUDIT ENGINE</div>
+                        <h4 class="bf-title">BidVerify AI</h4>
+                        <p class="bf-desc">Automated regulatory audit engine that parses tender dossiers and flags contract liability risks with 99.4% precision.</p>
+                        <div class="bf-meta">
+                          <span>ENTERPRISE SOC2</span>
+                          <span>•</span>
+                          <span>AUTOMATED RISK MATRIX</span>
+                        </div>
+                        <a href="#contact" class="bf-btn">
+                          <span>DISCUSS ARCHITECTURE &rarr;</span>
+                        </a>
+                      </div>
                     </div>
+
+                    <a href="#contact" class="b-viewport-link" aria-label="Discuss BidVerify AI Architecture">
+                      <picture class="b-preview-picture">
+                        <source srcset="assets/images/bidverify_ui.webp" type="image/webp" />
+                        <img src="assets/images/bidverify_ui.jpg" alt="BidVerify AI Procurement Compliance Dashboard"
+                          class="b-preview-img" loading="eager" width="1200" height="750" decoding="async" />
+                      </picture>
+                      <div class="b-viewport-overlay">
+                        <span class="b-live-pill"><span class="b-pulse-dot"></span> AI AUDIT ENGINE &bull; ENTERPRISE SOC2</span>
+                        <span class="b-visit-cta">DISCUSS ARCHITECTURE &rarr;</span>
+                      </div>
+                    </a>
                   </div>
                   <div class="b-shell-footer">
                     <div class="b-tags-list">
@@ -964,17 +1057,37 @@
                       <span class="b-url-badge">ESG TELEMETRY</span>
                     </div>
                   </div>
-                  <div class="b-shell-viewport">
-                    <picture>
-                      <source srcset="assets/images/ecoaudit_ui.webp" type="image/webp" />
-                      <img src="assets/images/ecoaudit_ui.jpg"
-                        alt="EcoAudit Environmental Intelligence Platform Dashboard" class="b-preview-img"
-                        loading="lazy" width="1200" height="750" decoding="async" />
-                    </picture>
-                    <div class="b-viewport-overlay">
-                      <span class="b-live-pill"><span class="b-pulse-dot"></span> LIVE TELEMETRY &bull; SCOPE 1-3
-                        AUDIT</span>
+                  <div class="b-shell-viewport" id="viewportCard2">
+                    <!-- Designed Fallback State -->
+                    <div class="b-fallback-view" id="fallbackCard2" aria-hidden="true">
+                      <div class="bf-grid-decor"></div>
+                      <div class="bf-content">
+                        <div class="bf-badge"><span class="b-pulse-dot"></span> LIVE TELEMETRY</div>
+                        <h4 class="bf-title">EcoAudit</h4>
+                        <p class="bf-desc">Continuous industrial emissions telemetry engine aggregating factory IoT sensor streams for Scope 1-3 carbon audits.</p>
+                        <div class="bf-meta">
+                          <span>&lt; 45MS WEBSOCKET</span>
+                          <span>•</span>
+                          <span>NET ZERO 2030</span>
+                        </div>
+                        <a href="#contact" class="bf-btn">
+                          <span>DISCUSS ARCHITECTURE &rarr;</span>
+                        </a>
+                      </div>
                     </div>
+
+                    <a href="#contact" class="b-viewport-link" aria-label="Discuss EcoAudit Architecture">
+                      <picture class="b-preview-picture">
+                        <source srcset="assets/images/ecoaudit_ui.webp" type="image/webp" />
+                        <img src="assets/images/ecoaudit_ui.jpg"
+                          alt="EcoAudit Environmental Intelligence Platform Dashboard" class="b-preview-img"
+                          loading="eager" width="1200" height="750" decoding="async" />
+                      </picture>
+                      <div class="b-viewport-overlay">
+                        <span class="b-live-pill"><span class="b-pulse-dot"></span> LIVE TELEMETRY &bull; SCOPE 1-3 AUDIT</span>
+                        <span class="b-visit-cta">DISCUSS ARCHITECTURE &rarr;</span>
+                      </div>
+                    </a>
                   </div>
                   <div class="b-shell-footer">
                     <div class="b-tags-list">
@@ -1006,17 +1119,37 @@
                       <span class="b-url-badge">DISPATCH MESH</span>
                     </div>
                   </div>
-                  <div class="b-shell-viewport">
-                    <picture>
-                      <source srcset="assets/images/guardian_ui.webp" type="image/webp" />
-                      <img src="assets/images/guardian_ui.jpg"
-                        alt="Guardian Collective AI-Powered Safety Dispatch Platform" class="b-preview-img"
-                        loading="lazy" width="1200" height="750" decoding="async" />
-                    </picture>
-                    <div class="b-viewport-overlay">
-                      <span class="b-live-pill"><span class="b-pulse-dot"></span> GEOSPATIAL MESH &bull; SUB-2S
-                        DISPATCH</span>
+                  <div class="b-shell-viewport" id="viewportCard3">
+                    <!-- Designed Fallback State -->
+                    <div class="b-fallback-view" id="fallbackCard3" aria-hidden="true">
+                      <div class="bf-grid-decor"></div>
+                      <div class="bf-content">
+                        <div class="bf-badge"><span class="b-pulse-dot"></span> GEOSPATIAL MESH</div>
+                        <h4 class="bf-title">Guardian Collective</h4>
+                        <p class="bf-desc">Mission-critical emergency response infrastructure connecting mobile triggers with local responder dispatch networks.</p>
+                        <div class="bf-meta">
+                          <span>1.4S RESPONSE</span>
+                          <span>•</span>
+                          <span>TIME-CRITICAL MESH</span>
+                        </div>
+                        <a href="#contact" class="bf-btn">
+                          <span>DISCUSS ARCHITECTURE &rarr;</span>
+                        </a>
+                      </div>
                     </div>
+
+                    <a href="#contact" class="b-viewport-link" aria-label="Discuss Guardian Collective Architecture">
+                      <picture class="b-preview-picture">
+                        <source srcset="assets/images/guardian_ui.webp" type="image/webp" />
+                        <img src="assets/images/guardian_ui.jpg"
+                          alt="Guardian Collective AI-Powered Safety Dispatch Platform" class="b-preview-img"
+                          loading="eager" width="1200" height="750" decoding="async" />
+                      </picture>
+                      <div class="b-viewport-overlay">
+                        <span class="b-live-pill"><span class="b-pulse-dot"></span> GEOSPATIAL MESH &bull; SUB-2S DISPATCH</span>
+                        <span class="b-visit-cta">DISCUSS ARCHITECTURE &rarr;</span>
+                      </div>
+                    </a>
                   </div>
                   <div class="b-shell-footer">
                     <div class="b-tags-list">
