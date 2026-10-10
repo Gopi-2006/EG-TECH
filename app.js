@@ -116,18 +116,18 @@ class EGTechStudioApp {
      Cards NEVER use opacity transitions — clip-path + translate only.
      ========================================================================= */
   initStackedProjectShowcase() {
-    const section        = document.getElementById('work');
-    const heading        = document.getElementById('stackedHeading');
-    const textPanels     = document.querySelectorAll('.stacked-text-panel');
-    const browserCards   = document.querySelectorAll('.stacked-browser-card');
-    const pillBtns       = document.querySelectorAll('.stacked-pill-btn');
-    const activeNum      = document.getElementById('stackedActiveNum');
-    const progressFill   = document.getElementById('stackedProgressFill');
-    const footerHint     = section ? section.querySelector('.sfb-hint') : null;
-    const viewportCont   = section ? section.querySelector('.stacked-viewport-container') : null;
-    const textCol        = document.getElementById('stackedTextCol') || (section ? section.querySelector('.stacked-text-col') : null);
-    const deckCol        = document.getElementById('stackedDeckCol') || (section ? section.querySelector('.stacked-deck-col') : null);
-    const bgWatermark    = document.getElementById('stackedBgWatermark');
+    const section = document.getElementById('work');
+    const heading = document.getElementById('stackedHeading');
+    const textPanels = document.querySelectorAll('.stacked-text-panel');
+    const browserCards = document.querySelectorAll('.stacked-browser-card');
+    const pillBtns = document.querySelectorAll('.stacked-pill-btn');
+    const activeNum = document.getElementById('stackedActiveNum');
+    const progressFill = document.getElementById('stackedProgressFill');
+    const footerHint = section ? section.querySelector('.sfb-hint') : null;
+    const viewportCont = section ? section.querySelector('.stacked-viewport-container') : null;
+    const textCol = document.getElementById('stackedTextCol') || (section ? section.querySelector('.stacked-text-col') : null);
+    const deckCol = document.getElementById('stackedDeckCol') || (section ? section.querySelector('.stacked-deck-col') : null);
+    const bgWatermark = document.getElementById('stackedBgWatermark');
 
     if (!section || browserCards.length === 0) return;
 
@@ -140,46 +140,46 @@ class EGTechStudioApp {
 
     /* ——— easing & math helpers ——— */
     const easeOut = (t) => 1 - Math.pow(1 - t, 3);
-    const clamp   = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-    const lerp    = (a, b, t) => a + (b - a) * t;
-    const norm    = (v, lo, hi) => clamp((v - lo) / (hi - lo), 0, 1);
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const norm = (v, lo, hi) => clamp((v - lo) / (hi - lo), 0, 1);
 
     /* ——— Mobile / Tablet snap-switcher (clean tap & swipe) ——— */
     const setMobileProject = (idx) => {
       idx = clamp(idx, 0, totalCards - 1);
       mobileActiveIdx = idx;
-      lastActiveIdx   = idx;
+      lastActiveIdx = idx;
 
       if (activeNum) activeNum.textContent = String(idx + 1).padStart(2, '0');
       pillBtns.forEach((btn, i) => btn.classList.toggle('active', i === idx));
       if (progressFill) progressFill.style.width = `${Math.round(((idx + 1) / totalCards) * 100)}%`;
-      if (footerHint)   footerHint.textContent = 'TAP 01–04 OR SWIPE TO EXPLORE';
+      if (footerHint) footerHint.textContent = 'TAP 01–04 OR SWIPE TO EXPLORE';
 
       textPanels.forEach((panel, i) => {
-        panel.classList.toggle('active',   i === idx);
+        panel.classList.toggle('active', i === idx);
         panel.classList.toggle('outgoing', i < idx && i !== idx);
-        panel.style.opacity   = (i === idx) ? '1' : '0';
+        panel.style.opacity = (i === idx) ? '1' : '0';
         panel.style.transform = (i === idx) ? 'translate3d(0,0,0)' : 'translate3d(0,16px,0)';
       });
 
       browserCards.forEach((card, i) => {
-        card.classList.toggle('bc-active',   i === idx);
+        card.classList.toggle('bc-active', i === idx);
         card.classList.toggle('bc-outgoing', i < idx);
         /* Cards remain 100% solid & opaque on mobile as well */
         card.style.opacity = '1';
         if (i === idx) {
-          card.style.visibility    = 'visible';
-          card.style.zIndex        = '10';
+          card.style.visibility = 'visible';
+          card.style.zIndex = '10';
           card.style.pointerEvents = 'auto';
-          card.style.transform     = 'translate3d(0,0,0) scale(1)';
-          card.style.clipPath      = 'inset(0% 0% 0% 0% round 12px)';
+          card.style.transform = 'translate3d(0,0,0) scale(1)';
+          card.style.clipPath = 'inset(0% 0% 0% 0% round 12px)';
         } else {
           const dir = i < idx ? -20 : 20;
-          card.style.visibility    = 'hidden';
-          card.style.zIndex        = '1';
+          card.style.visibility = 'hidden';
+          card.style.zIndex = '1';
           card.style.pointerEvents = 'none';
-          card.style.transform     = `translate3d(0,${dir}px,0) scale(0.96)`;
-          card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
+          card.style.transform = `translate3d(0,${dir}px,0) scale(0.96)`;
+          card.style.clipPath = 'inset(0% 0% 100% 0% round 12px)';
         }
       });
     };
@@ -240,14 +240,14 @@ class EGTechStudioApp {
       if (wordSpans.length > 0) {
         wordSpans.forEach((word, i) => {
           const staggerStart = i * 0.045; // ~80-140ms equivalent scroll stagger
-          const revealStart  = staggerStart;
-          const revealEnd    = revealStart + 0.09;
+          const revealStart = staggerStart;
+          const revealEnd = revealStart + 0.09;
 
-          const t  = norm(p, revealStart, revealEnd);
+          const t = norm(p, revealStart, revealEnd);
           const et = easeOut(t);
 
           const driftMax = parseFloat(word.dataset.x || 0);
-          const driftX   = (window.innerWidth < 1100) ? driftMax * 0.4 : driftMax;
+          const driftX = (window.innerWidth < 1100) ? driftMax * 0.4 : driftMax;
 
           const tx = lerp(driftX, 0, et);
           const ty = lerp(60, 0, et);
@@ -275,7 +275,7 @@ class EGTechStudioApp {
           }
 
           word.style.transform = `translate3d(${tx.toFixed(2)}px, ${ty.toFixed(2)}px, 0) scale(${sc.toFixed(4)})`;
-          word.style.opacity   = op.toFixed(3);
+          word.style.opacity = op.toFixed(3);
         });
       }
 
@@ -295,19 +295,19 @@ class EGTechStudioApp {
           if (idx === 0) {
             panel.classList.add('active');
             panel.classList.remove('outgoing');
-            panel.style.opacity   = textT.toFixed(3);
+            panel.style.opacity = textT.toFixed(3);
             panel.style.transform = `translate3d(0, ${lerp(20, 0, textT).toFixed(2)}px, 0)`;
           } else {
             panel.classList.remove('active', 'outgoing');
-            panel.style.opacity   = '0';
+            panel.style.opacity = '0';
             panel.style.transform = 'translate3d(0, 20px, 0)';
           }
         });
 
         /* First website preview rise & lock (Step 04 & 05) */
         const entryT = easeOut(norm(p, 0.30, 0.44));
-        const c0Y    = lerp(80, 0, entryT);
-        const c0Sc   = lerp(0.94, 1.0, entryT);
+        const c0Y = lerp(80, 0, entryT);
+        const c0Sc = lerp(0.94, 1.0, entryT);
         const maskBottom = Math.max(0, Math.round((1 - entryT) * 100));
 
         browserCards.forEach((card, idx) => {
@@ -316,27 +316,27 @@ class EGTechStudioApp {
 
           if (idx === 0) {
             if (entryT > 0.005) {
-              card.style.visibility    = 'visible';
-              card.style.zIndex        = '10';
+              card.style.visibility = 'visible';
+              card.style.zIndex = '10';
               card.style.pointerEvents = (entryT >= 0.9) ? 'auto' : 'none';
-              card.style.transform     = `translate3d(0, ${c0Y.toFixed(2)}px, 0) scale(${c0Sc.toFixed(4)})`;
+              card.style.transform = `translate3d(0, ${c0Y.toFixed(2)}px, 0) scale(${c0Sc.toFixed(4)})`;
               /* Mask opens from bottom upward, revealing the website preview without transparency */
-              card.style.clipPath      = `inset(0% 0% ${maskBottom}% 0% round 12px)`;
+              card.style.clipPath = `inset(0% 0% ${maskBottom}% 0% round 12px)`;
               card.classList.toggle('bc-active', entryT >= 0.5);
               card.classList.remove('bc-outgoing');
             } else {
-              card.style.visibility    = 'hidden';
+              card.style.visibility = 'hidden';
               card.style.pointerEvents = 'none';
-              card.style.transform     = 'translate3d(0, 80px, 0) scale(0.94)';
-              card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
+              card.style.transform = 'translate3d(0, 80px, 0) scale(0.94)';
+              card.style.clipPath = 'inset(0% 0% 100% 0% round 12px)';
             }
           } else {
             /* Remaining cards wait parked below */
-            card.style.visibility    = 'hidden';
-            card.style.zIndex        = '1';
+            card.style.visibility = 'hidden';
+            card.style.zIndex = '1';
             card.style.pointerEvents = 'none';
-            card.style.transform     = 'translate3d(0, 80px, 0) scale(0.94)';
-            card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
+            card.style.transform = 'translate3d(0, 80px, 0) scale(0.94)';
+            card.style.clipPath = 'inset(0% 0% 100% 0% round 12px)';
             card.classList.remove('bc-active', 'bc-outgoing');
           }
         });
@@ -366,12 +366,12 @@ class EGTechStudioApp {
            - reveals through clipping mask from bottom (inset: 0% 0% maskBottom% 0%)
            - scale 0.96 -> 1
          --------------------------------------------------------------------- */
-      const cycleP       = norm(p, 0.54, 1.00);
-      const totalSteps   = totalCards - 1; // 3 transitions
-      const floatPos     = cycleP * totalSteps;
-      const currIdx      = Math.min(Math.floor(floatPos), totalSteps - 1);
-      const nextIdx      = currIdx + 1;
-      const segProgress  = floatPos - currIdx; // 0 to 1 within this transition
+      const cycleP = norm(p, 0.54, 1.00);
+      const totalSteps = totalCards - 1; // 3 transitions
+      const floatPos = cycleP * totalSteps;
+      const currIdx = Math.min(Math.floor(floatPos), totalSteps - 1);
+      const nextIdx = currIdx + 1;
+      const segProgress = floatPos - currIdx; // 0 to 1 within this transition
 
       /* First 62% of segment is the physical card replacement; remaining 38% is solid hold */
       const transT = easeOut(clamp(segProgress / 0.62, 0, 1));
@@ -388,18 +388,18 @@ class EGTechStudioApp {
       textPanels.forEach((panel, i) => {
         if (i === currIdx) {
           const fadeOut = clamp(segProgress / 0.48, 0, 1);
-          panel.style.opacity   = (1 - fadeOut).toFixed(3);
+          panel.style.opacity = (1 - fadeOut).toFixed(3);
           panel.style.transform = `translate3d(0, ${lerp(0, -18, fadeOut).toFixed(2)}px, 0)`;
-          panel.classList.toggle('active',   segProgress < 0.5);
+          panel.classList.toggle('active', segProgress < 0.5);
           panel.classList.toggle('outgoing', segProgress >= 0.5);
         } else if (i === nextIdx) {
           const fadeIn = clamp((segProgress - 0.35) / 0.45, 0, 1);
-          panel.style.opacity   = fadeIn.toFixed(3);
+          panel.style.opacity = fadeIn.toFixed(3);
           panel.style.transform = `translate3d(0, ${lerp(20, 0, fadeIn).toFixed(2)}px, 0)`;
-          panel.classList.toggle('active',   segProgress >= 0.5);
+          panel.classList.toggle('active', segProgress >= 0.5);
           panel.classList.remove('outgoing');
         } else {
-          panel.style.opacity   = '0';
+          panel.style.opacity = '0';
           panel.style.transform = 'translate3d(0, 20px, 0)';
           panel.classList.remove('active', 'outgoing');
         }
@@ -412,47 +412,47 @@ class EGTechStudioApp {
 
         if (i < currIdx) {
           /* Past card: safely parked offscreen */
-          card.style.visibility    = 'hidden';
-          card.style.zIndex        = '1';
+          card.style.visibility = 'hidden';
+          card.style.zIndex = '1';
           card.style.pointerEvents = 'none';
-          card.style.transform     = 'translate3d(0, -30px, 0) scale(0.96)';
-          card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
+          card.style.transform = 'translate3d(0, -30px, 0) scale(0.96)';
+          card.style.clipPath = 'inset(0% 0% 100% 0% round 12px)';
           card.classList.remove('bc-active', 'bc-outgoing');
 
         } else if (i === currIdx) {
           /* Current website: moves slightly upward, scale 1 -> 0.98, stays 100% solid */
-          const cY  = lerp(0, -26, transT);
+          const cY = lerp(0, -26, transT);
           const cSc = lerp(1.0, 0.98, transT);
 
-          card.style.visibility    = (transT < 0.99) ? 'visible' : 'hidden';
-          card.style.zIndex        = '10';
+          card.style.visibility = (transT < 0.99) ? 'visible' : 'hidden';
+          card.style.zIndex = '10';
           card.style.pointerEvents = (transT < 0.5) ? 'auto' : 'none';
-          card.style.transform     = `translate3d(0, ${cY.toFixed(2)}px, 0) scale(${cSc.toFixed(4)})`;
-          card.style.clipPath      = 'inset(0% 0% 0% 0% round 12px)';
-          card.classList.toggle('bc-active',   transT < 0.5);
+          card.style.transform = `translate3d(0, ${cY.toFixed(2)}px, 0) scale(${cSc.toFixed(4)})`;
+          card.style.clipPath = 'inset(0% 0% 0% 0% round 12px)';
+          card.classList.toggle('bc-active', transT < 0.5);
           card.classList.toggle('bc-outgoing', transT >= 0.5);
 
         } else if (i === nextIdx) {
           /* Next website: rises from below, reveals through clipping mask, scale 0.96 -> 1.0 */
-          const nY  = lerp(70, 0, transT);
+          const nY = lerp(70, 0, transT);
           const nSc = lerp(0.96, 1.0, transT);
           const maskBottom = Math.max(0, Math.round((1 - transT) * 100));
 
-          card.style.visibility    = 'visible';
-          card.style.zIndex        = '20';
+          card.style.visibility = 'visible';
+          card.style.zIndex = '20';
           card.style.pointerEvents = (transT >= 0.5) ? 'auto' : 'none';
-          card.style.transform     = `translate3d(0, ${nY.toFixed(2)}px, 0) scale(${nSc.toFixed(4)})`;
-          card.style.clipPath      = `inset(0% 0% ${maskBottom}% 0% round 12px)`;
+          card.style.transform = `translate3d(0, ${nY.toFixed(2)}px, 0) scale(${nSc.toFixed(4)})`;
+          card.style.clipPath = `inset(0% 0% ${maskBottom}% 0% round 12px)`;
           card.classList.toggle('bc-active', transT >= 0.5);
           card.classList.remove('bc-outgoing');
 
         } else {
           /* Future cards waiting below */
-          card.style.visibility    = 'hidden';
-          card.style.zIndex        = '2';
+          card.style.visibility = 'hidden';
+          card.style.zIndex = '2';
           card.style.pointerEvents = 'none';
-          card.style.transform     = 'translate3d(0, 80px, 0) scale(0.94)';
-          card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
+          card.style.transform = 'translate3d(0, 80px, 0) scale(0.94)';
+          card.style.clipPath = 'inset(0% 0% 100% 0% round 12px)';
           card.classList.remove('bc-active', 'bc-outgoing');
         }
       });
@@ -461,7 +461,7 @@ class EGTechStudioApp {
     /* Helper to update pills and counter */
     function activeIdxUpdate(idx) {
       if (idx === lastActiveIdx) return false;
-      lastActiveIdx   = idx;
+      lastActiveIdx = idx;
       mobileActiveIdx = idx;
       if (activeNum) activeNum.textContent = String(idx + 1).padStart(2, '0');
       pillBtns.forEach((btn, i) => btn.classList.toggle('active', i === idx));
@@ -513,9 +513,9 @@ class EGTechStudioApp {
           return;
         }
 
-        const rect            = section.getBoundingClientRect();
-        const currentScroll   = window.scrollY || window.pageYOffset;
-        const sectionTop      = currentScroll + rect.top;
+        const rect = section.getBoundingClientRect();
+        const currentScroll = window.scrollY || window.pageYOffset;
+        const sectionTop = currentScroll + rect.top;
         const totalScrollable = rect.height - window.innerHeight;
 
         /* Precise target scroll per project hold state */
@@ -605,24 +605,44 @@ class EGTechStudioApp {
     const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     if (!hasFinePointer) return;
 
+    // V2 POLISH: respect reduced motion (decorative cursor is hidden by CSS)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // V2 doctrine: compositor-only cursor — translate3d writes, never left/top layout writes
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
-    let ringX = mouseX;
-    let ringY = mouseY;
+    let dotX = mouseX, dotY = mouseY;
+    let ringX = mouseX, ringY = mouseY;
+    let raf = 0;
+
+    const writeCursor = () => {
+      raf = 0;
+      dotX += (mouseX - dotX) * 0.55;
+      dotY += (mouseY - dotY) * 0.55;
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      dot.style.transform = `translate3d(${dotX.toFixed(1)}px, ${dotY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      ring.style.transform = `translate3d(${ringX.toFixed(1)}px, ${ringY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      if (Math.abs(mouseX - ringX) > 0.1 || Math.abs(mouseY - ringY) > 0.1) {
+        raf = requestAnimationFrame(writeCursor);
+      }
+    };
 
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+      dot.style.left = `${mouseX}px`;
+      dot.style.top = `${mouseY}px`;
     }, { passive: true });
 
     const animateRing = () => {
       ringX += (mouseX - ringX) * 0.18;
       ringY += (mouseY - ringY) * 0.18;
-      ring.style.transform = `translate3d(${ringX.toFixed(2)}px, ${ringY.toFixed(2)}px, 0) translate(-50%, -50%)`;
+      ring.style.left = `${ringX}px`;
+      ring.style.top = `${ringY}px`;
       requestAnimationFrame(animateRing);
     };
-    requestAnimationFrame(animateRing);
+    animateRing();
 
     const hoverables = document.querySelectorAll('a, button, input, textarea, .s-pill, .service-row-module, .showcase-project-panel, .theme-switch-btn, .h-audio-toggle');
     hoverables.forEach(el => {
@@ -1351,34 +1371,34 @@ class EGTechStudioApp {
         scale: 1.02,
         ease: 'power1.inOut'
       }, 0.18)
-      // Projects (#work): logo moves behind horizontal project showcase (slow independent parallax)
-      .to(stage, {
-        x: '10vw',
-        y: '-2vh',
-        scale: 1.04,
-        ease: 'power1.inOut'
-      }, 0.42)
-      // Process (#process): logo becomes more centered
-      .to(stage, {
-        x: '-2vw',
-        y: '6vh',
-        scale: 1.03,
-        ease: 'power1.inOut'
-      }, 0.65)
-      // About (#about): logo becomes partially cropped again
-      .to(stage, {
-        x: '16vw',
-        y: '-4vh',
-        scale: 1.05,
-        ease: 'power1.inOut'
-      }, 0.84)
-      // Final CTA (#contact): logo becomes larger and slightly more prominent
-      .to(stage, {
-        x: '5vw',
-        y: '2vh',
-        scale: 1.10,
-        ease: 'power1.out'
-      }, 1.0);
+        // Projects (#work): logo moves behind horizontal project showcase (slow independent parallax)
+        .to(stage, {
+          x: '10vw',
+          y: '-2vh',
+          scale: 1.04,
+          ease: 'power1.inOut'
+        }, 0.42)
+        // Process (#process): logo becomes more centered
+        .to(stage, {
+          x: '-2vw',
+          y: '6vh',
+          scale: 1.03,
+          ease: 'power1.inOut'
+        }, 0.65)
+        // About (#about): logo becomes partially cropped again
+        .to(stage, {
+          x: '16vw',
+          y: '-4vh',
+          scale: 1.05,
+          ease: 'power1.inOut'
+        }, 0.84)
+        // Final CTA (#contact): logo becomes larger and slightly more prominent
+        .to(stage, {
+          x: '5vw',
+          y: '2vh',
+          scale: 1.10,
+          ease: 'power1.out'
+        }, 1.0);
 
       // Section-specific opacity fine-tuning for Final CTA
       ScrollTrigger.create({
@@ -1397,3 +1417,343 @@ class EGTechStudioApp {
     }
   }
 }
+
+/* =========================================================================
+   13. V2 POLISH LAYER — ported from egtech-portfolio v2 (MYTHOS doctrine)
+   Zero new dependencies. Fully disabled under prefers-reduced-motion.
+   Modules: boot-skip · scroll progress · back-to-top · scroll reveals ·
+            card tilt · flashlight glare · magnetic CTAs · hero 3D depth
+            field · copy-number chip. All writes rAF-batched, rects cached.
+   ========================================================================= */
+(() => {
+  'use strict';
+
+  const RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const reduced = () => RM.matches;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  document.documentElement.classList.add('v2-js');
+
+  // Shared rect cache: one getBoundingClientRect per element per scroll position
+  const rectCache = new WeakMap();
+  const liveRect = (el) => {
+    const y = window.scrollY;
+    let c = rectCache.get(el);
+    if (!c || c.y !== y) {
+      c = { y, rect: el.getBoundingClientRect() };
+      rectCache.set(el, c);
+    }
+    return c.rect;
+  };
+
+  /* --- 13a. BOOT SKIP: click or any key finishes the preloader instantly --- */
+  (() => {
+    const pre = document.getElementById('sitePreloader');
+    if (!pre) return;
+    const cleanup = () => {
+      window.removeEventListener('pointerdown', skip);
+      window.removeEventListener('keydown', skip);
+    };
+    function skip() {
+      cleanup();
+      if (pre.classList.contains('dismissed')) return;
+      const bar = document.getElementById('preloaderBar');
+      const counter = document.getElementById('preloaderCounter');
+      if (bar) bar.style.width = '100%';
+      if (counter) counter.textContent = '100%';
+      pre.querySelectorAll('.preloader-status-block, .preloader-brand-cluster, .preloader-tagline, .v2-skip-hint')
+        .forEach((el) => el.classList.add('fade-out'));
+      setTimeout(() => {
+        pre.classList.add('dismissed');
+        setTimeout(() => { pre.style.display = 'none'; }, 650);
+      }, 180);
+    }
+    window.addEventListener('pointerdown', skip, { passive: true });
+    window.addEventListener('keydown', skip);
+  })();
+
+  /* --- 13b. SCROLL PROGRESS + BACK TO TOP (one rAF-batched handler) --- */
+  (() => {
+    const bar = document.querySelector('.v2-progress i');
+    const topBtn = document.getElementById('v2TopBtn');
+    if (!bar && !topBtn) return;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+      if (bar) bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+      if (topBtn) topBtn.classList.toggle('v2-show', window.scrollY > 700);
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }, { passive: true });
+    if (topBtn) {
+      topBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' });
+      });
+    }
+    update();
+  })();
+
+  /* --- 13c. SCROLL REVEALS (IntersectionObserver + stagger) ---
+     GSAP-driven zones are excluded so this never fights their timelines. */
+  (() => {
+    const SEL = [
+      '.section-label-row', '.editorial-section-heading', '.editorial-lead-para',
+      '.contact-dramatic-headline', '.contact-intro-copy', '.editorial-form-wrap',
+      '.process-step-row', '.audit-specimen-card', '.monolith-card',
+      '.case-spotlight-card', '.commitments-stack', '.manifesto-triad'
+    ];
+    const zones = ['#hero', '#brandStatement', '#services', '#work'];
+    const nodes = [];
+    document.querySelectorAll(SEL.join(',')).forEach((el) => {
+      if (zones.some((z) => el.closest(z))) return;
+      el.setAttribute('data-v2-reveal', '');
+      nodes.push(el);
+    });
+    if (!nodes.length) return;
+    if (reduced() || !('IntersectionObserver' in window)) {
+      nodes.forEach((el) => el.classList.add('v2-in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('v2-in');
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -7% 0px' });
+    nodes.forEach((el, i) => {
+      el.style.setProperty('--vd', ((i % 5) * 70) + 'ms');
+      io.observe(el);
+    });
+  })();
+
+  /* --- 13d. 3D TILT (v2 doctrine: cached rect, rAF writes, instant reset) --- */
+  (() => {
+    if (reduced()) return;
+    document.querySelectorAll('.h-frame, .audit-specimen-card, .monolith-card, .case-spotlight-card')
+      .forEach((el) => {
+        if (el.dataset.v2Tilt) return;
+        el.dataset.v2Tilt = '1';
+        el.setAttribute('data-v2-tilt', '');
+        el.classList.add('v2-tilting');
+        let raf = 0, px = 0.5, py = 0.5;
+        const apply = () => {
+          raf = 0;
+          const rx = ((0.5 - py) * 5).toFixed(2);
+          const ry = ((px - 0.5) * 6).toFixed(2);
+          el.style.transform = 'perspective(1100px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateZ(10px)';
+        };
+        el.addEventListener('pointerenter', () => {
+          if (reduced()) return;
+          liveRect(el);
+        });
+        el.addEventListener('pointermove', (e) => {
+          if (reduced()) return;
+          const rect = liveRect(el);
+          px = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+          py = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+          if (!raf) raf = requestAnimationFrame(apply);
+        });
+        el.addEventListener('pointerleave', () => {
+          if (raf) { cancelAnimationFrame(raf); raf = 0; }
+          el.style.transform = '';
+        });
+      });
+  })();
+
+  /* --- 13e. FLASHLIGHT CARD GLARE (CSS vars only, one rAF-batched write) --- */
+  (() => {
+    if (reduced()) return;
+    document.querySelectorAll('.h-frame, .audit-specimen-card, .monolith-card, .case-spotlight-card, .editorial-form-wrap')
+      .forEach((el) => {
+        if (el.dataset.v2Glare) return;
+        el.dataset.v2Glare = '1';
+        el.setAttribute('data-v2-glare', '');
+        let raf = 0, mx = 50, my = 50;
+        const apply = () => {
+          raf = 0;
+          el.style.setProperty('--mx', mx + '%');
+          el.style.setProperty('--my', my + '%');
+        };
+        el.addEventListener('pointermove', (e) => {
+          if (reduced()) return;
+          const rect = liveRect(el);
+          mx = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+          my = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+          if (!raf) raf = requestAnimationFrame(apply);
+        });
+      });
+  })();
+
+  /* --- 13f. MAGNETIC CTAs (subtle 8px pull, spring-back on leave) --- */
+  (() => {
+    if (reduced()) return;
+    document.querySelectorAll('.btn-primary-form, .btn-whatsapp-form, .wa-btn-direct')
+      .forEach((el) => {
+        if (el.dataset.v2Magnetic) return;
+        el.dataset.v2Magnetic = '1';
+        el.setAttribute('data-v2-magnetic', '');
+        let raf = 0, dx = 0, dy = 0;
+        const apply = () => {
+          raf = 0;
+          el.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+        };
+        el.addEventListener('pointerenter', () => {
+          liveRect(el);
+          el.classList.add('v2-magnet-on');
+        });
+        el.addEventListener('pointermove', (e) => {
+          const rect = liveRect(el);
+          dx = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
+          dy = ((e.clientY - rect.top) / rect.height - 0.5) * 6;
+          if (!raf) raf = requestAnimationFrame(apply);
+        });
+        el.addEventListener('pointerleave', () => {
+          el.classList.remove('v2-magnet-on');
+          el.style.transform = '';
+          if (raf) { cancelAnimationFrame(raf); raf = 0; }
+        });
+      });
+  })();
+
+  /* --- 13g. COPY NUMBER CHIP in the WhatsApp drawer (beginner-friendly) --- */
+  (() => {
+    const waFooter = document.querySelector('.wa-drawer-footer');
+    if (!waFooter || document.getElementById('v2CopyNum')) return;
+    const waLink = document.querySelector('a[href*="wa.me"]');
+    const num = waLink ? ((waLink.getAttribute('href').match(/wa\.me\/(\d+)/) || [])[1] || '') : '';
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'v2-copy-chip';
+    chip.id = 'v2CopyNum';
+    chip.textContent = 'COPY NUMBER';
+    chip.addEventListener('click', async () => {
+      const text = num ? '+' + num : '';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (_) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (_e) { /* noop */ }
+        ta.remove();
+      }
+      const box = document.getElementById('toastBox');
+      if (box) {
+        const t = document.createElement('div');
+        t.className = 'toast-item';
+        t.textContent = '✓ WhatsApp number copied.';
+        box.appendChild(t);
+        setTimeout(() => {
+          t.style.opacity = '0';
+          t.style.transition = 'opacity 0.3s ease';
+          setTimeout(() => t.remove(), 300);
+        }, 3200);
+      }
+    });
+    waFooter.appendChild(chip);
+  })();
+
+  /* --- 13h. HERO 3D DEPTH FIELD (vanilla canvas starfield + mouse parallax) ---
+     Replaces the WebGL engine dropped in their redesign, with zero libraries.
+     DPR-capped, sleeps when the hero is off-screen or the tab is hidden. */
+  (() => {
+    if (reduced()) return;
+    const cv = document.getElementById('v2Field3D');
+    const hero = document.getElementById('hero');
+    if (!cv || !hero) return;
+    const ctx = cv.getContext('2d');
+    if (!ctx) return;
+    const COLORS = ['201, 240, 0', '56, 189, 248', '139, 92, 246'];
+    let W = 0, H = 0, dots = [], running = false, raf = 0, last = 0;
+    let tx = 0, ty = 0, mx = 0, my = 0;
+    const build = () => {
+      const r = hero.getBoundingClientRect();
+      W = Math.max(1, Math.floor(r.width * DPR));
+      H = Math.max(1, Math.floor(r.height * DPR));
+      cv.width = W;
+      cv.height = H;
+      const n = Math.min(85, Math.max(26, Math.floor(r.width / 17)));
+      dots = [];
+      for (let i = 0; i < n; i++) {
+        dots.push({
+          x: Math.random() * 2 - 1,
+          y: Math.random() * 2 - 1,
+          z: 0.3 + Math.random() * 0.7,
+          c: COLORS[(Math.random() * COLORS.length) | 0],
+          tw: Math.random() * 6.28
+        });
+      }
+    };
+    const draw = (t) => {
+      if (!running) { raf = 0; return; }
+      if (!last) last = t;
+      const dt = Math.min(50, t - last);
+      last = t;
+      mx += (tx - mx) * 0.05;
+      my += (ty - my) * 0.05;
+      ctx.clearRect(0, 0, W, H);
+      const cx = W / 2, cy = H / 2;
+      for (const d of dots) {
+        d.z -= 0.00009 * dt * (0.4 + d.z);
+        if (d.z <= 0.08) {
+          d.x = Math.random() * 2 - 1;
+          d.y = Math.random() * 2 - 1;
+          d.z = 1;
+        }
+        const k = 0.85 / d.z;
+        const px = cx + d.x * k * cx * 0.5 + mx * 24 * DPR * (1.3 - d.z);
+        const py = cy + d.y * k * cy * 0.5 + my * 24 * DPR * (1.3 - d.z);
+        if (px < -30 || px > W + 30 || py < -30 || py > H + 30) continue;
+        const size = Math.max(0.6, 2.2 * DPR * (1.15 - d.z));
+        const a = (0.34 * (1.05 - d.z) * (0.72 + 0.28 * Math.sin(t * 0.0016 + d.tw))).toFixed(3);
+        ctx.fillStyle = 'rgba(' + d.c + ',' + a + ')';
+        ctx.beginPath();
+        ctx.arc(px, py, size, 0, 6.2832);
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    };
+    const start = () => {
+      if (!running && !raf) {
+        running = true;
+        last = 0;
+        raf = requestAnimationFrame(draw);
+      }
+    };
+    const stop = () => { running = false; };
+    build();
+    let rto = 0;
+    window.addEventListener('resize', () => {
+      clearTimeout(rto);
+      rto = setTimeout(build, 150);
+    }, { passive: true });
+    window.addEventListener('mousemove', (e) => {
+      tx = (e.clientX / window.innerWidth - 0.5) * 2;
+      ty = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((es) => {
+        es.forEach((en) => {
+          if (en.isIntersecting) {
+            if (!document.hidden) start();
+          } else {
+            stop();
+          }
+        });
+      }, { threshold: 0.02 }).observe(hero);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop(); else start();
+      });
+    } else {
+      start();
+    }
+  })();
+})();
