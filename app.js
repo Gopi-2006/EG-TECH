@@ -107,171 +107,425 @@ class EGTechStudioApp {
 
   /* =========================================================================
      2. FEATURED PROJECTS — CINEMATIC STACKED-CARD BROWSER REVEAL SYSTEM
-     Layered browser-window reveal with physical depth stacking on scroll
-     Completely scroll-driven, butter-smooth 120FPS hardware acceleration
+     Five-phase scroll sequence:
+       PHASE 0 (0–20%): Words reveal sequentially with kinetic drift + stagger
+       PHASE 1 (15–30%): Accent words gain emphasis (accent color + scale)
+       PHASE 2 (25–35%): Headline locks; project deck container fades-in
+       PHASE 3 (30–50%): First browser card rises from bottom via clip-path
+       PHASE 4 (50–100%): Card-cycling through remaining 3 projects
+     Cards NEVER use opacity transitions — clip-path + translate only.
      ========================================================================= */
   initStackedProjectShowcase() {
-    const section = document.getElementById('work');
-    const textPanels = document.querySelectorAll('.stacked-text-panel');
-    const browserCards = document.querySelectorAll('.stacked-browser-card');
-    const pillBtns = document.querySelectorAll('.stacked-pill-btn');
-    const activeNum = document.getElementById('stackedActiveNum');
-    const progressFill = document.getElementById('stackedProgressFill');
+    const section        = document.getElementById('work');
+    const heading        = document.getElementById('stackedHeading');
+    const textPanels     = document.querySelectorAll('.stacked-text-panel');
+    const browserCards   = document.querySelectorAll('.stacked-browser-card');
+    const pillBtns       = document.querySelectorAll('.stacked-pill-btn');
+    const activeNum      = document.getElementById('stackedActiveNum');
+    const progressFill   = document.getElementById('stackedProgressFill');
+    const footerHint     = section ? section.querySelector('.sfb-hint') : null;
+    const viewportCont   = section ? section.querySelector('.stacked-viewport-container') : null;
+    const textCol        = document.getElementById('stackedTextCol') || (section ? section.querySelector('.stacked-text-col') : null);
+    const deckCol        = document.getElementById('stackedDeckCol') || (section ? section.querySelector('.stacked-deck-col') : null);
+    const bgWatermark    = document.getElementById('stackedBgWatermark');
 
     if (!section || browserCards.length === 0) return;
 
+    /* ——— gather word spans ——— */
+    const wordSpans = heading ? Array.from(heading.querySelectorAll('.sh-word')) : [];
     const totalCards = browserCards.length; // 4
     let lastActiveIdx = -1;
+    let mobileActiveIdx = 0;
     let isTicking = false;
 
-    // Direct, ultra-smooth scroll handler using requestAnimationFrame
-    const updateStackedCards = () => {
-      isTicking = false;
-      const rect = section.getBoundingClientRect();
-      const totalScrollable = rect.height - window.innerHeight;
+    /* ——— easing & math helpers ——— */
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+    const clamp   = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    const lerp    = (a, b, t) => a + (b - a) * t;
+    const norm    = (v, lo, hi) => clamp((v - lo) / (hi - lo), 0, 1);
 
-      // Track if section is in viewport to reduce other ambient animations
-      const inView = rect.top <= window.innerHeight * 1.5 && rect.bottom >= -window.innerHeight * 0.5;
-      this.isInStackedShowcase = (rect.top <= 120 && rect.bottom >= window.innerHeight * 0.2);
+    /* ——— Mobile / Tablet snap-switcher (clean tap & swipe) ——— */
+    const setMobileProject = (idx) => {
+      idx = clamp(idx, 0, totalCards - 1);
+      mobileActiveIdx = idx;
+      lastActiveIdx   = idx;
 
-      if (!inView || totalScrollable <= 0) return;
+      if (activeNum) activeNum.textContent = String(idx + 1).padStart(2, '0');
+      pillBtns.forEach((btn, i) => btn.classList.toggle('active', i === idx));
+      if (progressFill) progressFill.style.width = `${Math.round(((idx + 1) / totalCards) * 100)}%`;
+      if (footerHint)   footerHint.textContent = 'TAP 01–04 OR SWIPE TO EXPLORE';
 
-      // Normalized progress p between 0 and 1
-      let p = 0;
-      if (rect.top <= 0) {
-        p = Math.max(0, Math.min(1, -rect.top / totalScrollable));
-      } else {
-        p = 0;
-      }
-
-      if (progressFill) {
-        progressFill.style.width = `${Math.min(100, Math.max(12, Math.round(p * 100)))}%`;
-      }
-
-      // Continuous virtual index position (0.0 to 3.0)
-      const maxPos = totalCards - 1; // 3
-      const pos = p * maxPos;
-      const baseIndex = Math.min(Math.floor(pos), maxPos - 1);
-      const t = pos - baseIndex; // 0.0 to 1.0
-
-      // Active display index (switches cleanly at 0.5 threshold)
-      const activeIdx = Math.min(Math.round(pos), maxPos);
-
-      // Update Header Active Number & Step Pills
-      if (activeIdx !== lastActiveIdx) {
-        lastActiveIdx = activeIdx;
-        if (activeNum) {
-          activeNum.textContent = String(activeIdx + 1).padStart(2, '0');
-        }
-        pillBtns.forEach((btn, idx) => {
-          if (idx === activeIdx) {
-            btn.classList.add('active');
-          } else {
-            btn.classList.remove('active');
-          }
-        });
-      }
-
-      // Synchronize Left Column Editorial Text Panels
-      textPanels.forEach((panel, idx) => {
-        if (idx === activeIdx) {
-          panel.classList.add('active');
-          panel.classList.remove('outgoing');
-        } else if (idx < activeIdx) {
-          panel.classList.remove('active');
-          panel.classList.add('outgoing');
-        } else {
-          panel.classList.remove('active', 'outgoing');
-        }
+      textPanels.forEach((panel, i) => {
+        panel.classList.toggle('active',   i === idx);
+        panel.classList.toggle('outgoing', i < idx && i !== idx);
+        panel.style.opacity   = (i === idx) ? '1' : '0';
+        panel.style.transform = (i === idx) ? 'translate3d(0,0,0)' : 'translate3d(0,16px,0)';
       });
 
-      // Synchronize Right Column Stacked Browser Deck
-      // Rule: ONLY 2 cards active/animated at any moment!
-      // Outgoing/Current (baseIndex) & Incoming (baseIndex + 1).
       browserCards.forEach((card, i) => {
-        if (i < baseIndex) {
-          // Parked behind in past - hidden to save GPU
-          card.style.visibility = 'hidden';
-          card.style.pointerEvents = 'none';
-          card.style.opacity = '0';
-          card.style.filter = 'none';
-        } else if (i === baseIndex) {
-          // Current active / outgoing card
-          // Moves slightly upward: translateY(0 -> -30px)
-          // Scales down slightly: scale(1.0 -> 0.97)
-          // Reduces opacity minimally: opacity(1.0 -> 0.82)
-          const translateY = -30 * t;
-          const scale = 1.0 - (0.03 * t);
-          const opacity = 1.0 - (0.18 * t);
-          const zIndex = 10 + i;
-
-          card.style.visibility = 'visible';
-          card.style.zIndex = zIndex;
-          card.style.opacity = opacity.toFixed(3);
-          card.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
-          card.style.pointerEvents = (t < 0.5) ? 'auto' : 'none';
-
-          // Subtle transition blur only during motion, removed when resting
-          if (t > 0.08 && t < 0.92) {
-            card.style.filter = 'blur(1px)';
-          } else {
-            card.style.filter = 'none';
-          }
-        } else if (i === baseIndex + 1) {
-          // Incoming card rising underneath and overlapping
-          // Starts: translateY(120px -> 0)
-          // Scale: scale(0.94 -> 1.0)
-          // Opacity: opacity(0 -> 1.0)
-          const translateY = 120 * (1 - t);
-          const scale = 0.94 + (0.06 * t);
-          const opacity = Math.min(1, Math.max(0, t * 1.15)); // smooth curve
-          const zIndex = 20 + i; // Overlaps in front/top of outgoing card
-
-          card.style.visibility = 'visible';
-          card.style.zIndex = zIndex;
-          card.style.opacity = opacity.toFixed(3);
-          card.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
-          card.style.pointerEvents = (t >= 0.5) ? 'auto' : 'none';
-          card.style.filter = 'none';
+        card.classList.toggle('bc-active',   i === idx);
+        card.classList.toggle('bc-outgoing', i < idx);
+        /* Cards remain 100% solid & opaque on mobile as well */
+        card.style.opacity = '1';
+        if (i === idx) {
+          card.style.visibility    = 'visible';
+          card.style.zIndex        = '10';
+          card.style.pointerEvents = 'auto';
+          card.style.transform     = 'translate3d(0,0,0) scale(1)';
+          card.style.clipPath      = 'inset(0% 0% 0% 0% round 12px)';
         } else {
-          // Future card - hidden to save GPU
-          card.style.visibility = 'hidden';
+          const dir = i < idx ? -20 : 20;
+          card.style.visibility    = 'hidden';
+          card.style.zIndex        = '1';
           card.style.pointerEvents = 'none';
-          card.style.opacity = '0';
-          card.style.filter = 'none';
+          card.style.transform     = `translate3d(0,${dir}px,0) scale(0.96)`;
+          card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
         }
       });
     };
 
-    // Smooth passive scroll listener
+    /* ——— MASTER SCROLL UPDATE — executes inside rAF ——— */
+    const update = () => {
+      isTicking = false;
+
+      /* Narrow screens: delegate to mobile switcher */
+      if (window.innerWidth <= 992) {
+        setMobileProject(mobileActiveIdx);
+        return;
+      }
+
+      if (footerHint && footerHint.textContent !== 'SCROLL TO REVEAL NEXT') {
+        footerHint.textContent = 'SCROLL TO REVEAL NEXT';
+      }
+
+      const rect = section.getBoundingClientRect();
+      const totalScrollable = rect.height - window.innerHeight;
+      if (totalScrollable <= 0) return;
+
+      const inView = rect.top <= window.innerHeight * 1.5 && rect.bottom >= -window.innerHeight * 0.5;
+      this.isInStackedShowcase = (rect.top <= 120 && rect.bottom >= window.innerHeight * 0.2);
+      if (!inView) return;
+
+      /* Global progress p: 0 when section top reaches viewport top, 1 when section finishes */
+      const p = rect.top <= 0 ? clamp(-rect.top / totalScrollable, 0, 1) : 0;
+
+      /* ---------------------------------------------------------------------
+         LAYER 3: SUBTLE 3-LAYER PARALLAX (Requirement 10)
+         - Background EG TECH logo watermark: very slow
+         - Text column: subtle translateY
+         - Website preview deck: slightly larger translateY
+         --------------------------------------------------------------------- */
+      if (bgWatermark) {
+        const wmY = lerp(-14, 20, p);
+        bgWatermark.style.transform = `translate(-50%, calc(-50% + ${wmY.toFixed(2)}px))`;
+      }
+      if (textCol) {
+        const tcY = lerp(-5, 10, p);
+        textCol.style.transform = `translate3d(0, ${tcY.toFixed(2)}px, 0)`;
+      }
+      if (deckCol) {
+        const dcY = lerp(-8, 16, p);
+        deckCol.style.transform = `translate3d(0, ${dcY.toFixed(2)}px, 0)`;
+      }
+
+      /* ---------------------------------------------------------------------
+         STEP 01 – 03: KINETIC HEADLINE PROGRESSIVE REVEAL (Requirements 1, 2, 3)
+         - Sequential word reveal: "Built" -> "for" -> "commercial" -> "momentum."
+         - translateY: 60px -> 0
+         - opacity: 0 -> 1
+         - scale: 0.96 -> 1
+         - kinetic horizontal drift: Built (-20), for (+15), commercial (-12), momentum (+20) -> 0
+         - Word emphasis: subtle accent glow + scale bump on "commercial" & "momentum."
+         --------------------------------------------------------------------- */
+      if (wordSpans.length > 0) {
+        wordSpans.forEach((word, i) => {
+          const staggerStart = i * 0.045; // ~80-140ms equivalent scroll stagger
+          const revealStart  = staggerStart;
+          const revealEnd    = revealStart + 0.09;
+
+          const t  = norm(p, revealStart, revealEnd);
+          const et = easeOut(t);
+
+          const driftMax = parseFloat(word.dataset.x || 0);
+          const driftX   = (window.innerWidth < 1100) ? driftMax * 0.4 : driftMax;
+
+          const tx = lerp(driftX, 0, et);
+          const ty = lerp(60, 0, et);
+          const op = lerp(0, 1, et);
+
+          /* Emphasis on accent words: subtle scale lift during appearance, settling smoothly */
+          const isAccent = word.classList.contains('sh-word--accent');
+          let sc = lerp(0.96, 1.0, et);
+          if (isAccent && t > 0.1 && t < 0.95) {
+            sc += 0.035 * Math.sin(t * Math.PI); // sophisticated subtle bump
+          }
+
+          if (isAccent) {
+            if (t > 0.4) {
+              word.classList.add('is-emphasized');
+            } else {
+              word.classList.remove('is-emphasized');
+            }
+          }
+
+          if (t >= 0.98) {
+            word.classList.add('sh-revealed');
+          } else {
+            word.classList.remove('sh-revealed');
+          }
+
+          word.style.transform = `translate3d(${tx.toFixed(2)}px, ${ty.toFixed(2)}px, 0) scale(${sc.toFixed(4)})`;
+          word.style.opacity   = op.toFixed(3);
+        });
+      }
+
+      /* ---------------------------------------------------------------------
+         STEP 04 & 05: FIRST WEBSITE PREVIEW ENTRY & SOLID HOLD
+         (Requirements 4, 5, 6, 9, 11)
+         p [0.20 – 0.30]: Headline hold (fully assembled and stable)
+         p [0.24 – 0.32]: Text panel 0 slides up into place
+         p [0.30 – 0.44]: Card 0 rises from below (translateY 80->0, scale 0.94->1, mask opens)
+                          OPACITY IS ALWAYS 1 — NEVER TRANSPARENT!
+         p [0.44 – 0.54]: Card 0 locks into place solid (Hold state)
+         --------------------------------------------------------------------- */
+      if (p < 0.54) {
+        /* Phase before multi-project cycling: Card 0 is the primary focus */
+        const textT = easeOut(norm(p, 0.24, 0.32));
+        textPanels.forEach((panel, idx) => {
+          if (idx === 0) {
+            panel.classList.add('active');
+            panel.classList.remove('outgoing');
+            panel.style.opacity   = textT.toFixed(3);
+            panel.style.transform = `translate3d(0, ${lerp(20, 0, textT).toFixed(2)}px, 0)`;
+          } else {
+            panel.classList.remove('active', 'outgoing');
+            panel.style.opacity   = '0';
+            panel.style.transform = 'translate3d(0, 20px, 0)';
+          }
+        });
+
+        /* First website preview rise & lock (Step 04 & 05) */
+        const entryT = easeOut(norm(p, 0.30, 0.44));
+        const c0Y    = lerp(80, 0, entryT);
+        const c0Sc   = lerp(0.94, 1.0, entryT);
+        const maskBottom = Math.max(0, Math.round((1 - entryT) * 100));
+
+        browserCards.forEach((card, idx) => {
+          /* CRITICAL: Website preview opacity is ALWAYS 1 */
+          card.style.opacity = '1';
+
+          if (idx === 0) {
+            if (entryT > 0.005) {
+              card.style.visibility    = 'visible';
+              card.style.zIndex        = '10';
+              card.style.pointerEvents = (entryT >= 0.9) ? 'auto' : 'none';
+              card.style.transform     = `translate3d(0, ${c0Y.toFixed(2)}px, 0) scale(${c0Sc.toFixed(4)})`;
+              /* Mask opens from bottom upward, revealing the website preview without transparency */
+              card.style.clipPath      = `inset(0% 0% ${maskBottom}% 0% round 12px)`;
+              card.classList.toggle('bc-active', entryT >= 0.5);
+              card.classList.remove('bc-outgoing');
+            } else {
+              card.style.visibility    = 'hidden';
+              card.style.pointerEvents = 'none';
+              card.style.transform     = 'translate3d(0, 80px, 0) scale(0.94)';
+              card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
+            }
+          } else {
+            /* Remaining cards wait parked below */
+            card.style.visibility    = 'hidden';
+            card.style.zIndex        = '1';
+            card.style.pointerEvents = 'none';
+            card.style.transform     = 'translate3d(0, 80px, 0) scale(0.94)';
+            card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
+            card.classList.remove('bc-active', 'bc-outgoing');
+          }
+        });
+
+        if (activeIdxUpdate(0)) {
+          /* Updated to project 01 */
+        }
+
+        if (progressFill) {
+          const progP = clamp(p / 0.54, 0, 1) * 25;
+          progressFill.style.width = `${Math.max(8, Math.round(progP))}%`;
+        }
+        return;
+      }
+
+      /* ---------------------------------------------------------------------
+         TRANSITIONS BETWEEN WEBSITES / PRODUCTS (Requirement 7)
+         p [0.54 – 1.00]:
+         No cross-fade. No transparency. Both remain opacity: 1!
+         Current website:
+           - moves slightly upward (translateY: 0 -> -26px)
+           - scale from 1 -> 0.98
+           - remains opaque (opacity: 1)
+         Next website:
+           - enters from below (translateY: 70px -> 0)
+           - remains opacity: 1
+           - reveals through clipping mask from bottom (inset: 0% 0% maskBottom% 0%)
+           - scale 0.96 -> 1
+         --------------------------------------------------------------------- */
+      const cycleP       = norm(p, 0.54, 1.00);
+      const totalSteps   = totalCards - 1; // 3 transitions
+      const floatPos     = cycleP * totalSteps;
+      const currIdx      = Math.min(Math.floor(floatPos), totalSteps - 1);
+      const nextIdx      = currIdx + 1;
+      const segProgress  = floatPos - currIdx; // 0 to 1 within this transition
+
+      /* First 62% of segment is the physical card replacement; remaining 38% is solid hold */
+      const transT = easeOut(clamp(segProgress / 0.62, 0, 1));
+      const activeIdx = (segProgress < 0.5) ? currIdx : nextIdx;
+
+      activeIdxUpdate(activeIdx);
+
+      if (progressFill) {
+        const totalProgress = 25 + Math.round(cycleP * 75);
+        progressFill.style.width = `${Math.min(100, totalProgress)}%`;
+      }
+
+      /* Synchronize editorial text panels */
+      textPanels.forEach((panel, i) => {
+        if (i === currIdx) {
+          const fadeOut = clamp(segProgress / 0.48, 0, 1);
+          panel.style.opacity   = (1 - fadeOut).toFixed(3);
+          panel.style.transform = `translate3d(0, ${lerp(0, -18, fadeOut).toFixed(2)}px, 0)`;
+          panel.classList.toggle('active',   segProgress < 0.5);
+          panel.classList.toggle('outgoing', segProgress >= 0.5);
+        } else if (i === nextIdx) {
+          const fadeIn = clamp((segProgress - 0.35) / 0.45, 0, 1);
+          panel.style.opacity   = fadeIn.toFixed(3);
+          panel.style.transform = `translate3d(0, ${lerp(20, 0, fadeIn).toFixed(2)}px, 0)`;
+          panel.classList.toggle('active',   segProgress >= 0.5);
+          panel.classList.remove('outgoing');
+        } else {
+          panel.style.opacity   = '0';
+          panel.style.transform = 'translate3d(0, 20px, 0)';
+          panel.classList.remove('active', 'outgoing');
+        }
+      });
+
+      /* Synchronize solid browser preview cards */
+      browserCards.forEach((card, i) => {
+        /* CRITICAL: Preview card opacity is ALWAYS 1 */
+        card.style.opacity = '1';
+
+        if (i < currIdx) {
+          /* Past card: safely parked offscreen */
+          card.style.visibility    = 'hidden';
+          card.style.zIndex        = '1';
+          card.style.pointerEvents = 'none';
+          card.style.transform     = 'translate3d(0, -30px, 0) scale(0.96)';
+          card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
+          card.classList.remove('bc-active', 'bc-outgoing');
+
+        } else if (i === currIdx) {
+          /* Current website: moves slightly upward, scale 1 -> 0.98, stays 100% solid */
+          const cY  = lerp(0, -26, transT);
+          const cSc = lerp(1.0, 0.98, transT);
+
+          card.style.visibility    = (transT < 0.99) ? 'visible' : 'hidden';
+          card.style.zIndex        = '10';
+          card.style.pointerEvents = (transT < 0.5) ? 'auto' : 'none';
+          card.style.transform     = `translate3d(0, ${cY.toFixed(2)}px, 0) scale(${cSc.toFixed(4)})`;
+          card.style.clipPath      = 'inset(0% 0% 0% 0% round 12px)';
+          card.classList.toggle('bc-active',   transT < 0.5);
+          card.classList.toggle('bc-outgoing', transT >= 0.5);
+
+        } else if (i === nextIdx) {
+          /* Next website: rises from below, reveals through clipping mask, scale 0.96 -> 1.0 */
+          const nY  = lerp(70, 0, transT);
+          const nSc = lerp(0.96, 1.0, transT);
+          const maskBottom = Math.max(0, Math.round((1 - transT) * 100));
+
+          card.style.visibility    = 'visible';
+          card.style.zIndex        = '20';
+          card.style.pointerEvents = (transT >= 0.5) ? 'auto' : 'none';
+          card.style.transform     = `translate3d(0, ${nY.toFixed(2)}px, 0) scale(${nSc.toFixed(4)})`;
+          card.style.clipPath      = `inset(0% 0% ${maskBottom}% 0% round 12px)`;
+          card.classList.toggle('bc-active', transT >= 0.5);
+          card.classList.remove('bc-outgoing');
+
+        } else {
+          /* Future cards waiting below */
+          card.style.visibility    = 'hidden';
+          card.style.zIndex        = '2';
+          card.style.pointerEvents = 'none';
+          card.style.transform     = 'translate3d(0, 80px, 0) scale(0.94)';
+          card.style.clipPath      = 'inset(0% 0% 100% 0% round 12px)';
+          card.classList.remove('bc-active', 'bc-outgoing');
+        }
+      });
+    };
+
+    /* Helper to update pills and counter */
+    function activeIdxUpdate(idx) {
+      if (idx === lastActiveIdx) return false;
+      lastActiveIdx   = idx;
+      mobileActiveIdx = idx;
+      if (activeNum) activeNum.textContent = String(idx + 1).padStart(2, '0');
+      pillBtns.forEach((btn, i) => btn.classList.toggle('active', i === idx));
+      return true;
+    }
+
+    /* ——— Passive scroll + resize listener ——— */
     const onScroll = () => {
       if (!isTicking) {
         isTicking = true;
-        requestAnimationFrame(updateStackedCards);
+        requestAnimationFrame(update);
       }
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
 
-    // Initial render
-    updateStackedCards();
+    /* Initial render */
+    requestAnimationFrame(() => {
+      update();
+    });
 
-    // Clickable quick jump buttons for each project step
+    /* ——— Touch swipe gestures for mobile ——— */
+    if (deckCol) {
+      let touchStartX = 0, touchStartY = 0;
+      deckCol.addEventListener('touchstart', (e) => {
+        if (window.innerWidth > 992) return;
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+      }, { passive: true });
+      deckCol.addEventListener('touchend', (e) => {
+        if (window.innerWidth > 992) return;
+        const dx = e.changedTouches[0].screenX - touchStartX;
+        const dy = e.changedTouches[0].screenY - touchStartY;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+          setMobileProject(mobileActiveIdx + (dx < 0 ? 1 : -1));
+        }
+      }, { passive: true });
+    }
+
+    /* ——— Quick-jump pill buttons ——— */
     pillBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         const step = parseInt(btn.dataset.step, 10);
         if (isNaN(step)) return;
-        const rect = section.getBoundingClientRect();
-        const currentScroll = window.scrollY || window.pageYOffset;
-        const sectionTop = currentScroll + rect.top;
-        const totalScrollable = rect.height - window.innerHeight;
-        const targetScroll = sectionTop + (step / (totalCards - 1)) * totalScrollable + 20;
 
-        window.scrollTo({
-          top: targetScroll,
-          behavior: 'smooth'
-        });
+        if (window.innerWidth <= 992) {
+          setMobileProject(step);
+          return;
+        }
+
+        const rect            = section.getBoundingClientRect();
+        const currentScroll   = window.scrollY || window.pageYOffset;
+        const sectionTop      = currentScroll + rect.top;
+        const totalScrollable = rect.height - window.innerHeight;
+
+        /* Precise target scroll per project hold state */
+        let targetP = 0.46; // project 0
+        if (step === 1) targetP = 0.68;
+        else if (step === 2) targetP = 0.84;
+        else if (step === 3) targetP = 0.98;
+
+        const targetScroll = sectionTop + targetP * totalScrollable;
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
       });
     });
   }
@@ -347,6 +601,10 @@ class EGTechStudioApp {
     const ring = document.getElementById('cursorRing');
     if (!dot || !ring) return;
 
+    // Performance Guard: disable continuous cursor rAF loop on touch/mobile devices
+    const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!hasFinePointer) return;
+
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let ringX = mouseX;
@@ -355,23 +613,21 @@ class EGTechStudioApp {
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      dot.style.left = `${mouseX}px`;
-      dot.style.top = `${mouseY}px`;
+      dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
     }, { passive: true });
 
     const animateRing = () => {
       ringX += (mouseX - ringX) * 0.18;
       ringY += (mouseY - ringY) * 0.18;
-      ring.style.left = `${ringX}px`;
-      ring.style.top = `${ringY}px`;
+      ring.style.transform = `translate3d(${ringX.toFixed(2)}px, ${ringY.toFixed(2)}px, 0) translate(-50%, -50%)`;
       requestAnimationFrame(animateRing);
     };
-    animateRing();
+    requestAnimationFrame(animateRing);
 
     const hoverables = document.querySelectorAll('a, button, input, textarea, .s-pill, .service-row-module, .showcase-project-panel, .theme-switch-btn, .h-audio-toggle');
     hoverables.forEach(el => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'));
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-active'), { passive: true });
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-active'), { passive: true });
     });
   }
 
@@ -460,8 +716,10 @@ class EGTechStudioApp {
         const lineEnd = lineStart + 0.22;
         const lineP = Math.max(0, Math.min(1, (p - lineStart) / (lineEnd - lineStart)));
 
-        // Horizontal convergence: offset -> 0
-        const startX = lineOffsets[idx] || 0;
+        // Horizontal convergence: offset -> 0 (scaled on mobile to avoid overflow)
+        const isMobileScreen = window.innerWidth <= 768;
+        const mobileFactor = isMobileScreen ? 0.35 : 1.0;
+        const startX = (lineOffsets[idx] || 0) * mobileFactor;
         const currentX = (startX * (1 - lineP)).toFixed(2);
 
         // Vertical reveal: 40px -> 0
@@ -662,11 +920,60 @@ class EGTechStudioApp {
     window.addEventListener('resize', onScroll, { passive: true });
     updateHorizontalCards();
 
+    // Mobile horizontal touch-scroll listener for trackWrapper
+    if (trackWrapper) {
+      let isMobileScrollTicking = false;
+      const onMobileTrackScroll = () => {
+        isMobileScrollTicking = false;
+        if (window.innerWidth > 900) return;
+
+        const scrollLeft = trackWrapper.scrollLeft;
+        const firstCard = cards[0];
+        if (!firstCard) return;
+        const cardWidth = firstCard.offsetWidth + 16;
+        const activeIdx = Math.max(0, Math.min(totalCards - 1, Math.round(scrollLeft / cardWidth)));
+
+        if (activeIdx !== lastActiveIdx) {
+          lastActiveIdx = activeIdx;
+          if (activeNum) {
+            activeNum.textContent = String(activeIdx + 1).padStart(2, '0');
+          }
+          dots.forEach((dot, idx) => {
+            if (idx === activeIdx) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+      };
+
+      trackWrapper.addEventListener('scroll', () => {
+        if (!isMobileScrollTicking) {
+          isMobileScrollTicking = true;
+          requestAnimationFrame(onMobileTrackScroll);
+        }
+      }, { passive: true });
+    }
+
     // Clickable dots to quickly navigate to specific capability
     dots.forEach((dot) => {
       dot.addEventListener('click', () => {
         const idx = parseInt(dot.dataset.index, 10);
         if (isNaN(idx)) return;
+
+        if (window.innerWidth <= 900) {
+          const targetCard = cards[idx];
+          if (targetCard && trackWrapper) {
+            const targetLeft = targetCard.offsetLeft - trackWrapper.offsetLeft;
+            trackWrapper.scrollTo({
+              left: targetLeft,
+              behavior: 'smooth'
+            });
+          }
+          return;
+        }
+
         const rect = section.getBoundingClientRect();
         const currentScroll = window.scrollY || window.pageYOffset;
         const sectionTop = currentScroll + rect.top;

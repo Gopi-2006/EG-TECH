@@ -63,8 +63,10 @@ body[data-theme="dark"] {
   --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.35);
   --shadow-card: 0 12px 36px rgba(0, 0, 0, 0.5);
 
-  /* Fonts */
-  --font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Fonts: Curated Studio Typography System (Distinctive, Human-Crafted, Anti-AI) */
+  --font-display: 'Syne', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-editorial: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
 
   /* Radius (Crisp Studio Discipline) */
@@ -121,6 +123,36 @@ body[data-theme="light"] {
   padding: 0;
 }
 
+/* Accessibility: Skip to Main Content */
+.skip-link {
+  position: fixed;
+  top: -120px;
+  left: 20px;
+  background: var(--accent);
+  color: #050505;
+  padding: 12px 24px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  z-index: 99999999;
+  text-decoration: none;
+  transition: top 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.skip-link:focus {
+  top: 20px;
+  outline: 2px solid var(--text-contrast);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 html {
   background-color: var(--bg-deep);
   color: var(--text-primary);
@@ -130,6 +162,61 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Curated Editorial & Anti-AI Font Utilities */
+.font-editorial,
+.editorial-accent {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.015em;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Architectural Display Typography (Anti-AI Distinctive Type) */
+h1, h2, h3, h4,
+.hero-headline,
+.brand-title,
+.preloader-brand-title,
+.editorial-section-heading,
+.anchor-massive-title,
+.stp-title,
+.sh-card-title,
+.pillar-title,
+.audit-title,
+.p-step-title,
+.cs-title,
+.sc-title,
+.arch-title,
+.modal-title,
+.contact-form-title,
+.gs-card-title,
+.perf-card-title,
+.solution-col-title,
+.audit-banner-title,
+.f-col-title,
+.f-brand-huge,
+.monolith-name,
+.f-success-heading,
+.kinetic-line {
+  font-family: var(--font-display);
+}
+
+/* Off-screen Content Rendering Optimization */
+.section-stacked-showcase,
+.section-search-infra,
+.section-about,
+.section-audit,
+.section-contact,
+.eg-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
 }
 
 body.eg-body {
@@ -213,25 +300,31 @@ img, video {
 
 .cursor-dot {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 5px;
   height: 5px;
   background: var(--accent);
   border-radius: 50%;
   pointer-events: none;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
   transition: width 0.15s ease, height 0.15s ease, opacity 0.2s ease;
   z-index: 10000000;
 }
 
 .cursor-ring {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 28px;
   height: 28px;
   border: 1px solid var(--accent-border);
   border-radius: 50%;
   pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, background 0.2s ease;
   z-index: 9999999;
 }
 
@@ -470,7 +563,7 @@ body.cursor-active .cursor-ring {
 }
 
 .preloader-brand-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -654,7 +747,7 @@ body[data-theme="light"] .eg-header.nav-pill-active {
 }
 
 .brand-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -827,6 +920,33 @@ body[data-theme="light"] .eg-header.nav-pill-active {
   }
 }
 
+@media (max-width: 540px) {
+  .header-actions {
+    gap: 6px;
+  }
+  .theme-toggle-control {
+    padding: 2px;
+    gap: 1px;
+  }
+  .theme-switch-btn {
+    padding: 3px 6px;
+    font-size: 8.5px;
+  }
+  .btn-talk-outline {
+    padding: 6px 12px;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-title {
+    font-size: 13px;
+  }
+  .theme-switch-btn:not(.active) {
+    display: none;
+  }
+}
+
 /* --------------------------------------------------------------------------
    6. COMMON EDITORIAL LAYOUT & TYPOGRAPHY TOKENS
    -------------------------------------------------------------------------- */
@@ -885,7 +1005,7 @@ main {
 }
 
 .editorial-section-heading {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: clamp(30px, 3.8vw, 56px);
   font-weight: 800;
   line-height: 1.1;
@@ -956,13 +1076,13 @@ main {
   color: var(--text-secondary);
 }
 
-/* Hero Typography (Outfit Bold & Confident) */
+/* Hero Typography (Architectural Syne Bold & Confident) */
 .hero-headline {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: clamp(44px, 5.8vw, 86px);
   font-weight: 800;
-  line-height: 1.0;
-  letter-spacing: -0.03em;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
   color: var(--text-primary);
   margin-bottom: 24px;
 }
@@ -1234,8 +1354,8 @@ body[data-theme="light"] .statement-bg-logo-parallax {
 }
 
 .kinetic-line {
-  font-family: var(--font-primary);
-  font-size: clamp(34px, 5.4vw, 76px);
+  font-family: var(--font-display);
+  font-size: clamp(24px, 5.2vw, 76px);
   font-weight: 800;
   line-height: 1.04;
   letter-spacing: -0.025em;
@@ -1245,7 +1365,7 @@ body[data-theme="light"] .statement-bg-logo-parallax {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: clamp(10px, 1.8vw, 24px);
+  gap: clamp(8px, 1.6vw, 24px);
 }
 
 .kt-word {
@@ -1484,7 +1604,7 @@ body[data-theme="light"] .statement-bg-logo-parallax {
 }
 
 .anchor-massive-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: clamp(38px, 4.5vw, 64px);
   font-weight: 800;
   line-height: 0.95;
@@ -1686,7 +1806,7 @@ body[data-theme="light"] .service-horizontal-card.active {
 }
 
 .sh-card-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: clamp(20px, 2.2vw, 26px);
   font-weight: 800;
   color: var(--text-primary);
@@ -1823,6 +1943,30 @@ body[data-theme="light"] .service-horizontal-card.active {
   z-index: 20;
 }
 
+/* Subtle Architectural Background Emblem Watermark (Parallax Layer 3) */
+.stacked-bg-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(650px, 75vw);
+  height: min(650px, 75vw);
+  pointer-events: none;
+  z-index: 0;
+  color: var(--text-primary);
+  opacity: 0.038;
+  will-change: transform;
+}
+
+.stacked-watermark-svg {
+  width: 100%;
+  height: 100%;
+}
+
+body[data-theme="light"] .stacked-bg-watermark {
+  opacity: 0.048;
+}
+
 .stacked-title-row {
   display: flex;
   align-items: flex-end;
@@ -1833,13 +1977,63 @@ body[data-theme="light"] .service-horizontal-card.active {
   gap: 20px;
 }
 
+/* Kinetic Word-by-Word Headline System */
 .stacked-heading {
   font-family: var(--font-primary);
-  font-size: clamp(24px, 2.8vw, 40px);
+  font-size: clamp(22px, 2.6vw, 38px);
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1.1;
   letter-spacing: -0.02em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.3em;
+  overflow: visible;
+}
+
+/* Each word is clipped to its own overflow container so reveal is isolated */
+.sh-word-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.15;
+}
+
+/* The animated span inside each word-wrap clip */
+.sh-word {
+  display: inline-block;
+  will-change: transform, opacity;
+  /* Initial hidden state — set by CSS so there's no flash before JS runs */
+  transform: translate3d(0, 60px, 0);
+  opacity: 0;
+}
+
+/* Accent emphasis words (commercial, momentum) */
+.sh-word--accent {
+  color: var(--text-primary);
+  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              text-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* When the word is emphasized (JS adds .is-emphasized) */
+.sh-word--accent.is-emphasized {
+  color: var(--accent);
+  filter: brightness(1.1);
+  text-shadow: 0 0 20px var(--accent-dim);
+}
+
+body[data-theme="light"] .sh-word--accent.is-emphasized {
+  color: var(--accent);
+  filter: brightness(0.96);
+  text-shadow: none;
+}
+
+/* Settled / fully revealed state (JS adds .sh-revealed) */
+.sh-word.sh-revealed {
+  transform: translate3d(0, 0, 0) !important;
+  opacity: 1 !important;
 }
 
 .stacked-progress-cluster {
@@ -1903,7 +2097,7 @@ body[data-theme="light"] .service-horizontal-card.active {
   color: var(--text-secondary);
 }
 
-/* Main Viewport Container */
+/* Main Viewport Container — Always 100% solid & opaque */
 .stacked-viewport-container {
   flex: 1;
   width: 100%;
@@ -1912,6 +2106,8 @@ body[data-theme="light"] .service-horizontal-card.active {
   align-items: center;
   position: relative;
   margin: 12px auto;
+  opacity: 1;
+  will-change: transform;
 }
 
 .stacked-grid-layout {
@@ -1969,7 +2165,7 @@ body[data-theme="light"] .service-horizontal-card.active {
 }
 
 .stp-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-display);
   font-size: clamp(28px, 3.2vw, 44px);
   font-weight: 800;
   color: var(--text-primary);
@@ -2077,9 +2273,33 @@ body[data-theme="light"] .service-horizontal-card.active {
   height: 100%;
   top: 0;
   left: 0;
-  will-change: transform, opacity;
-  transform-origin: center center;
-  transition: box-shadow 0.3s ease;
+  will-change: transform, clip-path;
+  transform-origin: center bottom;
+  /* CRITICAL: Cards remain 100% solid and opaque — opacity NEVER drops below 1 */
+  opacity: 1 !important;
+  /* Initial off-screen state: below and clipped via bottom mask */
+  transform: translate3d(0, 80px, 0) scale(0.94);
+  clip-path: inset(0% 0% 100% 0% round 12px);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Active / revealed browser card state */
+.stacked-browser-card.bc-active {
+  transform: translate3d(0, 0, 0) scale(1);
+  clip-path: inset(0% 0% 0% 0% round 12px);
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 10 !important;
+}
+
+/* Outgoing card — slides up slightly, solid and opaque */
+.stacked-browser-card.bc-outgoing {
+  transform: translate3d(0, -20px, 0) scale(0.98);
+  clip-path: inset(0% 0% 0% 0% round 12px);
+  visibility: visible;
+  pointer-events: none;
+  z-index: 5 !important;
 }
 
 .browser-window-shell {
@@ -2091,19 +2311,31 @@ body[data-theme="light"] .service-horizontal-card.active {
   border: 1px solid var(--border-medium);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 24px 56px -8px rgba(0, 0, 0, 0.55),
-              0 0 0 1px rgba(255, 255, 255, 0.04);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  /* Always solid, never transparent. Depth through shadow only. */
+  box-shadow: 0 28px 60px -8px rgba(0, 0, 0, 0.65),
+              0 0 0 1px rgba(255, 255, 255, 0.06),
+              inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 body[data-theme="light"] .browser-window-shell {
   background: #FFFFFF;
-  box-shadow: 0 24px 56px -8px rgba(0, 0, 0, 0.12),
-              0 0 0 1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 20px 50px -8px rgba(0, 0, 0, 0.15),
+              0 0 0 1px rgba(0, 0, 0, 0.07);
 }
 
-.stacked-browser-card:hover .browser-window-shell {
+/* Active card gets accent border highlight */
+.stacked-browser-card.bc-active .browser-window-shell {
   border-color: var(--accent-border);
+  box-shadow: 0 28px 60px -8px rgba(0, 0, 0, 0.65),
+              0 0 0 1px rgba(255, 255, 255, 0.06),
+              0 0 32px rgba(201, 240, 0, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+body[data-theme="light"] .stacked-browser-card.bc-active .browser-window-shell {
+  border-color: var(--accent-border);
+  box-shadow: 0 20px 50px -8px rgba(0, 0, 0, 0.18),
+              0 0 24px rgba(62, 82, 0, 0.07);
 }
 
 /* Browser Titlebar */
@@ -2349,11 +2581,29 @@ body[data-theme="light"] .b-live-pill {
     gap: 32px;
   }
   .stacked-text-col {
+    position: relative;
     height: auto;
-    min-height: 280px;
+    min-height: auto;
+    display: block;
+  }
+  .stacked-text-panel {
+    position: relative;
+    display: none;
+    opacity: 0;
+    transform: none;
+  }
+  .stacked-text-panel.active {
+    display: flex;
+    opacity: 1;
+    transform: none;
+    animation: fadeInMobilePanel 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .stacked-deck-col {
-    height: clamp(340px, 48vh, 440px);
+    height: clamp(340px, 52vh, 460px);
+    touch-action: pan-y;
+  }
+  .stacked-browser-card {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), clip-path 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .stacked-footer-bar {
     flex-direction: column;
@@ -2365,6 +2615,11 @@ body[data-theme="light"] .b-live-pill {
     max-width: 100%;
     margin: 4px 0;
   }
+}
+
+@keyframes fadeInMobilePanel {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* --------------------------------------------------------------------------

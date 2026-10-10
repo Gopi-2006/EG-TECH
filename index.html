@@ -4,8 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EG TECH | Empowering Growth Technology</title>
-  <meta name="description" content="EG TECH is an independent digital growth studio based in Tamil Nadu. We engineer high-converting web platforms, distinctive identities, search infrastructure, and automated business systems." />
+  <meta name="description" content="EG TECH is an independent digital growth studio based in Tamil Nadu. We engineer high-converting web platforms, distinctive visual identities, technical search infrastructure, and automated business systems." />
   <meta name="theme-color" content="#050505" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://egtech.com/" />
+
+  <!-- Open Graph / Social Media Optimization -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://egtech.com/" />
+  <meta property="og:site_name" content="EG TECH" />
+  <meta property="og:title" content="EG TECH | Empowering Growth Technology" />
+  <meta property="og:description" content="Independent digital growth studio engineering high-converting web platforms, distinctive identities, search infrastructure, and automated business systems." />
+  <meta property="og:image" content="https://egtech.com/assets/images/egtech_logo.jpg" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://egtech.com/" />
+  <meta name="twitter:title" content="EG TECH | Empowering Growth Technology" />
+  <meta name="twitter:description" content="Independent digital growth studio engineering high-converting web platforms, distinctive identities, search infrastructure, and automated business systems." />
+  <meta name="twitter:image" content="https://egtech.com/assets/images/egtech_logo.jpg" />
 
   <!-- EG TECH Official Favicons & PWA Assets -->
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -17,14 +36,47 @@
   <meta name="apple-mobile-web-app-title" content="EG TECH" />
   <meta name="application-name" content="EG TECH" />
 
-  <!-- Google Fonts: Outfit (Primary Display & Body) + JetBrains Mono (Technical Metadata / Numbers) -->
+  <!-- Performance Optimization: Preconnect & Preload Critical Resources -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="assets/images/egtech_logo.jpg" fetchpriority="high" />
+
+  <!-- Curated Studio Typography: Syne (Architectural Display), Plus Jakarta Sans (Human Modern Body), Instrument Serif (Editorial Accent), JetBrains Mono (Technical) -->
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Structured Data (JSON-LD) for Search Engines -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "EG TECH",
+    "alternateName": "Empowering Growth Technology",
+    "url": "https://egtech.com/",
+    "logo": "https://egtech.com/assets/images/egtech_logo.jpg",
+    "description": "Independent digital growth studio engineering high-converting web platforms, distinctive identities, search infrastructure, and automated business systems.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressRegion": "Tamil Nadu",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "13.0827",
+      "longitude": "80.2707"
+    },
+    "priceRange": "$$",
+    "sameAs": [
+      "https://github.com/Gopi-2006"
+    ]
+  }
+  </script>
 </head>
 <body class="eg-body" data-theme="dark">
+
+  <!-- Accessibility: Skip to Main Content Link -->
+  <a href="#hero" class="skip-link">Skip to main content</a>
 
   <!-- =========================================================================
        EG TECH MECHANICAL LOGO PRELOADER
@@ -46,7 +98,7 @@
 
         <!-- Official EG TECH Logo Frame -->
         <div class="preloader-logo-frame" id="preloaderLogoFrame">
-          <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Logo" class="preloader-logo-img" id="preloaderLogoImg" />
+          <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Logo" class="preloader-logo-img" id="preloaderLogoImg" width="90" height="90" decoding="async" />
           <div class="preloader-scanline" id="preloaderScanline"></div>
         </div>
       </div>
@@ -58,8 +110,8 @@
         <span class="preloader-brand-sub">EMPOWERING GROWTH TECHNOLOGY</span>
       </div>
 
-      <!-- Tagline -->
-      <div class="preloader-tagline">IDEAS TODAY / IMPACT TOMORROW</div>
+      <!-- Tagline with Editorial Touch -->
+      <div class="preloader-tagline"><span class="font-editorial">IDEAS TODAY</span> <span class="tagline-slash">/</span> <span class="font-editorial">IMPACT TOMORROW</span></div>
 
       <!-- Status Line & Progress Track -->
       <div class="preloader-status-block">
@@ -89,7 +141,7 @@
   <div class="eg-bg-brand-system" id="bgBrandSystem" aria-hidden="true">
     <div class="bg-logo-stage" id="bgLogoStage">
       <div class="bg-logo-mover" id="bgLogoMover">
-        <img src="assets/images/egtech_logo.jpg" alt="" class="bg-logo-asset" id="bgLogoAsset" loading="eager" />
+        <img src="assets/images/egtech_logo.jpg" alt="" class="bg-logo-asset" id="bgLogoAsset" loading="eager" width="480" height="480" decoding="async" />
       </div>
     </div>
   </div>
@@ -102,7 +154,7 @@
       <!-- Top Left: Uploaded EG TECH Logo + Studio Name -->
       <a href="#" class="brand-cluster" aria-label="EG TECH Home">
         <div class="brand-logo-wrap">
-          <img src="assets/images/egtech_logo.jpg" alt="EG TECH Emblem" class="brand-logo-img" />
+          <img src="assets/images/egtech_logo.jpg" alt="EG TECH Emblem" class="brand-logo-img" width="34" height="34" decoding="async" />
         </div>
         <div class="brand-text-block">
           <span class="brand-title">EG TECH</span>
@@ -160,7 +212,7 @@
             </div>
 
             <h1 class="hero-headline">
-              Engineering ideas into <span class="text-accent">commercial momentum.</span>
+              Engineering ideas into <span class="text-accent editorial-accent">commercial momentum.</span>
             </h1>
 
             <div class="hero-narrative">
@@ -209,7 +261,7 @@
               <span class="h-frame-badge">ACTIVE REEL</span>
             </div>
             <div class="h-frame-viewport">
-              <video id="heroBrandVideo" autoplay loop muted playsinline class="h-frame-video" aria-label="EG TECH Studio Reel">
+              <video id="heroBrandVideo" autoplay loop muted playsinline preload="metadata" class="h-frame-video" aria-label="EG TECH Studio Reel">
                 <source src="egtech_brand_film.mp4" type="video/mp4" />
               </video>
             </div>
@@ -232,7 +284,7 @@
     <section class="section-editorial brand-statement-section" id="brandStatement">
       <!-- Background Depth Layer 3: Giant Subtle EG TECH Logo Mark -->
       <div class="statement-bg-logo-parallax" id="statementBgLogo" aria-hidden="true">
-        <img src="assets/images/egtech_logo.jpg" alt="" class="statement-bg-logo-img" />
+        <img src="assets/images/egtech_logo.jpg" alt="" class="statement-bg-logo-img" width="360" height="360" loading="lazy" decoding="async" />
       </div>
 
       <div class="editorial-container statement-relative-stage">
@@ -577,6 +629,17 @@
     <section class="section-stacked-showcase" id="work">
       <div class="stacked-stage" id="stackedStage">
         
+        <!-- Architectural Background Emblem Watermark (Parallax Layer 3) -->
+        <div class="stacked-bg-watermark" id="stackedBgWatermark" aria-hidden="true">
+          <svg class="stacked-watermark-svg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="300" cy="300" r="280" stroke="currentColor" stroke-width="1" stroke-dasharray="4 8" opacity="0.35" />
+            <circle cx="300" cy="300" r="200" stroke="currentColor" stroke-width="1" opacity="0.25" />
+            <circle cx="300" cy="300" r="120" stroke="currentColor" stroke-width="1" stroke-dasharray="2 6" opacity="0.3" />
+            <path d="M160 220H440M160 300H380M160 380H440" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.4" />
+            <text x="300" y="310" text-anchor="middle" font-family="var(--font-mono)" font-size="24" font-weight="700" letter-spacing="0.32em" fill="currentColor" opacity="0.5">EG TECH &bull; CORE</text>
+          </svg>
+        </div>
+
         <!-- Header Bar -->
         <div class="stacked-header-bar editorial-container">
           <div class="section-label-row">
@@ -584,7 +647,13 @@
             <span class="sec-title-tag">SELECTED WORK</span>
           </div>
           <div class="stacked-title-row">
-            <h2 class="stacked-heading">Built for commercial momentum.</h2>
+            <!-- Kinetic Word-by-Word Headline (scroll-animated) -->
+            <h2 class="stacked-heading" id="stackedHeading" aria-label="Built for commercial momentum.">
+              <span class="sh-word-wrap"><span class="sh-word" data-x="-20" data-idx="0">Built</span></span><!--
+              --><span class="sh-word-wrap"><span class="sh-word" data-x="15" data-idx="1">for</span></span><!--
+              --><span class="sh-word-wrap"><span class="sh-word sh-word--accent" data-x="-12" data-idx="2">commercial</span></span><!--
+              --><span class="sh-word-wrap"><span class="sh-word sh-word--accent" data-x="20" data-idx="3">momentum.</span></span>
+            </h2>
             <div class="stacked-progress-cluster">
               <div class="stacked-step-pills" role="tablist" aria-label="Project Quick Navigation">
                 <button type="button" class="stacked-pill-btn active" data-step="0" aria-label="Jump to Project 01">01</button>
@@ -763,7 +832,7 @@
                     <a href="https://gopi-2006.github.io/tiruttani-quick-privacy-policy/index.html" target="_blank" rel="noopener noreferrer" class="b-viewport-link" aria-label="Visit Tiruttani Quick Live Platform">
                       <picture>
                         <source srcset="assets/images/tiruttani_quick_front.webp" type="image/webp" />
-                        <img src="assets/images/tiruttani_quick_front.png" alt="Tiruttani Quick Live E-commerce Platform" class="b-preview-img" loading="eager" />
+                        <img src="assets/images/tiruttani_quick_front.png" alt="Tiruttani Quick Live E-commerce Platform" class="b-preview-img" loading="eager" width="1200" height="750" decoding="async" />
                       </picture>
                       <div class="b-viewport-overlay">
                         <span class="b-live-pill"><span class="b-pulse-dot"></span> LIVE WEB PLATFORM &bull; TIRUTTANI, TN</span>
@@ -802,7 +871,7 @@
                   <div class="b-shell-viewport">
                     <picture>
                       <source srcset="assets/images/bidverify_ui.webp" type="image/webp" />
-                      <img src="assets/images/bidverify_ui.jpg" alt="BidVerify AI Procurement Compliance Dashboard" class="b-preview-img" loading="lazy" />
+                      <img src="assets/images/bidverify_ui.jpg" alt="BidVerify AI Procurement Compliance Dashboard" class="b-preview-img" loading="lazy" width="1200" height="750" decoding="async" />
                     </picture>
                     <div class="b-viewport-overlay">
                       <span class="b-live-pill"><span class="b-pulse-dot"></span> AI AUDIT ENGINE &bull; ENTERPRISE SOC2</span>
@@ -840,7 +909,7 @@
                   <div class="b-shell-viewport">
                     <picture>
                       <source srcset="assets/images/ecoaudit_ui.webp" type="image/webp" />
-                      <img src="assets/images/ecoaudit_ui.jpg" alt="EcoAudit Environmental Intelligence Platform Dashboard" class="b-preview-img" loading="lazy" />
+                      <img src="assets/images/ecoaudit_ui.jpg" alt="EcoAudit Environmental Intelligence Platform Dashboard" class="b-preview-img" loading="lazy" width="1200" height="750" decoding="async" />
                     </picture>
                     <div class="b-viewport-overlay">
                       <span class="b-live-pill"><span class="b-pulse-dot"></span> LIVE TELEMETRY &bull; SCOPE 1-3 AUDIT</span>
@@ -878,7 +947,7 @@
                   <div class="b-shell-viewport">
                     <picture>
                       <source srcset="assets/images/guardian_ui.webp" type="image/webp" />
-                      <img src="assets/images/guardian_ui.jpg" alt="Guardian Collective AI-Powered Safety Dispatch Platform" class="b-preview-img" loading="lazy" />
+                      <img src="assets/images/guardian_ui.jpg" alt="Guardian Collective AI-Powered Safety Dispatch Platform" class="b-preview-img" loading="lazy" width="1200" height="750" decoding="async" />
                     </picture>
                     <div class="b-viewport-overlay">
                       <span class="b-live-pill"><span class="b-pulse-dot"></span> GEOSPATIAL MESH &bull; SUB-2S DISPATCH</span>
@@ -1129,7 +1198,7 @@
         <!-- Monolith Studio Card with Actual Uploaded Logo -->
         <div class="monolith-card">
           <div class="monolith-logo-frame">
-            <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Brand Emblem" class="monolith-logo-img" />
+            <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Brand Emblem" class="monolith-logo-img" width="80" height="80" loading="lazy" decoding="async" />
           </div>
           <div class="monolith-typography">
             <h3 class="monolith-name">EG TECH</h3>
@@ -1370,7 +1439,7 @@
               <!-- Success Panel -->
               <div class="form-success-panel" id="formSuccessPanel" style="display: none;">
                 <div class="f-success-logo-wrap">
-                  <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Emblem" class="f-success-logo" />
+                  <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Emblem" class="f-success-logo" width="44" height="44" loading="lazy" decoding="async" />
                 </div>
                 <h3 class="f-success-heading">PROJECT REQUIREMENT RECEIVED</h3>
                 <p class="f-success-body">Thank you for reaching out to EG TECH. Our digital engineering team will review your brief and reply within 24 hours.</p>
@@ -1411,7 +1480,7 @@
               </div>
 
               <div class="ci-emblem-badge">
-                <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Logo" class="ci-logo-img" />
+                <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Logo" class="ci-logo-img" width="32" height="32" loading="lazy" decoding="async" />
                 <div class="ci-badge-text">
                   <strong>EG TECH</strong>
                   <span>EMPOWERING GROWTH TECHNOLOGY</span>
@@ -1433,7 +1502,7 @@
         <!-- Brand Summary -->
         <div class="footer-brand-side">
           <div class="footer-logo-row">
-            <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Logo" class="footer-logo-img" />
+            <img src="assets/images/egtech_logo.jpg" alt="EG TECH Official Logo" class="footer-logo-img" width="40" height="40" loading="lazy" decoding="async" />
             <span class="f-brand-huge">EG TECH</span>
           </div>
           <p class="f-brand-full">EMPOWERING GROWTH TECHNOLOGY</p>
@@ -1550,7 +1619,7 @@
     <div class="wa-chat-drawer" id="waPopupDrawer" style="display: none;">
       <div class="wa-drawer-header">
         <div class="wa-header-logo-wrap">
-          <img src="assets/images/egtech_logo.jpg" alt="EG TECH Emblem" class="wa-logo-img" />
+          <img src="assets/images/egtech_logo.jpg" alt="EG TECH Emblem" class="wa-logo-img" width="32" height="32" loading="lazy" decoding="async" />
           <span class="wa-live-dot"></span>
         </div>
         <div class="wa-header-text">
@@ -1597,9 +1666,9 @@
   <!-- Toast Notification Container -->
   <div class="toast-box" id="toastBox" aria-live="polite"></div>
 
-  <!-- Scripts: Local GSAP, ScrollTrigger & App Runtime -->
-  <script src="assets/libs/gsap.min.js"></script>
-  <script src="assets/libs/ScrollTrigger.min.js"></script>
-  <script src="app.js"></script>
+  <!-- Performance Optimization: Non-blocking Defer Scripts -->
+  <script src="assets/libs/gsap.min.js" defer></script>
+  <script src="assets/libs/ScrollTrigger.min.js" defer></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
